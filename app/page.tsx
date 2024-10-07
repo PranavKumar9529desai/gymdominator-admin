@@ -18,7 +18,6 @@ export default async function page() {
           </>
         );
       })}
-      {/* <div className="text-4xl">{JSON.stringify(response)}</div> */}
       <Button />
     </div>
   );
