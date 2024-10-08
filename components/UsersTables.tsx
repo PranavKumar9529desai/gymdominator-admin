@@ -1,6 +1,14 @@
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
-import { ChevronDown, Users, UserCheck, UserX, Turtle } from "lucide-react";
+import {
+  ChevronDown,
+  Users,
+  UserCheck,
+  UserX,
+  Turtle,
+  TicketCheckIcon,
+  Icon,
+} from "lucide-react";
 import FetchUser from "@/app/utils/FetchUser";
 import UserTrainerTableSkeleton from "./Skeltons/UserTabelsSkelton";
 
@@ -179,8 +187,8 @@ export default function UserTrainerTable() {
             <thead className="bg-gray-200">
               <tr>
                 <th className="px-4 py-2 text-left text-gray-600">User Name</th>
-                <th className="px-4 py-2 text-left text-gray-600">Gender</th>
-                <th className="px-4 py-2 text-left text-gray-600">Goal</th>
+                <th className="px-4 py-2 text-left text-gray-600 ">Gender</th>
+                <th className="px-4 py-2 text-left text-gray-600 ">Goal</th>
                 <th className="px-4 py-2 text-left text-gray-600">
                   Assign Trainer
                 </th>
@@ -193,8 +201,8 @@ export default function UserTrainerTable() {
                   className="border-b border-gray-200 hover:bg-gray-50"
                 >
                   <td className="px-4 py-2">{user.name}</td>
-                  <td className="px-4 py-2">{user.gender}</td>
-                  <td className="px-4 py-2">{user.goal}</td>
+                  <td className="px-4 py-2 ">{user.gender}</td>
+                  <td className="px-4 py-2 ">{user.goal}</td>
                   <td className="px-4 py-2">
                     <div className="relative">
                       <select
@@ -204,7 +212,7 @@ export default function UserTrainerTable() {
                           user.assignedTrainer
                             ? "border-green-500"
                             : "border-gray-300"
-                        } text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-blue-500 transition-colors duration-200`}
+                        } text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white border-1 focus:border-green-500 transition-colors duration-200`}
                       >
                         <option value="">Assign Trainer</option>
                         {trainers.map((trainer) => (
@@ -213,9 +221,13 @@ export default function UserTrainerTable() {
                           </option>
                         ))}
                       </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <ChevronDown size={20} />
-                      </div>
+                      {/* <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                        {user.assignedTrainer ? (
+                          <TicketCheckIcon className="" />
+                        ) : (
+                          <></>
+                        )}
+                      </div> */}
                     </div>
                   </td>
                 </tr>
