@@ -24,35 +24,35 @@ export default function UserWorkoutAssignment({
   const [users, setUsers] = useState<User[]>([
     {
       id: 1,
-      name: "User 1",
+      name: "pranav desai 1",
       gender: "Male",
       goal: "Weight Loss",
       workoutPlan: null,
     },
     {
       id: 2,
-      name: "User 2",
+      name: "pranav desai 2",
       gender: "Female",
       goal: "Muscle Gain",
       workoutPlan: "Strength Training",
     },
     {
       id: 3,
-      name: "User 3",
+      name: "pranav desai 3",
       gender: "Non-binary",
       goal: "General Fitness",
       workoutPlan: null,
     },
     {
       id: 4,
-      name: "User 4",
+      name: "pranav desai 4",
       gender: "Female",
       goal: "Endurance",
       workoutPlan: "Cardio Focus",
     },
     {
       id: 5,
-      name: "User 5",
+      name: "pranav desai 5",
       gender: "Male",
       goal: "Flexibility",
       workoutPlan: null,
@@ -196,7 +196,7 @@ export default function UserWorkoutAssignment({
                         ))}
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        <ChevronDown size={20} />
+                        {/* <ChevronDown size={20} /> */}
                       </div>
                     </div>
                   </td>
