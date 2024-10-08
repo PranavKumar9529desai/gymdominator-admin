@@ -4,7 +4,7 @@ import FetchUser from "./utils/FetchUser";
 
 export default async function page() {
   const response: User[] = await FetchUser();
-  console.log(response);
+  // console.log(response);
   return (
     <div className="flex h-screen w-screen justify-center items-center flex-col gap-4 ">
       {response.map((user) => {

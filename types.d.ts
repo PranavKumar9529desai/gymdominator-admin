@@ -21,3 +21,18 @@ interface FetchUserType {
   msg: string;
   data: User[];
 }
+
+
+interface User {
+  id: number;
+  name: string;
+  gender: string;
+  goal: string;
+  assignedTrainer: string | null;
+}
+
+interface Trainer {
+  id: number;
+  name: string;
+}
+
