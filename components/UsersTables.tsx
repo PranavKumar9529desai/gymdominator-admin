@@ -28,60 +28,14 @@ interface Trainer {
 export default function UserTrainerTable() {
   // fetch the users and the trainers here
   const [isloading, setisloading] = useState<boolean>(true);
-  const [users, setUsers] = useState<User[]>([
-    // {
-    //   id: 1,
-    //   name: "John Doe",
-    //   gender: "Male",
-    //   goal: "Weight Loss",
-    //   assignedTrainer: null,
-    // },
-    // {
-    //   id: 2,
-    //   name: "Jane Smith",
-    //   gender: "Female",
-    //   goal: "Muscle Gain",
-    //   assignedTrainer: null,
-    // },
-    // {
-    //   id: 3,
-    //   name: "Alex Johnson",
-    //   gender: "Non-binary",
-    //   goal: "General Fitness",
-    //   assignedTrainer: null,
-    // },
-    // {
-    //   id: 4,
-    //   name: "Emily Brown",
-    //   gender: "Female",
-    //   goal: "Flexibility",
-    //   assignedTrainer: "Sarah Coach",
-    // },
-    // {
-    //   id: 5,
-    //   name: "Michael Lee",
-    //   gender: "Male",
-    //   goal: "Endurance",
-    //   assignedTrainer: null,
-    // },
-    // {
-    //   id: 6,
-    //   name: "pranav Desai",
-    //   gender: "Male",
-    //   goal: "Weight Loss",
-    //   assignedTrainer: null,
-    // },
-  ]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     try {
       setisloading(true);
       console.log(isloading);
       const fetchAllusers = async () => {
-        console.log(!users);
-        console.log("useeffect is running ");
         let userslist = await FetchUser();
-        console.log("users list from the useffect is ", userslist);
         // Ensure default values for missing fields
         let updatedUsers = userslist.map((user, index) => ({
           id: user.id ?? users.length + index + 1, // Assign default ID if missing
@@ -106,7 +60,7 @@ export default function UserTrainerTable() {
     }
   }, []);
 
-  // get list of traniners from the backend
+  // TODO get list of traniners from the backend
   const trainers: Trainer[] = [
     { id: 1, name: "Mike Trainer" },
     { id: 2, name: "Sarah Coach" },
@@ -183,7 +137,7 @@ export default function UserTrainerTable() {
         </div>
 
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
-          <table className="min-w-full table-auto">
+          <table className="min-w-full table-auto hidden md:table">
             <thead className="bg-gray-200">
               <tr>
                 <th className="px-4 py-2 text-left text-gray-600">User Name</th>
@@ -234,6 +188,42 @@ export default function UserTrainerTable() {
               ))}
             </tbody>
           </table>
+
+          {/* here is mobile ui components */}
+          <div className="sm:hidden ">
+            {users.map((user) => (
+              <div key={user.id} className="border-b border-gray-200 p-4 ">
+                <h3 className="font-semibold text-gray-800 mb-2">
+                  {user.name}
+                </h3>
+                <p className="text-sm text-gray-600 mb-1">
+                  Gender: {user.gender}
+                </p>
+                <p className="text-sm text-gray-600 mb-2">Goal: {user.goal}</p>
+                <div className="relative">
+                  <select
+                    value={user.assignedTrainer || ""}
+                    onChange={(e) => assignTrainer(user.id, e.target.value)}
+                    className={`block w-full bg-white border ${
+                      user.assignedTrainer
+                        ? "border-green-500"
+                        : "border-gray-300"
+                    } text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
+                  >
+                    <option value="">Assign Trainer</option>
+                    {trainers.map((trainer) => (
+                      <option key={trainer.id} value={trainer.name}>
+                        {trainer.name}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    {/* <ChevronDown size={20} /> */}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
