@@ -185,6 +185,7 @@ export default function UserTrainerTable() {
                     <div className="relative">
                       <select
                         value={user.assignedTrainer || ""}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={(e) => assignTrainer(user.id, e.target.value)}
                         className={`block w-full bg-white border ${
                           user.assignedTrainer
@@ -216,7 +217,13 @@ export default function UserTrainerTable() {
           {/* here is mobile ui components */}
           <div className="sm:hidden ">
             {filteredUsers.map((user) => (
-              <div key={user.id} className="border-b border-gray-200 p-4 ">
+              <div
+                key={user.id}
+                className="border-b border-gray-200 p-4 "
+                onClick={() => {
+                  router.push(`/users/${user.id}`);
+                }}
+              >
                 <h3 className="font-semibold text-gray-800 mb-2">
                   {user.name}
                 </h3>
@@ -227,6 +234,7 @@ export default function UserTrainerTable() {
                 <div className="relative">
                   <select
                     value={user.assignedTrainer || ""}
+                    onClick={(e) => e.stopPropagation()}
                     onChange={(e) => assignTrainer(user.id, e.target.value)}
                     className={`block w-full bg-white border ${
                       user.assignedTrainer
