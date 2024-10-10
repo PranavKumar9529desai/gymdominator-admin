@@ -1,16 +1,11 @@
 "use client";
-import React, { useState, useMemo, useEffect } from "react";
-import {
-  ChevronDown,
-  Users,
-  UserCheck,
-  UserX,
-  Turtle,
-  TicketCheckIcon,
-  Icon,
-} from "lucide-react";
+import React, { useState, useMemo, useEffect, useRef } from "react";
+import Link from "next/link";
+import { Search } from "lucide-react";
+import { Users, UserCheck, UserX } from "lucide-react";
 import FetchUser from "@/app/utils/FetchUser";
 import UserTrainerTableSkeleton from "./Skeltons/UserTabelsSkelton";
+import { useRouter } from "next/navigation";
 
 interface User {
   id: number;
@@ -26,26 +21,25 @@ interface Trainer {
 }
 
 export default function UserTrainerTable() {
-  // fetch the users and the trainers here
+  const router = useRouter();
   const [isloading, setisloading] = useState<boolean>(true);
   const [users, setUsers] = useState<User[]>([]);
-
+  const [searchTerm, setSearchTerm] = useState<string>("");
   useEffect(() => {
     try {
       setisloading(true);
-      console.log(isloading);
+      // console.log(isloading);
       const fetchAllusers = async () => {
         let userslist = await FetchUser();
         // Ensure default values for missing fields
         let updatedUsers = userslist.map((user, index) => ({
           id: user.id ?? users.length + index + 1, // Assign default ID if missing
           name: user.name ?? "Unknown", // Default name if missing
-          gender: user.gender ?? "Unknown", // Default gender if missing
+          gender: user.gender ?? "Male", // Default gender if missing
           goal: user.goal ?? "None", // Default goal if missing
           assignedTrainer: user.assignedTrainer ?? null, // Default trainer if missing
         }));
 
-        console.log("Updated users list from useEffect: ", updatedUsers);
         setUsers((prevUsers) => [...prevUsers, ...updatedUsers]);
       };
       // calling the fetchAllusers
@@ -76,6 +70,15 @@ export default function UserTrainerTable() {
       )
     );
   };
+
+  const filteredUsers = useMemo(() => {
+    return users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.gender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.goal.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [users, searchTerm]);
 
   const { totalUsers, assignedUsers, unassignedUsers } = useMemo(() => {
     const total = users.length;
@@ -136,6 +139,24 @@ export default function UserTrainerTable() {
           </div>
         </div>
 
+        {/* search box */}
+        <div className="mb-6">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search users..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 pl-10 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              aria-label="Search users"
+            />
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+              size={20}
+            />
+          </div>
+        </div>
+
         <div className="bg-white shadow-md rounded-lg overflow-hidden">
           <table className="min-w-full table-auto hidden md:table">
             <thead className="bg-gray-200">
@@ -149,10 +170,13 @@ export default function UserTrainerTable() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {filteredUsers.map((user) => (
                 <tr
+                  onClick={() => {
+                    router.push(`/users/${user.id}`);
+                  }}
                   key={user.id}
-                  className="border-b border-gray-200 hover:bg-gray-50"
+                  className="border-b border-gray-200 hover:bg-gray-50 w-full h-full"
                 >
                   <td className="px-4 py-2">{user.name}</td>
                   <td className="px-4 py-2 ">{user.gender}</td>
@@ -178,10 +202,10 @@ export default function UserTrainerTable() {
                       {/* <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         {user.assignedTrainer ? (
                           <TicketCheckIcon className="" />
-                        ) : (
-                          <></>
-                        )}
-                      </div> */}
+                          ) : (
+                            <></>
+                            )}
+                            </div> */}
                     </div>
                   </td>
                 </tr>
@@ -191,7 +215,7 @@ export default function UserTrainerTable() {
 
           {/* here is mobile ui components */}
           <div className="sm:hidden ">
-            {users.map((user) => (
+            {filteredUsers.map((user) => (
               <div key={user.id} className="border-b border-gray-200 p-4 ">
                 <h3 className="font-semibold text-gray-800 mb-2">
                   {user.name}

@@ -83,7 +83,7 @@ export default function UserWorkoutAssignment({
         user.goal.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [users, searchTerm]);
-
+  console.log(searchTerm, filteredUsers);
   const { totalUsers, assignedUsers, unassignedUsers } = useMemo(() => {
     const total = users.length;
     const assigned = users.filter((user) => user.workoutPlan).length;
@@ -136,6 +136,7 @@ export default function UserWorkoutAssignment({
         </div>
       </div>
 
+      {/* search box*/}
       <div className="mb-6">
         <div className="relative">
           <input
