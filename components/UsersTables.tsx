@@ -200,13 +200,7 @@ export default function UserTrainerTable() {
                           </option>
                         ))}
                       </select>
-                      {/* <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                        {user.assignedTrainer ? (
-                          <TicketCheckIcon className="" />
-                          ) : (
-                            <></>
-                            )}
-                            </div> */}
+                      
                     </div>
                   </td>
                 </tr>
