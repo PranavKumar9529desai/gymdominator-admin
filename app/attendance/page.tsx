@@ -19,7 +19,9 @@ export default function AttendanceComponent() {
     year: "numeric",
   });
   // In a real application, this would be a unique identifier for the session
-  const qrValue = `gymdominator-attendance-${currentDate}`;
+  // TODO  create new token/string that is consist of the 
+  // token = trainer-name + today's day 
+  const qrValue = `gymdominator-attendance-${currentDate} and the unique token is pranav desai`;
 
   function QrcodeScanned() {
     console.log("qr code is scanned");
