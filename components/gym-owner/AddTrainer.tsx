@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import WarningAlert from "./alerts/WarningAlert";
+import WarningAlert from "../alerts/WarningAlert";
 
 export default function AddTrainer() {
   const [name, setName] = useState("");
