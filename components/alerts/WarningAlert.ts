@@ -4,19 +4,19 @@ import Swal from "sweetalert2";
 export default  function WarningAlert() {
   let Userchoice: boolean = false;
   Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
+    title: "Are you sure ",
+    text: "You want to create new workout plan!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!",
+    confirmButtonText: "Yes!",
   }).then((result) => {
     if (result.isConfirmed) {
       Userchoice = true;
       Swal.fire({
-        title: "Deleted!",
-        text: "Your file has been deleted.",
+        title: "Successs!",
+        text: "Workout is sucssfully created.",
         icon: "success",
       });
     }
