@@ -200,7 +200,6 @@ export default function UserTrainerTable() {
                           </option>
                         ))}
                       </select>
-                      
                     </div>
                   </td>
                 </tr>

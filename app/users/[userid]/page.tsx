@@ -1,30 +1,61 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
-import { Calendar, Phone, MapPin, TrendingUp, Award } from "lucide-react";
+import { Phone, MapPin, TrendingUp, Award, Calendar } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import UserProfileImage from "@/app/assests/profileImage.jpeg";
 
-// TODO add get user data from the backend 
+// TOOD send data to the backend
 export default function UserProfileCard() {
-  // Temporary data
-  const userData = {
-    // photo: "/placeholder.svg?height=80&width=80",
+  const [userData, setUserData] = useState({
     name: "John Doe",
     challengeName: "30-Day Fitness Challenge",
-    joinedDate: "May 1, 2023",
-    completionDate: "May 30, 2023",
-    contact: "+1 (123) 456-7890",
-    address: "123 Fitness Street, Gym City, 12345",
+    joinedDate: null as Date | null,
+    completionDate: null as Date | null,
+    contact: "",
+    address: "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleCheckProgress = () => {
-    console.log("Checking progress...");
-    // Add navigation or modal opening logic here
+  const handleDateChange = (
+    date: Date | null,
+    field: "joinedDate" | "completionDate"
+  ) => {
+    setUserData((prevData) => ({ ...prevData, [field]: date }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Submitting user data:", userData);
+    // Add logic to send data to backend here
+    alert("the new alert is triggred after the form submission");
   };
 
   return (
-    <div className=" bg-slate-600 flex  px-4 py-2  lg:w-full h-screen justify-center items-center lg:px-1 lg:py-1">
-      <div className="bg-white shadow-lg rounded-lg overflow-hidden max-w-md mx-auto container">
-        <div className="bg-gradient-to-tr from-blue-600 to-violet-600 text-white p-4">
+    <div className="bg-slate-100 flex px-4 py-2 lg:w-full min-h-screen justify-center items-center lg:px-1 lg:py-1">
+      <Card className="w-full max-w-md mx-auto">
+        <CardHeader className="bg-gradient-to-tr from-blue-600 to-violet-600 text-white p-4">
           <div className="flex items-center">
             <div className="relative w-20 h-20 mr-4">
               <Image
@@ -38,62 +69,119 @@ export default function UserProfileCard() {
             <div>
               <h2 className="text-2xl font-bold">{userData.name}</h2>
               <p className="text-blue-200 flex items-center text-nowrap text-sm lg:text-base">
-                <Award className="w-4 h-4 mr-1" />
+                <Award className="w-4 h-4 mr-1 text-yellow-400" />
                 {userData.challengeName}
               </p>
             </div>
           </div>
-        </div>
-        <div className="p-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="col-span-2">
-              <label className="text-sm text-gray-500 block mb-1">
-                Joined Date
-              </label>
-              <p className="font-semibold text-gray-800 flex items-center">
-                <Calendar className="w-4 h-4 mr-2 text-blue-600" />
-                {userData.joinedDate}
-              </p>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="p-6 space-y-4">
+            <div>
+              <Label htmlFor="joinedDate">Start Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !userData.joinedDate && "text-muted-foreground"
+                    )}
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {userData.joinedDate ? (
+                      format(userData.joinedDate, "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    // @ts-ignore
+                    selected={userData.joinedDate}
+                    // @ts-ignore
+                    onSelect={(date) => handleDateChange(date, "joinedDate")}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
-            <div className="col-span-2">
-              <label className="text-sm text-gray-500 block mb-1">
-                Completion Date
-              </label>
-              <p className="font-semibold text-gray-800 flex items-center">
-                <Calendar className="w-4 h-4 mr-2 text-blue-600" />
-                {userData.completionDate}
-              </p>
+            <div>
+              <Label htmlFor="completionDate">Completion Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !userData.completionDate && "text-muted-foreground"
+                    )}
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {userData.completionDate ? (
+                      format(userData.completionDate, "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    // @ts-ignore
+                    selected={userData.completionDate}
+                    onSelect={(date) =>
+                      // @ts-ignore
+                      handleDateChange(date, "completionDate")
+                    }
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
-            <div className="col-span-2">
-              <label className="text-sm text-gray-500 block mb-1">
-                Contact
-              </label>
-              <p className="font-semibold text-gray-800 flex items-center">
-                <Phone className="w-4 h-4 mr-2 text-blue-600" />
-                {userData.contact}
-              </p>
+            <div>
+              <Label htmlFor="contact">Contact</Label>
+              <div className="flex items-center">
+                <Phone className="w-4 h-4 mr-2 text-purple-600" />
+                <Input
+                  id="contact"
+                  name="contact"
+                  type="tel"
+                  value={userData.contact}
+                  onChange={handleInputChange}
+                  placeholder="Enter your phone number"
+                  required
+                />
+              </div>
             </div>
-            <div className="col-span-2">
-              <label className="text-sm text-gray-500 block mb-1">
-                Address
-              </label>
-              <p className="font-semibold text-gray-800 flex items-center">
-                <MapPin className="w-4 h-4 mr-2 text-blue-600" />
-                {userData.address}
-              </p>
+            <div>
+              <Label htmlFor="address">Address</Label>
+              <div className="flex items-center">
+                <MapPin className="w-4 h-4 mr-2 text-red-600" />
+                <Input
+                  id="address"
+                  name="address"
+                  type="text"
+                  value={userData.address}
+                  onChange={handleInputChange}
+                  placeholder="Enter your address (optional)"
+                />
+              </div>
             </div>
-          </div>
-          <button
-            // onClick={handleCheckProgress}
-            className="
-          bg-gradient-to-tr from-blue-600 to-violet-600 
-          mt-6 w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out flex items-center justify-center"
-          >
-            Check Progress
-            <TrendingUp className="ml-2 w-5 h-5" />
-          </button>
-        </div>
-      </div>
+          </CardContent>
+          <CardFooter>
+            <Button
+              type="submit"
+              className="w-full bg-gradient-to-tr from-blue-600 to-violet-600 "
+            >
+              Save Profile
+              <TrendingUp className="ml-2 w-5 h-5" />
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
     </div>
   );
 }
