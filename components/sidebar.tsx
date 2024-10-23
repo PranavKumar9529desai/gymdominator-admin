@@ -10,7 +10,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
+import IconImage from "@/app/assests/gymherosectionremovedbg.jpeg";
 export default function SideBar() {
   const [activePage, setActivePage] = useState<string>("Gym Details");
   const [isTrainerOpen, setIsTrainerOpen] = useState<boolean>(false);
@@ -103,7 +104,8 @@ export default function SideBar() {
     <div className="flex flex-col bg-gray-900 text-white w-full py-8 h-screen">
       <div className="flex items-center mb-8 px-2 relative left-1">
         <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-3">
-          {/* <img src={Gymdominator} alt="" className="cover" /> */}
+          {/* @ts-ignore */}
+          <Image src={IconImage}  className="" />
         </div>
         <h1 className="text-2xl font-bold">Gym Management</h1>
       </div>
@@ -113,7 +115,7 @@ export default function SideBar() {
           {menuItems.map((item) => (
             <li key={item.name} className="whitespace-nowrap group">
               <button
-              // @ts-ignore
+                // @ts-ignore
                 onClick={() => handleItemClick(item)}
                 className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200  
                   group-hover:bg-gray-800
@@ -148,7 +150,9 @@ export default function SideBar() {
                         <button
                           onClick={() => {
                             setActivePage(subItem.name);
-                            router.push(`/dashboard/attendance/${subItem.label}`);
+                            router.push(
+                              `/dashboard/attendance/${subItem.label}`
+                            );
                           }}
                           className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
                             activePage === subItem.name
@@ -164,11 +168,15 @@ export default function SideBar() {
                 </ul>
               )}
 
-         {/* Trainers subitem  */}
+              {/* Trainers subitem  */}
               {item.name === "Trainers" && isTrainerOpen && (
                 <ul className="ml-6 mt-2 space-y-2 transition-all duration-200 ease-in-out">
                   {trainerSubItems.map(
-                    (subItem: { name: string; link: string , label:string}) => (
+                    (subItem: {
+                      name: string;
+                      link: string;
+                      label: string;
+                    }) => (
                       <li key={subItem.name}>
                         <button
                           onClick={() => {
