@@ -173,7 +173,7 @@ export default function UserTrainerTable() {
               {filteredUsers.map((user) => (
                 <tr
                   onClick={() => {
-                    router.push(`/users/${user.id}`);
+                    router.push(`userstrainersassignment/users/${user.id}`);
                   }}
                   key={user.id}
                   className="border-b border-gray-200 hover:bg-gray-50 w-full h-full"

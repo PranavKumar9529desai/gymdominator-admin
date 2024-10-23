@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function SidebarGym() {
+export default function SideBar() {
   const [activePage, setActivePage] = useState<string>("Gym Details");
   const [isTrainerOpen, setIsTrainerOpen] = useState<boolean>(false);
   const [IsAttendanceOpen, setIsAttendanceOpen] = useState<boolean>(false);
@@ -19,6 +19,7 @@ export default function SidebarGym() {
   interface SubItmestype {
     name: string;
     link: string;
+    label: string;
   }
 
   interface menuItem {
@@ -29,8 +30,12 @@ export default function SidebarGym() {
     link?: string;
   }
   const AttendanceSubItems = [
-    { name: "Today's Attendance", link: "/attendance/today" },
-    { name: "Show QR", link: "/attendance/qr" },
+    {
+      name: "Today's Attendance",
+      link: "/attendance/today",
+      label: "todaysattendance",
+    },
+    { name: "Show QR", link: "/attendance/qr", label: "showqr" },
   ];
 
   const trainerSubItems = [
@@ -84,7 +89,7 @@ export default function SidebarGym() {
     if (item.label === "trainers" || item.label === "attendance") {
       console.log("no change in route");
     } else {
-      // router.push(`${item.label}`);
+      router.push(`/dashboard/${item.label}`);
     }
     if (item.name === "Attendance") {
       setIsAttendanceOpen(!IsAttendanceOpen);
@@ -93,10 +98,6 @@ export default function SidebarGym() {
       setIsTrainerOpen(!isTrainerOpen);
     }
   };
-
-  // useEffect(() => {
-  //   setActivePage(acRoute);
-  // }, [acRoute]);
 
   return (
     <div className="flex flex-col bg-gray-900 text-white w-full py-8 h-screen">
@@ -110,15 +111,16 @@ export default function SidebarGym() {
       <nav className="flex-grow">
         <ul className="space-y-3">
           {menuItems.map((item) => (
-            <li key={item.name}>
+            <li key={item.name} className="whitespace-nowrap group">
               <button
+              // @ts-ignore
                 onClick={() => handleItemClick(item)}
                 className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200  
-                  
+                  group-hover:bg-gray-800
             ${
               activePage === item.label
                 ? "bg-blue-700 text-white"
-                : "text-gray-300 hover:bg-gray-800"
+                : "text-gray-300 hover:text-4xl"
             }}`}
                 aria-expanded={
                   item.name === "Trainers" ? isTrainerOpen : undefined
@@ -137,12 +139,16 @@ export default function SidebarGym() {
               {item.name === "Attendance" && IsAttendanceOpen && (
                 <ul className="ml-6 mt-2 space-y-2 transition-all duration-200 ease-in-out">
                   {AttendanceSubItems.map(
-                    (subItem: { name: string; link: string }) => (
+                    (subItem: {
+                      name: string;
+                      link: string;
+                      label: string;
+                    }) => (
                       <li key={subItem.name}>
                         <button
                           onClick={() => {
                             setActivePage(subItem.name);
-                            // navigate(subItem.link);
+                            router.push(`/dashboard/attendance/${subItem.label}`);
                           }}
                           className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
                             activePage === subItem.name
@@ -158,15 +164,16 @@ export default function SidebarGym() {
                 </ul>
               )}
 
+         {/* Trainers subitem  */}
               {item.name === "Trainers" && isTrainerOpen && (
                 <ul className="ml-6 mt-2 space-y-2 transition-all duration-200 ease-in-out">
                   {trainerSubItems.map(
-                    (subItem: { name: string; link: string }) => (
+                    (subItem: { name: string; link: string , label:string}) => (
                       <li key={subItem.name}>
                         <button
                           onClick={() => {
                             setActivePage(subItem.name);
-                            // navigate(subItem.link);
+                            router.push(`/dashboard/trainers/${subItem.label}`);
                           }}
                           className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
                             activePage === subItem.name

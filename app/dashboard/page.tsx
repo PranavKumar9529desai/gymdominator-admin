@@ -4,9 +4,10 @@ import SidebarGym from "./sidebar";
 export default function page() {
   return (
     <>
-      <div className="w-[300px]">
-        <SidebarGym />
-      </div>
+    {/*  show the welcome page here  */}
+    <div className="text-4xl flex justify-center items-center w-full h-full">
+       this is welcome page 
+    </div>
     </>
   );
 }
