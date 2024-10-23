@@ -126,7 +126,7 @@ export default function SideBar() {
                   item.name === "Trainers" ? isTrainerOpen : undefined
                 }
               >
-                <item.icon className="w-5 h-5 mr-3" />
+                <item.icon className="w-5 h-5 mr-3 " />
                 <span>{item.name}</span>
                 {item.subItems &&
                   (isTrainerOpen ? (

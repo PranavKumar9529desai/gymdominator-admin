@@ -15,10 +15,25 @@ import {
 } from "@/components/ui/card";
 import WarningAlert from "../alerts/WarningAlert";
 
+type ShifType = "morning" | "evening";
+
+const ShiftArray = [
+  {
+    name: "Morning",
+    label: "morniong",
+  },
+  {
+    name: "Evening",
+    label: "evening",
+  },
+];
+
+// TODO do a backend call add the trainers to the api .
 export default function AddTrainer() {
   const [name, setName] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [rating, setRating] = useState(0);
+  const [shift, setShift] = useState<ShifType>("morning");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -46,8 +61,7 @@ export default function AddTrainer() {
           text: "Trainer is sucessfully created.",
           icon: "success",
         }).then(() => {
-          
-        console.log("now submitting the form");
+          console.log("now submitting the form");
           // submit the form
         });
       }
@@ -56,7 +70,7 @@ export default function AddTrainer() {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full h-full px-20 py-10">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">
           Add Trainer
@@ -88,6 +102,26 @@ export default function AddTrainer() {
             />
           </div>
           <div>
+            <label htmlFor="shift" className="text-sm">
+              Shift
+            </label>
+            <select
+              value={"morning"}
+              required
+              onChange={(e) => setShift(e.target.value as ShifType)}
+              className={`block w-full text-sm bg-white border text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
+            >
+              {ShiftArray.map((shift, index) => (
+                <>
+                  {/* <option value="Select Shift" key={index}>Select Shift</option> */}
+                  <option key={index} value={shift.name}>
+                    {shift.name}
+                  </option>
+                </>
+              ))}
+            </select>
+          </div>
+          <div>
             <Label htmlFor="image">Trainer Image</Label>
             <div className="flex items-center space-x-2">
               <Input
@@ -111,7 +145,7 @@ export default function AddTrainer() {
             </div>
           </div>
           <div>
-            <Label>Rating</Label>
+            <Label>Initial Rating</Label>
             <div className="flex items-center space-x-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star

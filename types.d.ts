@@ -1,3 +1,12 @@
+type gender = "Male" | "Female";
+
+interface mockUsersType {
+  id: number;
+  name: string;
+  gender: gender;
+  todaysAttendance: boolean;
+}
+
 interface FormData {
   username: string;
   password: string;
@@ -22,7 +31,6 @@ interface FetchUserType {
   data: User[];
 }
 
-
 interface User {
   id: number;
   name: string;
@@ -35,4 +43,3 @@ interface Trainer {
   id: number;
   name: string;
 }
-

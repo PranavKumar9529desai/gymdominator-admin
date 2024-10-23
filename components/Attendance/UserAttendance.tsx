@@ -22,50 +22,38 @@ import {
   UserCheck,
   Search,
   Clock,
+  UserX,
   Users as UsersIcon,
 } from "lucide-react";
-
+// TODO do a backend call get the array from the api
 // Mock data
+
 const mockUsers = [
   {
     id: 1,
     name: "John Doe",
     gender: "Male",
     shift: "Morning",
-    lastAttendance: "2023-05-15",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    gender: "Female",
-    shift: "Evening",
-    lastAttendance: "2023-05-14",
+    todaysAttendance: false,
   },
   {
     id: 3,
     name: "Bob Johnson",
     gender: "Male",
     shift: "Morning",
-    lastAttendance: "2023-05-15",
-  },
-  {
-    id: 4,
-    name: "Alice Brown",
-    gender: "Female",
-    shift: "Afternoon",
-    lastAttendance: "2023-05-13",
+    todaysAttendance: true,
   },
   {
     id: 5,
     name: "Charlie Wilson",
     gender: "Male",
     shift: "Evening",
-    lastAttendance: "2023-05-15",
+    todaysAttendance: true,
   },
 ];
 
 export default function UserAttendance() {
-  // mock users data from the backend  
+  // mock users data from the backend
   const [users, setUsers] = useState(mockUsers);
   const [filteredUsers, setFilteredUsers] = useState(mockUsers);
   const [searchTerm, setSearchTerm] = useState("");
@@ -89,8 +77,10 @@ export default function UserAttendance() {
   }, [searchTerm, shiftFilter, genderFilter, users]);
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 lg:text-left text-center lg:my-4 my-2">User Attendance</h1>
+    <div className="container mx-auto p-6 space-y-6 lg:px-5">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 lg:text-left text-center lg:my-4 my-2">
+        User Attendance
+      </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <Card className="bg-gradient-to-br from-purple-500 to-indigo-600">
@@ -98,10 +88,10 @@ export default function UserAttendance() {
             <CardTitle className="text-sm font-medium text-white">
               Total Users
             </CardTitle>
-            <Users className="h-4 w-4 text-white" />
+            <Users className="h-10 w-10 text-white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{users.length}</div>
+            <div className="text-4xl font-bold text-white">{users.length}</div>
           </CardContent>
         </Card>
         <Card className="bg-gradient-to-br from-pink-500 to-rose-600">
@@ -109,10 +99,10 @@ export default function UserAttendance() {
             <CardTitle className="text-sm font-medium text-white">
               Filtered Users
             </CardTitle>
-            <UserCheck className="h-4 w-4 text-white" />
+            <UserCheck className="h-10 w-10 text-white" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">
+            <div className="text-4xl font-bold text-white">
               {filteredUsers.length}
             </div>
           </CardContent>
@@ -164,7 +154,7 @@ export default function UserAttendance() {
               <TableHead>Name</TableHead>
               <TableHead>Gender</TableHead>
               <TableHead>Shift</TableHead>
-              <TableHead>Last Attendance</TableHead>
+              <TableHead>Attendance</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -173,7 +163,13 @@ export default function UserAttendance() {
                 <TableCell className="font-medium">{user.name}</TableCell>
                 <TableCell>{user.gender}</TableCell>
                 <TableCell>{user.shift}</TableCell>
-                <TableCell>{user.lastAttendance}</TableCell>
+                <TableCell className="">
+                  {user.todaysAttendance == true ? (
+                    <UserCheck className="text-green-600" />
+                  ) : (
+                    <UserX className="text-red-600" />
+                  )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -191,7 +187,7 @@ export default function UserAttendance() {
               <div className="">Name: {user.name}</div>
               <div>Gender : {user.gender}</div>
               <div>Shift : {user.shift}</div>
-              <div>last Attendance : {user.lastAttendance}</div>
+              <div>Attendance : </div>
             </div>
           );
         })}
