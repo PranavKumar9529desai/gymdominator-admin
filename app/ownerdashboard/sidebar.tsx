@@ -11,9 +11,9 @@ import {
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import IconImage from "@/app/assests/gymherosectionremovedbg.jpeg";
+import IconImage from "@/app/assests/gym-manager.webp";
 export default function SideBar() {
-  const [activePage, setActivePage] = useState<string>("Gym Details");
+  const [activePage, setActivePage] = useState<string>("gymdetails");
   const [isTrainerOpen, setIsTrainerOpen] = useState<boolean>(false);
   const [IsAttendanceOpen, setIsAttendanceOpen] = useState<boolean>(false);
   const router = useRouter();
@@ -90,7 +90,7 @@ export default function SideBar() {
     if (item.label === "trainers" || item.label === "attendance") {
       console.log("no change in route");
     } else {
-      router.push(`/dashboard/${item.label}`);
+      router.push(`/ownerdashboard/${item.label}`);
     }
     if (item.name === "Attendance") {
       setIsAttendanceOpen(!IsAttendanceOpen);
@@ -101,13 +101,12 @@ export default function SideBar() {
   };
 
   return (
-    <div className="flex flex-col bg-gray-900 text-white w-full py-8 h-screen">
-      <div className="flex items-center mb-8 px-2 relative left-1">
-        <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-3">
-          {/* @ts-ignore */}
-          <Image src={IconImage}  className="" />
-        </div>
-        <h1 className="text-2xl font-bold">Gym Management</h1>
+    <div className="flex flex-col bg-gray-900 text-white w-full  h-screen">
+      <div className="rounded-full w-30 h-25flex items-center justify-center ">
+        <Image src={IconImage} alt="Inconimage" className="object-cover  w-full h-full  rounded-full" />
+        {/* <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-3">
+        </div> */}
+        {/* <h1 className="text-2xl font-bold">Gym Management</h1> */}
       </div>
 
       <nav className="flex-grow">
@@ -121,7 +120,7 @@ export default function SideBar() {
                   group-hover:bg-gray-800
             ${
               activePage === item.label
-                ? "bg-blue-700 text-white"
+                ? "!bg-blue-700 text-white "
                 : "text-gray-300 hover:text-4xl"
             }}`}
                 aria-expanded={
@@ -151,7 +150,7 @@ export default function SideBar() {
                           onClick={() => {
                             setActivePage(subItem.name);
                             router.push(
-                              `/dashboard/attendance/${subItem.label}`
+                              `/ownerdashboard/attendance/${subItem.label}`
                             );
                           }}
                           className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
@@ -181,7 +180,7 @@ export default function SideBar() {
                         <button
                           onClick={() => {
                             setActivePage(subItem.name);
-                            router.push(`/dashboard/trainers/${subItem.label}`);
+                            router.push(`/ownerdashboard/trainers/${subItem.label}`);
                           }}
                           className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
                             activePage === subItem.name

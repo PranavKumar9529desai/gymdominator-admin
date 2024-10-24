@@ -1,5 +1,5 @@
 import React from "react";
-import SidebarGym from "@/components/sidebar";
+import SidebarGym from "./sidebar";
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <>

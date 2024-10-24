@@ -10,8 +10,9 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-export default function SidebarGym() {
+import Image from "next/image";
+import IconImage from "@/app/assests/gym-manager.webp";
+export default function SideBar() {
   const [activePage, setActivePage] = useState<string>("Gym Details");
   const [isTrainerOpen, setIsTrainerOpen] = useState<boolean>(false);
   const [IsAttendanceOpen, setIsAttendanceOpen] = useState<boolean>(false);
@@ -19,6 +20,7 @@ export default function SidebarGym() {
   interface SubItmestype {
     name: string;
     link: string;
+    label: string;
   }
 
   interface menuItem {
@@ -29,8 +31,12 @@ export default function SidebarGym() {
     link?: string;
   }
   const AttendanceSubItems = [
-    { name: "Today's Attendance", link: "/attendance/today" },
-    { name: "Show QR", link: "/attendance/qr" },
+    {
+      name: "Today's Attendance",
+      link: "/attendance/today",
+      label: "todaysattendance",
+    },
+    { name: "Show QR", link: "/attendance/qr", label: "showqr" },
   ];
 
   const trainerSubItems = [
@@ -84,7 +90,7 @@ export default function SidebarGym() {
     if (item.label === "trainers" || item.label === "attendance") {
       console.log("no change in route");
     } else {
-      // router.push(`${item.label}`);
+      router.push(`/dashboard/${item.label}`);
     }
     if (item.name === "Attendance") {
       setIsAttendanceOpen(!IsAttendanceOpen);
@@ -94,37 +100,34 @@ export default function SidebarGym() {
     }
   };
 
-  // useEffect(() => {
-  //   setActivePage(acRoute);
-  // }, [acRoute]);
-
   return (
-    <div className="flex flex-col bg-gray-900 text-white w-full py-8 h-screen">
-      <div className="flex items-center mb-8 px-2 relative left-1">
-        <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-3">
-          {/* <img src={Gymdominator} alt="" className="cover" /> */}
-        </div>
-        <h1 className="text-2xl font-bold">Gym Management</h1>
+    <div className="flex flex-col bg-gray-900 text-white w-full  h-screen">
+      <div className="rounded-full w-30 h-25flex items-center justify-center ">
+        <Image src={IconImage} alt="Inconimage" className="object-cover  w-full h-full  rounded-full" />
+        {/* <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-3">
+        </div> */}
+        {/* <h1 className="text-2xl font-bold">Gym Management</h1> */}
       </div>
 
       <nav className="flex-grow">
         <ul className="space-y-3">
           {menuItems.map((item) => (
-            <li key={item.name}>
+            <li key={item.name} className="whitespace-nowrap group">
               <button
+                // @ts-ignore
                 onClick={() => handleItemClick(item)}
                 className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200  
-                  
+                  group-hover:bg-gray-800
             ${
               activePage === item.label
-                ? "bg-blue-700 text-white"
-                : "text-gray-300 hover:bg-gray-800"
+                ? "bg-blue-700 text-white "
+                : "text-gray-300 hover:text-4xl"
             }}`}
                 aria-expanded={
                   item.name === "Trainers" ? isTrainerOpen : undefined
                 }
               >
-                <item.icon className="w-5 h-5 mr-3" />
+                <item.icon className="w-5 h-5 mr-3 " />
                 <span>{item.name}</span>
                 {item.subItems &&
                   (isTrainerOpen ? (
@@ -137,12 +140,18 @@ export default function SidebarGym() {
               {item.name === "Attendance" && IsAttendanceOpen && (
                 <ul className="ml-6 mt-2 space-y-2 transition-all duration-200 ease-in-out">
                   {AttendanceSubItems.map(
-                    (subItem: { name: string; link: string }) => (
+                    (subItem: {
+                      name: string;
+                      link: string;
+                      label: string;
+                    }) => (
                       <li key={subItem.name}>
                         <button
                           onClick={() => {
                             setActivePage(subItem.name);
-                            // navigate(subItem.link);
+                            router.push(
+                              `/dashboard/attendance/${subItem.label}`
+                            );
                           }}
                           className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
                             activePage === subItem.name
@@ -158,15 +167,20 @@ export default function SidebarGym() {
                 </ul>
               )}
 
+              {/* Trainers subitem  */}
               {item.name === "Trainers" && isTrainerOpen && (
                 <ul className="ml-6 mt-2 space-y-2 transition-all duration-200 ease-in-out">
                   {trainerSubItems.map(
-                    (subItem: { name: string; link: string }) => (
+                    (subItem: {
+                      name: string;
+                      link: string;
+                      label: string;
+                    }) => (
                       <li key={subItem.name}>
                         <button
                           onClick={() => {
                             setActivePage(subItem.name);
-                            // navigate(subItem.link);
+                            router.push(`/dashboard/trainers/${subItem.label}`);
                           }}
                           className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
                             activePage === subItem.name

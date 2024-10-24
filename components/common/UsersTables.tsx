@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { Users, UserCheck, UserX } from "lucide-react";
 import FetchUser from "@/app/utils/FetchUser";
-import UserTrainerTableSkeleton from "./Skeltons/UserTabelsSkelton";
+import UserTrainerTableSkeleton from "@/components/Skeltons/UserTabelsSkelton";
 import { useRouter } from "next/navigation";
 
 interface User {
