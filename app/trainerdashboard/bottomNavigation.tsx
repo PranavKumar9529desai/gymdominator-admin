@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type Route = "addworkout" | "assignworkout" | "attendance";
 
@@ -34,10 +34,13 @@ interface SubRoute {
 
 export default function BottomNavigation() {
   const [activeRoute, setActiveRoute] = useState<Route | null>(null);
+  const [isActive, setisActive] = useState<Route>();
   const [isClosing, setIsClosing] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
+  // TODO if possible only show the unassigned users
 
   const router = useRouter();
+  let currentPath = usePathname();
   const navItems: NavItem[] = [
     {
       icon: <Dumbbell className="h-6 w-6" />,
@@ -134,6 +137,14 @@ export default function BottomNavigation() {
     </div>
   );
 
+  useEffect(() => {
+    console.log("active route is ", activeRoute);
+    let routefrompath = currentPath.split("/")[2];
+    console.log(routefrompath);
+    // @ts-ignore`
+    setisActive(routefrompath);
+  }, [activeRoute, currentPath]);
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10">
       <div className="relative">
@@ -146,7 +157,7 @@ export default function BottomNavigation() {
             key={item.route}
             className={cn(
               "flex flex-col items-center justify-center h-full w-full text-white",
-              activeRoute === item.route ? "bg-blue-700" : ""
+              isActive === item.route ? "bg-blue-700" : ""
             )}
             onClick={() => handleNavClick(item.route)}
           >

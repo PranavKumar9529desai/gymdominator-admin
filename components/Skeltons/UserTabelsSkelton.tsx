@@ -1,10 +1,10 @@
-import React from 'react'
-import { Users, UserCheck, UserX, ChevronDown } from 'lucide-react'
+import React from "react";
+import { Users, UserCheck, UserX, ChevronDown } from "lucide-react";
 
 export default function UserTrainerTableSkeleton() {
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">
         User-Trainer Assignment
       </h1>
 
@@ -63,7 +63,9 @@ export default function UserTrainerTableSkeleton() {
             ))}
           </tbody>
         </table>
+
+        {/* mobile view   */}
       </div>
     </div>
-  )
+  );
 }

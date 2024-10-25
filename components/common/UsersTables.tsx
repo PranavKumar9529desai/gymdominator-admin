@@ -19,7 +19,7 @@ interface Trainer {
   id: number;
   name: string;
 }
-
+// only show the unassigned users
 export default function UserTrainerTable() {
   const router = useRouter();
   const [isloading, setisloading] = useState<boolean>(true);
@@ -98,8 +98,8 @@ export default function UserTrainerTable() {
     );
   } else {
     return (
-      <div className="container mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">
+      <div className="container mx-auto p-6 pb-14">
+        <h1 className="text-center w-full lg:text-left text-xl font-bold mb-6 text-gray-800">
           User-Trainer Assignment
         </h1>
 

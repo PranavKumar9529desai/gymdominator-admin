@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 type Route =
   | "gymdetails"
@@ -39,7 +39,8 @@ export default function BottomNavigation() {
   const [activeRoute, setActiveRoute] = useState<Route | null>(null);
   const [isClosing, setIsClosing] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
-
+  const [isActive, setisActive] = useState<Route>("userstrainersassignment");
+  let currentPath = usePathname();
   const router = useRouter();
   const navItems: NavItem[] = [
     {
@@ -105,20 +106,28 @@ export default function BottomNavigation() {
   const closeSubRoutes = () => {
     setIsClosing(true);
     setTimeout(() => {
-      setActiveRoute(null);
+      setActiveRoute(activeRoute);
       setIsClosing(false);
+      setActiveRoute(null);
     }, 300); // Match this with the CSS transition time
   };
 
   const handleNavClick = (route: Route) => {
     if (activeRoute === route) {
+      let temp = route;
       closeSubRoutes();
+      setActiveRoute(temp);
     } else {
       openSubRoutes(route);
     }
     if (route !== "trainers" && route !== "attendance") {
+      const isTrainerSubRoute = currentPath.startsWith(
+        `/ownerdashboard/trainers`
+      );
+      const isAttendanceSubRoute = currentPath.startsWith(
+        `/ownerdashboard/attendance`
+      );
       router.push(`/ownerdashboard/${route}`);
-      console.log(`Navigate to ${route}`);
     }
   };
 
@@ -156,6 +165,14 @@ export default function BottomNavigation() {
     </div>
   );
 
+  useEffect(() => {
+    console.log("active route is ", activeRoute);
+    let routefrompath = currentPath.split("/")[2];
+    console.log(routefrompath);
+    // @ts-ignore`
+    setisActive(routefrompath);
+  }, [activeRoute, currentPath]);
+
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10">
       <div className="relative">
@@ -170,7 +187,7 @@ export default function BottomNavigation() {
             key={item.route}
             className={cn(
               "flex flex-col items-center justify-center h-full w-full text-white",
-              activeRoute === item.route ? "bg-blue-700" : ""
+              isActive === item.route ? "bg-blue-700" : ""
             )}
             onClick={() => handleNavClick(item.route)}
           >

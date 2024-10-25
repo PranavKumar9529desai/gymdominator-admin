@@ -35,8 +35,8 @@ export default function AttendanceComponent() {
     console.log("qr code is scanned");
   }
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden">
+    <div className="min-h-screen flex lg:items-center justify-center px-2 pt-2">
+      <Card className="w-full max-w-md bg-white shadow-xl overflow-hidden">
         <CardHeader className={`bg-primary`}>
           <CardTitle className="text-3xl font-extrabold text-center text-primary-foreground ">
             {/* <Image src={GymManagar} alt="GymManagar Image " className="o" /> */}
@@ -49,12 +49,12 @@ export default function AttendanceComponent() {
               <QRCodeSVG value={qrValue} size={256} />
             </div>
           </div>
-          <div className="text-xl font-semibold text-primary bg-primary-foreground px-4 py-2 rounded-full">
+          <div className="text-2xl font-bold text-primary bg-primary-foreground px-4 py-2 rounded-full ">
             {currentDate}
           </div>
           {/* <DateComponent /> */}
         </CardContent>
-        <CardFooter className="flex justify-between p-6 bg-gray-50 flex-col lg:flex-row gap-4">
+        <CardFooter className="flex justify-between p-6 bg-gray-50  lg:flex-row gap-2">
           <Button
             variant="default"
             className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold py-2 px-4 rounded-full transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md"

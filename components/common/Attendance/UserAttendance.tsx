@@ -177,17 +177,22 @@ export default function UserAttendance() {
       </div>
       {/* mobile view */}
 
-      <div className="lg:hidden block">
+      <div className="lg:hidden block pb-10">
         {filteredUsers.map((user) => {
           return (
             <div
               key={user.id}
-              className="flex  flex-col items-start  border-b-2 py-4 space-y-2 *:font-semibold"
+              className="flex  flex-col items-start  border-b-2 py-4 space-y-2 font-semibold"
             >
-              <div className="">Name: {user.name}</div>
-              <div>Gender : {user.gender}</div>
-              <div>Shift : {user.shift}</div>
-              <div>Attendance : </div>
+              <div className="">
+                <div className="">Name: {user.name}</div>
+                <div>Gender : {user.gender}</div>
+                <div>Shift : {user.shift}</div>
+              </div>
+              <div className="flex h-6 items-center gap-2">
+                <div>Today's Attendance :</div>
+                <UserX className="text-red-600 h-5" />
+              </div>
             </div>
           );
         })}
