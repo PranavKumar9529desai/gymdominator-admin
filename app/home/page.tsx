@@ -1,84 +1,87 @@
 import { Button } from "@/components/ui/button";
 import LogoImage from "@/app/assests/gymd.webp";
 import TestimonialCard from "./TestimonialsCard";
-import {
-  ArrowRight,
-  BarChart2,
-  Users,
-  Calendar,
-  LucideIcon,
-} from "lucide-react";
+import { ArrowRight, BarChart2, Users, Calendar } from "lucide-react";
 import Image from "next/image";
 import FeatureCard from "./FeatureCard";
+import { redirect } from "next/navigation";
+import CustomButton from "./CustomButton";
 export default function HeroSection() {
   return (
-    <div className="bg-gradient-to-b from-gray-900 to-black text-white min-h-screen ">
-      <div className="container mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
-              Elevate Your
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 block">
-                Gym Management
-              </span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-2xl">
-              Streamline operations, enhance member experience, and drive growth
-              with our sophisticated management suite.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-all duration-200 ease-in-out transform hover:scale-105">
-                Get Started
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button
-                variant="outline"
-                className="bg-transparent border-2 border-gray-300 text-gray-300 hover:bg-gray-300 hover:text-gray-900 font-bold py-3 px-6 rounded-full text-lg transition-all duration-200 ease-in-out"
-              >
-                Learn More
-              </Button>
+    <main className="bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900 text-white min-h-screen">
+      <section className="pb-12 lg:pb-0">
+        <div className="container mx-auto px-4 py-2 sm:px-6 sm:py-24 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2  sm:gap-12 items-center">
+            <div className="space-y-8 lg:order-1 order-2">
+              <h1 className="text-3xl sm:text-2xl lg:text-6xl font-extrabold leading-tight  text-center lg:text-left">
+                Elevate Your
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 block">
+                  Gym Management
+                </span>
+              </h1>
+              <p className="text-lg  lg:text-xl text-gray-300 max-w-2xl hidden sm:block">
+                Streamline operations, enhance member experience, and drive
+                growth with our sophisticated management suite.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex justify-center ">
+                  <CustomButton />
+                </div>
+                <Button
+                  variant="outline"
+                  className=" hidden sm:flex bg-transparent border-2 border-gray-300 text-gray-300 hover:bg-gray-300 hover:text-gray-900 font-bold py-3 px-6 rounded-full sm:text-lg transition-all duration-200 ease-in-out"
+                >
+                  Learn More
+                </Button>
+              </div>
             </div>
-          </div>
-          <div className="flex justify-center lg:justify-end">
-            <div className="relative w-72 h-72 sm:w-96 sm:h-96">
-              <div className="absolute inset-0 bg-blue-300 sm:bg-blue-400 opacity-90 sm:opacity-80 rounded-full blur-3xl"></div>
-              <Image
-                src={LogoImage}
-                alt="Gym Manager Logo"
-                className="relative z-10 w-full h-full object-cover mix-blend-darken "
-              />
+            <div className="flex justify-center lg:justify-center lg:order-2 order-1">
+              <div className="relative w-72 h-72 sm:w-96 sm:h-96">
+                <div className="absolute inset-0 bg-blue-400 opacity-90 sm:opacity-75 rounded-full blur-3xl"></div>
+                <Image
+                  src={LogoImage}
+                  alt="GymDominator Logo"
+                  className="relative z-10 w-full h-full object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
-        <div className="mt-20 grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {/*  @ts-nocheck */}
-          <FeatureCard
-            Icon={BarChart2}
-            title="Performance Tracking"
-            description="Monitor gym metrics and member progress"
-          />
-          <FeatureCard
-            Icon={Users}
-            title="Member Management"
-            description="Efficiently handle memberships and billing"
-          />
-          <FeatureCard
-            Icon={Calendar}
-            title="Class Scheduling"
-            description="Organize and optimize your class timetables"
-          />
+      </section>
+
+      {/* features section */}
+      <section className="py-20 bg-gray-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center mb-12">Key Features</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <FeatureCard
+              Icon={BarChart2}
+              title="Performance Tracking"
+              description="Monitor gym metrics and member progress"
+            />
+            <FeatureCard
+              Icon={Users}
+              title="Member Management"
+              description="Efficiently handle memberships and billing"
+            />
+            <FeatureCard
+              Icon={Calendar}
+              title="Class Scheduling"
+              description="Organize and optimize your class timetables"
+            />
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 bg-gray-900 flex ">
+      <section className="py-20 bg-gray-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12">
             What Our Clients Say
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <TestimonialCard
-              quote="Gym Manager revolutionized our operations. We've seen a 30% increase in member retention since implementing it."
+              quote="GymDominator revolutionized our operations. We've seen a 30% increase in member retention since implementing it."
               author="Sarah Johnson"
               role="Fitness Center Owner"
             />
@@ -219,7 +222,7 @@ export default function HeroSection() {
           </div>
           <div className="mt-12 pt-8 border-t border-gray-700 flex flex-col sm:flex-row justify-between items-center">
             <p className="text-gray-400">
-              &copy; 2024 Gym Manager. All rights reserved.
+              &copy; 2024 GymDominator. All rights reserved.
             </p>
             <div className="flex space-x-4 mt-4 sm:mt-0">
               <a
@@ -276,6 +279,6 @@ export default function HeroSection() {
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   );
 }
