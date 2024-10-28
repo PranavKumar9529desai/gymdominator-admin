@@ -4,7 +4,9 @@ import React from "react";
 export default function page() {
   return (
     <>
-      <AddTrainer />
+      <div className="px-4 py-10 w-full h-full  flex justify-center items-center">
+        <AddTrainer />
+      </div>
     </>
   );
 }

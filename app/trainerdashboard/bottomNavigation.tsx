@@ -1,109 +1,133 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import {
-  Home,
   Users,
-  ClipboardList,
   UserCheck,
   Dumbbell,
+  UtensilsCrossed,
+  ClipboardList,
+  CalendarCheck,
   ChevronDown,
   Eye,
-  UserPlus,
-  CalendarCheck,
+  Edit,
   QrCode,
-  Route,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 
-type Route = "addworkout" | "assignworkout" | "attendance";
-
-interface NavItem {
-  icon: React.ReactNode;
+interface SubItem {
+  name: string;
+  link: string;
   label: string;
-  route: Route;
+  icon?: React.ElementType;
 }
 
-interface SubRoute {
-  icon: React.ReactNode;
+interface MenuItem {
+  name: string;
+  icon: React.ElementType;
   label: string;
-  route: string;
-  onClick: () => void;
+  link?: string;
+  subItems?: SubItem[];
 }
 
 export default function BottomNavigation() {
-  const [activeRoute, setActiveRoute] = useState<Route | null>(null);
-  const [isActive, setisActive] = useState<Route>();
+  const [activeRoute, setActiveRoute] = useState<string | null>(null);
   const [isClosing, setIsClosing] = useState(false);
   const [isOpening, setIsOpening] = useState(false);
-  // TODO if possible only show the unassigned users
-
+  const pathname = usePathname();
   const router = useRouter();
-  let currentPath = usePathname();
-  const navItems: NavItem[] = [
+
+  const menuItems: MenuItem[] = [
     {
-      icon: <Dumbbell className="h-6 w-6" />,
-      label: "Workouts",
-      route: "addworkout",
+      name: "Workouts",
+      label: "workouts",
+      icon: Dumbbell,
+      subItems: [
+        {
+          name: "Create Workouts",
+          label: "addworkout",
+          icon: ClipboardList,
+          link: "/workouts/addworkout", // Add a link if needed
+      
+        },
+        {
+          name: "Assign Workout",
+          label: "assignworkout",
+          icon: UserCheck,
+          link: "/workouts/assignworkout", // Add a link if needed
+        },
+      ],
     },
     {
-      icon: <ClipboardList className="h-6 w-6" />,
-      label: "Assignments",
-      route: "assignworkout",
+      name: "Diet",
+      label: "diet",
+      icon: UtensilsCrossed,
+      subItems: [
+        {
+          name: "Create diet-plan",
+          label: "createdietplan",
+          icon: ClipboardList,
+          link: "/diet/createdietplan", // Add a link if needed
+        },
+        {
+          name: "Assign Diet plan",
+          label: "assigndietplan",
+          icon: UserCheck,
+          link: "/diet/assigndietplan", // Add a link if needed
+        },
+      ],
     },
     {
-      icon: <UserCheck className="h-6 w-6" />,
-      label: "Attendance",
-      route: "attendance",
+      name: "Attendance",
+      icon: CalendarCheck,
+      label: "attendance",
+      subItems: [
+        {
+          name: "Today's Attendance",
+          label: "todaysattendance",
+          icon: CalendarCheck,
+          link: "/attendance/todaysattendance", // Add a link if needed
+        },
+        {
+          name: "Show QR",
+          label: "showqr",
+          icon: QrCode,
+          link: "/attendance/showqr", // Add a link if needed
+        },
+      ],
     },
   ];
 
-  const attendanceSubRoutes: SubRoute[] = [
-    {
-      icon: <CalendarCheck className="h-6 w-6 text-indigo-500" />,
-      label: "Today's Attendance",
-      route: "todaysattendance",
-      onClick: () => console.log("Navigate to Today's Attendance"),
-    },
-    {
-      icon: <QrCode className="h-6 w-6 text-indigo-500" />,
-      label: "Show Qr",
-      route: "showqr",
-      onClick: () => console.log("Navigate to Show QR"),
-    },
-  ];
-
-  const openSubRoutes = (route: Route) => {
+  const openSubRoutes = (label: string) => {
     setIsOpening(true);
-    setActiveRoute(route);
+    setActiveRoute(label);
     setTimeout(() => {
       setIsOpening(false);
-    }, 200); // Quick opening animation
+    }, 200);
   };
 
   const closeSubRoutes = () => {
     setIsClosing(true);
     setTimeout(() => {
-      setActiveRoute(null);
       setIsClosing(false);
-    }, 300); // Match this with the CSS transition time
+      setActiveRoute(null);
+    }, 300);
   };
 
-  const handleNavClick = (route: Route) => {
-    if (activeRoute === route) {
+  const handleNavClick = (item: MenuItem) => {
+    if (activeRoute === item.label) {
       closeSubRoutes();
-    } else {
-      openSubRoutes(route);
-    }
-    // route which has subroutes that routes changed after the user selects the route the subroutes
-    if (route !== "attendance") {
-      console.log(`Navigate to ${route}`);
-      router.push(`/trainerdashboard/${route}`);
+    } else if (item.subItems) {
+      openSubRoutes(item.label);
+    } else if (item.link) {
+      router.push(`/trainerdashboard/${item.link}`);
+      setActiveRoute(item.label);
     }
   };
 
-  const renderSubRoutes = (subRoutes: SubRoute[], title: string) => (
+  const renderSubRoutes = (subItems: SubItem[], title: string) => (
     <div
       className={cn(
         "absolute left-0 right-0 bg-white p-4 rounded-t-lg shadow-lg transition-all duration-300 ease-in-out",
@@ -118,19 +142,20 @@ export default function BottomNavigation() {
       </div>
       <h2 className="text-xl font-bold text-center mb-4">{title}</h2>
       <div className="space-y-2">
-        {subRoutes.map((subRoute, index) => (
+        {subItems.map((subItem, index) => (
           <Button
             key={index}
             variant="outline"
             className="flex items-center justify-start w-full p-4 bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors"
             onClick={() => {
-              subRoute.onClick();
-              router.push(`/trainerdashboard/${activeRoute}/${subRoute.route}`);
+              router.push(`/trainerdashboard/${subItem.link}`);
               closeSubRoutes();
             }}
           >
-            {subRoute.icon}
-            <span className="ml-4 text-sm font-medium">{subRoute.label}</span>
+            {subItem.icon && (
+              <subItem.icon className="h-5 w-5 mr-3 text-blue-600" />
+            )}
+            <span className="text-sm font-medium">{subItem.name}</span>
           </Button>
         ))}
       </div>
@@ -138,33 +163,42 @@ export default function BottomNavigation() {
   );
 
   useEffect(() => {
-    console.log("active route is ", activeRoute);
-    let routefrompath = currentPath.split("/")[2];
-    console.log(routefrompath);
-    // @ts-ignore`
-    setisActive(routefrompath);
-  }, [activeRoute, currentPath]);
+    const currentMainRoute = pathname.split("/")[2];
+    const activeMenuItem = menuItems.find(
+      (item) => item.label === currentMainRoute
+    );
+    if (activeMenuItem) {
+      setActiveRoute(activeMenuItem.label);
+    }
+  }, [pathname]);
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10">
       <div className="relative">
-        {activeRoute === "attendance" &&
-          renderSubRoutes(attendanceSubRoutes, "Attendance Options")}
+        {activeRoute &&
+          menuItems.find((item) => item.label === activeRoute)?.subItems &&
+          renderSubRoutes(
+            menuItems.find((item) => item.label === activeRoute)!.subItems!,
+            menuItems.find((item) => item.label === activeRoute)!.name
+          )}
       </div>
       <nav className="flex justify-around items-center h-16 bg-gray-700">
-        {navItems.map((item) => (
-          <button
-            key={item.route}
-            className={cn(
-              "flex flex-col items-center justify-center h-full w-full text-white",
-              isActive === item.route ? "bg-blue-700" : ""
-            )}
-            onClick={() => handleNavClick(item.route)}
-          >
-            {item.icon}
-            <span className="text-xs mt-1">{item.label}</span>
-          </button>
-        ))}
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.label}
+              className={cn(
+                "flex flex-col items-center justify-center h-full w-full text-white",
+                activeRoute === item.label ? "bg-blue-700" : ""
+              )}
+              onClick={() => handleNavClick(item)}
+            >
+              <Icon className="h-6 w-6" />
+              <span className="text-xs mt-1">{item.name}</span>
+            </button>
+          );
+        })}
       </nav>
     </div>
   );

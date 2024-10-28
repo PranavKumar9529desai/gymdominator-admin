@@ -1,9 +1,11 @@
+import { LucideProps } from "lucide-react";
+
 export default function FeatureCard({
   Icon,
   title,
   description,
 }: {
-  Icon: React.ComponentType<{ className: "string" }>;
+  Icon: React.ComponentType<LucideProps>;
   title: string;
   description: string;
 }) {

@@ -4,12 +4,11 @@ import TestimonialCard from "./TestimonialsCard";
 import { ArrowRight, BarChart2, Users, Calendar } from "lucide-react";
 import Image from "next/image";
 import FeatureCard from "./FeatureCard";
-import { redirect } from "next/navigation";
 import CustomButton from "./CustomButton";
 export default function HeroSection() {
   return (
     <main className="bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900 text-white min-h-screen">
-      <section className="pb-12 lg:pb-0">
+      <section className="pb-12 lg:pb-24">
         <div className="container mx-auto px-4 py-2 sm:px-6 sm:py-24 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2  sm:gap-12 items-center">
             <div className="space-y-8 lg:order-1 order-2">

@@ -70,7 +70,7 @@ export default function AddTrainer() {
   };
 
   return (
-    <Card className="w-full h-full px-20 py-10">
+    <Card className="w-full h-full ">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">
           Add Trainer
@@ -162,7 +162,7 @@ export default function AddTrainer() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full bg-gradient-to-tr from-blue-600 to-violet-600 ">
             Add Trainer
           </Button>
         </CardFooter>

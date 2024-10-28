@@ -1,10 +1,10 @@
-import AttendanceComponent from "@/components/trainer/showqr/page";
+import AssignDietPlan from "@/components/trainer/AssignDietPlan";
 import React from "react";
 
 export default function page() {
   return (
     <div>
-      <AttendanceComponent />
+      <AssignDietPlan />
     </div>
   );
 }

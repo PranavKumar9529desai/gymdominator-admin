@@ -1,198 +1,168 @@
 "use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import {
   ChevronRight,
   ChevronDown,
   Users,
   ClipboardList,
   CalendarCheck,
-  QrCode,
   UserCheck,
+  Settings,
+  LogOut,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import IconImage from "@/app/assests/gym-manager.webp";
-export default function SideBar() {
-  const [activePage, setActivePage] = useState<string>("gymdetails");
-  const [isTrainerOpen, setIsTrainerOpen] = useState<boolean>(false);
-  const [IsAttendanceOpen, setIsAttendanceOpen] = useState<boolean>(false);
+
+interface SubItem {
+  name: string;
+  link: string;
+  label: string;
+}
+
+interface MenuItem {
+  name: string;
+  icon: React.ElementType;
+  label: string;
+  subItems?: SubItem[];
+  link?: string;
+}
+
+export default function Sidebar() {
+  const [activePage, setActivePage] = useState<string>("viewGymDetails");
+  const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const router = useRouter();
-  interface SubItmestype {
-    name: string;
-    link: string;
-    label: string;
-  }
 
-  interface menuItem {
-    name: string;
-    icon: any;
-    label: string;
-    subItems?: SubItmestype[];
-    link?: string;
-  }
-  const AttendanceSubItems = [
-    {
-      name: "Today's Attendance",
-      link: "/attendance/today",
-      label: "todaysattendance",
-    },
-    { name: "Show QR", link: "/attendance/qr", label: "showqr" },
-  ];
-
-  const trainerSubItems = [
-    {
-      name: "View Trainers",
-      link: "/trainers/view",
-      label: "viewtrainers",
-    },
-    {
-      name: "Add Trainers",
-      link: "/trainers/add",
-      label: "addtrainers",
-    },
-  ];
-
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       name: "Gym Details",
       icon: Users,
-      link: "/gym-details",
-      label: "gymdetails",
+      label: "gymDetails",
+      subItems: [
+        {
+          name: "View Details",
+          link: "/gymdetails/viewgymdetails",
+          label: "viewGymDetails",
+        },
+        {
+          name: "Edit Details",
+          link: "/gymdetails/editgymdetails",
+          label: "editGymDetails",
+        },
+      ],
     },
     {
       name: "Trainers",
       icon: UserCheck,
-      subItems: trainerSubItems,
       label: "trainers",
+      subItems: [
+        {
+          name: "View Trainers",
+          link: "/trainers/viewtrainers",
+          label: "viewTrainers",
+        },
+        {
+          name: "Add Trainers",
+          link: "/trainers/addtrainers",
+          label: "addTrainers",
+        },
+      ],
     },
     {
       name: "Users-Trainers Assignment",
       icon: ClipboardList,
-      link: "/users-trainers-assignment",
+      link: "/userstrainersassignment",
       label: "userstrainersassignment",
     },
     {
       name: "Attendance",
       icon: CalendarCheck,
-      subItems: [
-        { name: "Today's Attendance", link: "/attendance/today" },
-        { name: "Show QR", link: "/attendance/qr" },
-      ],
       label: "attendance",
+      subItems: [
+        {
+          name: "Today's Attendance",
+          link: "/attendance/todaysattendance",
+          label: "todaysAttendance",
+        },
+        { name: "Show QR", link: "/attendance/showqr", label: "showQR" },
+      ],
     },
   ];
 
-  const handleItemClick = (item: menuItem) => {
-    // using next router
-    console.log("route is changed to", item.label);
-    setActivePage(item.label);
-    // if label is Trainers or Attendance then should not change the rout
-    if (item.label === "trainers" || item.label === "attendance") {
-      console.log("no change in route");
-    } else {
-      router.push(`/ownerdashboard/${item.label}`);
-    }
-    if (item.name === "Attendance") {
-      setIsAttendanceOpen(!IsAttendanceOpen);
-    }
-    if (item.name === "Trainers") {
-      setIsTrainerOpen(!isTrainerOpen);
+  const handleItemClick = (item: MenuItem) => {
+    if (item.subItems) {
+      setOpenMenus((prev) => ({ ...prev, [item.label]: !prev[item.label] }));
+      if (!openMenus[item.label]) {
+        setActivePage(item.label);
+      }
+    } else if (item.link) {
+      setActivePage(item.label);
+      router.push(`/ownerdashboard${item.link}`);
     }
   };
 
+  const handleSubItemClick = (subItem: SubItem, parentLabel: string) => {
+    setActivePage(subItem.label);
+    setOpenMenus((prev) => ({ ...prev, [parentLabel]: true }));
+    router.push(`/ownerdashboard${subItem.link}`);
+  };
+
+  const isActiveParent = (item: MenuItem) => {
+    return item.subItems
+      ? item.subItems.some((subItem) => subItem.label === activePage) ||
+          (!openMenus[item.label] && activePage === item.label)
+      : activePage === item.label;
+  };
+
   return (
-    <div className="flex flex-col bg-gray-900 text-white w-full  h-screen">
-      <div className="rounded-full w-30 h-25flex items-center justify-center ">
-        <Image src={IconImage} alt="Inconimage" className="object-cover  w-full h-full  rounded-full" />
-        {/* <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center mr-3">
-        </div> */}
-        {/* <h1 className="text-2xl font-bold">Gym Management</h1> */}
+    <div className="flex flex-col bg-gray-900 text-white w-64 h-screen">
+      <div className="px-4 w-full flex items-center justify-center ">
+        <Image
+          src={IconImage}
+          alt="Gym Manager Icon"
+          className="rounded-full "
+        />
       </div>
 
       <nav className="flex-grow">
-        <ul className="space-y-3">
+        <ul className="space-y-2">
           {menuItems.map((item) => (
-            <li key={item.name} className="whitespace-nowrap group">
+            <li key={item.name} className="whitespace-nowrap">
               <button
-                // @ts-ignore
                 onClick={() => handleItemClick(item)}
-                className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200  
-                  group-hover:bg-gray-800
-            ${
-              activePage === item.label
-                ? "!bg-blue-700 text-white "
-                : "text-gray-300 hover:text-4xl"
-            }}`}
-                aria-expanded={
-                  item.name === "Trainers" ? isTrainerOpen : undefined
-                }
+                className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
+                  ${
+                    isActiveParent(item)
+                      ? "bg-blue-700 text-white"
+                      : "text-gray-300 hover:bg-gray-800"
+                  }`}
               >
-                <item.icon className="w-5 h-5 mr-3 " />
+                <item.icon className="w-5 h-5 mr-3" />
                 <span>{item.name}</span>
                 {item.subItems &&
-                  (isTrainerOpen ? (
+                  (openMenus[item.label] ? (
                     <ChevronDown className="w-5 h-5 ml-auto" />
                   ) : (
                     <ChevronRight className="w-5 h-5 ml-auto" />
                   ))}
               </button>
-              {/* isAttendance is open */}
-              {item.name === "Attendance" && IsAttendanceOpen && (
-                <ul className="ml-6 mt-2 space-y-2 transition-all duration-200 ease-in-out">
-                  {AttendanceSubItems.map(
-                    (subItem: {
-                      name: string;
-                      link: string;
-                      label: string;
-                    }) => (
-                      <li key={subItem.name}>
-                        <button
-                          onClick={() => {
-                            setActivePage(subItem.name);
-                            router.push(
-                              `/ownerdashboard/attendance/${subItem.label}`
-                            );
-                          }}
-                          className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
-                            activePage === subItem.name
-                              ? "bg-blue-700 text-white"
+              {item.subItems && openMenus[item.label] && (
+                <ul className="ml-6 mt-2 space-y-2">
+                  {item.subItems.map((subItem) => (
+                    <li key={subItem.name}>
+                      <button
+                        onClick={() => handleSubItemClick(subItem, item.label)}
+                        className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 
+                          ${
+                            activePage === subItem.label
+                              ? "bg-blue-600 text-white"
                               : "text-gray-300 hover:bg-gray-800"
                           }`}
-                        >
-                          <span>{subItem.name}</span>
-                        </button>
-                      </li>
-                    )
-                  )}
-                </ul>
-              )}
-
-              {/* Trainers subitem  */}
-              {item.name === "Trainers" && isTrainerOpen && (
-                <ul className="ml-6 mt-2 space-y-2 transition-all duration-200 ease-in-out">
-                  {trainerSubItems.map(
-                    (subItem: {
-                      name: string;
-                      link: string;
-                      label: string;
-                    }) => (
-                      <li key={subItem.name}>
-                        <button
-                          onClick={() => {
-                            setActivePage(subItem.name);
-                            router.push(`/ownerdashboard/trainers/${subItem.label}`);
-                          }}
-                          className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
-                            activePage === subItem.name
-                              ? "bg-blue-700 text-white"
-                              : "text-gray-300 hover:bg-gray-800"
-                          }`}
-                        >
-                          <span>{subItem.name}</span>
-                        </button>
-                      </li>
-                    )
-                  )}
+                      >
+                        <span>{subItem.name}</span>
+                      </button>
+                    </li>
+                  ))}
                 </ul>
               )}
             </li>
@@ -200,10 +170,10 @@ export default function SideBar() {
         </ul>
       </nav>
 
-      <div className="mt-auto">
-        <button className="flex items-center w-full px-4 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition-colors duration-200">
-          <ChevronRight className="w-5 h-5 mr-3 text-red-400" />
-          <span className="text-red-400">Logout</span>
+      <div className="p-4">
+        <button className="flex items-center w-full px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg transition-colors duration-200">
+          <LogOut className="w-5 h-5 mr-3" />
+          <span>Logout</span>
         </button>
       </div>
     </div>

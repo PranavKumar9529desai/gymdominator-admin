@@ -15,11 +15,7 @@ interface WorkoutPlan {
   name: string;
 }
 
-export default function UserWorkoutAssignment({
-  params,
-}: {
-  params: { trainerid: string };
-}) {
+export default function UserWorkoutAssignment({}: {}) {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [users, setUsers] = useState<User[]>([
     {
@@ -97,7 +93,8 @@ export default function UserWorkoutAssignment({
   return (
     <div className="container mx-auto p-4 sm:p-6 bg-white">
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-gray-800">
-        Welcome Trainer Number : {params.trainerid}
+        {/* later on this number comes from the backend  */}
+        Welcome Trainer Number : {1}
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4 sm:mb-6">

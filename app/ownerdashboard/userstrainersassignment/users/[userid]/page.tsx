@@ -20,8 +20,7 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import UserProfileImage from "@/app/assests/profileImage.jpeg";
-
+import UserprofileImage from "@/app/assests/gymd.webp"
 // TOOD send data to the backend
 export default function UserProfileCard() {
   const [userData, setUserData] = useState({
@@ -59,7 +58,7 @@ export default function UserProfileCard() {
           <div className="flex items-center">
             <div className="relative w-20 h-20 mr-4">
               <Image
-                src={UserProfileImage}
+                src={UserprofileImage}
                 alt={`${userData.name}'s profile picture`}
                 layout="fill"
                 objectFit="cover"
