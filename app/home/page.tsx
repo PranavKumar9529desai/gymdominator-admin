@@ -5,11 +5,12 @@ import { ArrowRight, BarChart2, Users, Calendar } from "lucide-react";
 import Image from "next/image";
 import FeatureCard from "./FeatureCard";
 import CustomButton from "./CustomButton";
+import { BackgroundBeams } from "@/components/beams";
 export default function HeroSection() {
   return (
     <main className="bg-gradient-to-br from-gray-900 via-gray-900 to-blue-900 text-white min-h-screen">
       <section className="pb-12 lg:pb-24">
-        <div className="container mx-auto px-4 py-2 sm:px-6 sm:py-24 lg:px-8">
+        <div className="container mx-auto px-4 py-2 sm:px-6 sm:py-24 lg:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-2  sm:gap-12 items-center">
             <div className="space-y-8 lg:order-1 order-2">
               <h1 className="text-3xl sm:text-2xl lg:text-6xl font-extrabold leading-tight  text-center lg:text-left">
@@ -34,9 +35,9 @@ export default function HeroSection() {
                 </Button>
               </div>
             </div>
-            <div className="flex justify-center lg:justify-center lg:order-2 order-1">
-              <div className="relative w-72 h-72 sm:w-96 sm:h-96">
-                <div className="absolute inset-0 bg-blue-400 opacity-90 sm:opacity-75 rounded-full blur-3xl"></div>
+            <div className="flex justify-center lg:justify-center lg:order-2 order-1 z-50 ">
+              <div className="relative w-72 h-72 sm:w-96 sm:h-96 ">
+                <div className="absolute inset-0 bg-blue-400 opacity-90 sm:opacity-75 rounded-full blur-3xl "></div>
                 <Image
                   src={LogoImage}
                   alt="GymDominator Logo"
@@ -46,6 +47,7 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
+        <BackgroundBeams className="w-full h-full z-40" />
       </section>
 
       {/* features section */}

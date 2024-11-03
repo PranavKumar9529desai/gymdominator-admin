@@ -57,8 +57,8 @@ export default function CreateDietPlan() {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-white shadow-lg">
-      <CardHeader className="bg-blue-600 text-white">
+    <Card className="w-full max-w-2xl mx-auto bg-white shadow-lg my-10 ">
+      <CardHeader className="bg-gradient-to-br from-purple-600 to-indigo-600 text-white ">
         <CardTitle className="text-2xl font-bold flex items-center gap-2">
           <ClipboardList className="w-6 h-6" />
           Create Diet Plan
@@ -171,7 +171,7 @@ export default function CreateDietPlan() {
         <CardFooter>
           <Button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-br from-purple-600 to-indigo-600 text-white  flex items-center justify-center gap-2"
           >
             <CalendarRange className="w-5 h-5" />
             Create Diet Plan
