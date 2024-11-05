@@ -19,16 +19,33 @@ import { signIn } from "next-auth/react";
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [username, setusername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
     setIsLoading(true);
-    console.log(email,password);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+    console.log(email, password, username);
+
+    // Call the credentials provider
+    const result = await signIn("credentials", {
+      redirect: false, // Set to true if you want to redirect after sign-in
+      email, // Send email as the username
+      username,
+      password, // Send password
+    });
+
+    setIsLoading(false);
+
+    // Check if sign-in was successful
+    if (result && !result.error) {
+      // Handle successful sign-in, e.g., redirect or display a success message
+      console.log("Signed in successfully");
+    } else {
+      // Handle error
+      console.error("Failed to sign in");
+    }
   }
 
   return (
@@ -47,6 +64,18 @@ export default function SignIn() {
         </CardHeader>
         <CardContent className="space-y-4">
           <form onSubmit={onSubmit}>
+            <div className="space-y-2">
+              <Label htmlFor="username">Username</Label>
+              <Input
+                id="username"
+                placeholder="m@example.com"
+                required
+                type="username"
+                value={username}
+                onChange={(e) => setusername(e.target.value)}
+                className={cn("transition-all duration-300")}
+              />
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -107,9 +136,7 @@ export default function SignIn() {
             <Button
               className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white"
               type="submit"
-              disabled={isLoading}
             >
-              {isLoading}
               Sign in
             </Button>
           </form>
