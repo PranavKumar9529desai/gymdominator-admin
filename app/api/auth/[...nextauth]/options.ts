@@ -20,20 +20,23 @@ export const authOptions: NextAuthOptions = {
           placeholder: "jsmith@gmail.com",
         },
         password: { label: "Password", type: "password" },
+        role: { label: "Role", type: "text" },
       },
       async authorize(credentials, req: any) {
+        console.log("here are the creedentials ", credentials);
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
         // that is false/null if the credentials are invalid.
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        let { username, password, email } = credentials || {};
-        console.log("Crendential ", username, password, email);
+        let { username, password, email, role } = credentials || {};
+        console.log("Crendential ", username, password, email, role);
         let user = {
-          username: username,
+          name: username || "",
           id: "1",
-          email: email,
+          email: email || " ",
+          Role: role,
         };
         console.log("here is the user ", user);
         if (!user) return null;
@@ -54,10 +57,17 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, user, profile, account }) {
-      if (user) {
+      if (user && account) {
         token.accessToken = account?.access_token;
-        (token.id = user.id), (token.name = user.name);
-        token.role = "ADMIN";
+        token.id = user.id;
+        token.name = user.name;
+        token.role = user.Role;
+        if (account.provider === "credentials") {
+          token.role = user.Role;
+        } else if (account.provider === "google") {
+          // Assign a default role or fetch from your database
+          token.role = "GYMOWNER"; // Or fetch the role based on user's email
+        }
       }
       return token;
     },
@@ -65,7 +75,7 @@ export const authOptions: NextAuthOptions = {
       session.user.email = token.email;
       session.accessToken = token.accessToken;
       session.user.name = token.name || " ";
-      session.Role = "ADMIN";
+      session.Role = "GYMOWNER";
       return session;
     },
   },

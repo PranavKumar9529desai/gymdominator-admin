@@ -1,16 +1,45 @@
-import { getServerSession } from "next-auth";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
+import { IsGymOwner } from "./lib/isGymOwner";
+import { IsTrainer } from "./lib/isTrainer";
+import { IsSales } from "./lib/isSales";
 
 export default async function middleware(request: NextRequest) {
-  // console.log()
-  let token = await getToken({
+  console.log("middleware");
+  const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
+  console.log("token is ", token);
+  if (!token) {
+    return NextResponse.redirect(new URL("/signin", request.url));
+  }
 
-  // let sesssion = await getServerSession();
-  // console.log("session details are",sesssion?.user);
-  console.log("here is the token", token);
+  const path = request.nextUrl.pathname;
+  if (path.startsWith("/gymowner")) {
+    return IsGymOwner(token)
+      ? NextResponse.next()
+      : NextResponse.rewrite(new URL("/unauthorized", request.url));
+  }
+
+  if (path.startsWith("/trainer")) {
+    return IsTrainer(token)
+      ? NextResponse.next()
+      : NextResponse.rewrite(new URL("/unauthorized", request.url));
+  }
+
+  if (path.startsWith("/sales")) {
+    return IsSales(token)
+      ? NextResponse.next()
+      : NextResponse.rewrite(new URL("/unauthorized", request.url));
+  }
+
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: [
+    // Exclude authentication on the following paths:
+    "/((?!api|_next/static|_next/image|favicon.ico|signin|signup).*)",
+  ],
+};

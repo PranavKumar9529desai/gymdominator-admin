@@ -1,5 +1,4 @@
 type gender = "Male" | "Female";
-
 interface mockUsersType {
   id: number;
   name: string;
