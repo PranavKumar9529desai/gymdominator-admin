@@ -1,11 +1,18 @@
-"use client"
+import { getServerSession } from "next-auth";
+import React from "react";
+import { authOptions } from "../api/auth/[...nextauth]/options";
+import SignUp from "@/components/common/Signup";
+import { redirect } from "next/navigation";
 
-import React from 'react'
-// TODO add ui to this  this is signup page
-export default function page() {
-  return (
-     <>
-      this is signup page
-     </> 
-  )
+export default async function page() {
+  let session = await getServerSession(authOptions);
+  if (session?.user) {
+    redirect("/");
+  } else {
+    return (
+      <>
+        <SignUp />
+      </>
+    );
+  }
 }

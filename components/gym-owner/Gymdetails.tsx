@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,11 +15,33 @@ import {
 } from "lucide-react";
 
 export default function GymDetails() {
+  const [formData, setFormData] = useState({
+    gym_name: "",
+    gym_logo: null as File | null,
+    address: "",
+    phone_number: "",
+    Email: "",
+  });
+
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
-  const handleLogoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { id, value } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [id]: value,
+    }));
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        gym_logo: file,
+      }));
       const reader = new FileReader();
       reader.onloadend = () => {
         setLogoPreview(reader.result as string);
@@ -27,17 +50,54 @@ export default function GymDetails() {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Here you would typically send the form data to your backend
-    console.log("Form submitted");
+    console.log("Form submitted with data: ", formData);
+    try {
+      let logoBase64 = null;
+      if (formData.gym_logo) {
+        logoBase64 = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          // @ts-nocheck
+          reader.readAsDataURL(formData.gym_logo);
+        });
+      }
+
+      const payload = {
+        gym_name: formData.gym_name,
+        gym_logo: logoBase64, // Base64 encoded image for D1 database
+        address: formData.address,
+        phone_number: formData.phone_number,
+        Email: formData.Email,
+      };
+
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/admin/creategym`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Gym details submitted successfully:", response.data);
+      } else {
+        console.log("Failed to submit gym details:", response.data);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="text-4xl font-bold text-center ">
-        Enter Gym Details
+        <CardTitle className="text-4xl font-bold text-center">
+          Enter Gym Details
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -47,7 +107,9 @@ export default function GymDetails() {
             <div className="relative">
               <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <Input
-                id="gymName"
+                id="gym_name"
+                value={formData.gym_name}
+                onChange={handleInputChange}
                 placeholder="Enter gym name"
                 className="pl-10"
               />
@@ -69,10 +131,10 @@ export default function GymDetails() {
                 )}
               </div>
               <Input
-                id="logo"
+                id="gym_logo"
                 type="file"
                 accept="image/*"
-                onChange={handleLogoChange}
+                onChange={handleFileChange}
                 className="flex-1"
               />
             </div>
@@ -84,6 +146,8 @@ export default function GymDetails() {
               <MapPin className="absolute left-3 top-3 text-gray-400" />
               <Textarea
                 id="address"
+                value={formData.address}
+                onChange={handleInputChange}
                 placeholder="Enter gym address"
                 className="pl-10 min-h-[80px]"
               />
@@ -96,7 +160,9 @@ export default function GymDetails() {
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <Input
-                  id="phone"
+                  id="phone_number"
+                  value={formData.phone_number}
+                  onChange={handleInputChange}
                   type="tel"
                   placeholder="Enter phone number"
                   className="pl-10"
@@ -108,7 +174,9 @@ export default function GymDetails() {
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                 <Input
-                  id="email"
+                  id="Email"
+                  value={formData.Email}
+                  onChange={handleInputChange}
                   type="email"
                   placeholder="Enter email address"
                   className="pl-10"
