@@ -5,18 +5,16 @@ import { IsTrainer } from "./lib/isTrainer";
 import { IsSales } from "./lib/isSales";
 
 export default async function middleware(request: NextRequest) {
-  console.log("middleware");
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
-  console.log("token is ", token);
   if (!token) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
 
   const path = request.nextUrl.pathname;
-  if (path.startsWith("/gymowner")) {
+  if (path.startsWith("/owner")) {
     return IsGymOwner(token)
       ? NextResponse.next()
       : NextResponse.rewrite(new URL("/unauthorized", request.url));

@@ -11,7 +11,9 @@ export default async function signin() {
   } else {
     return (
       <>
-        <SignIn />
+        <div className="w-screen  h-screen  justify-center items-center ">
+          <SignIn />
+        </div>
       </>
     );
   }

@@ -11,7 +11,9 @@ export default async function page() {
   } else {
     return (
       <>
-        <SignUp />
+        <div className="w-screen h-screen flex justify-center items-center">
+          <SignUp />
+        </div>
       </>
     );
   }

@@ -10,7 +10,9 @@ export default async function signin() {
   } else {
     return (
       <>
-        <SignIn />
+        <div className="w-screen h-screen flex justify-center items-center">
+          <SignIn />
+        </div>
       </>
     );
   }

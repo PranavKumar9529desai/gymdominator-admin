@@ -1,12 +1,10 @@
-"use client";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, MapPin, Phone, Mail } from "lucide-react";
 
 // Define types for the gym data
-type GymDetails = {
+export type GymDetails = {
   name: string;
   logo: string;
   address: string;
@@ -14,48 +12,12 @@ type GymDetails = {
   email: string;
 };
 
-export default function ViewGymDetails() {
-  const [gymDetails, setGymDetails] = useState<GymDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchGymDetails = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/admin/gymdetails`,
-          {
-            data: { name: "awd" },
-          }
-        );
-        console.log(response);
-        if (response.status === 200 && response.data.gym) {
-          const { gym_name, gym_logo, address, phone_number, Email } =
-            response.data.gym;
-          console.log(gym_name, gym_logo, address, phone_number);
-          setGymDetails({
-            name: gym_name,
-            logo: gym_logo,
-            address: address,
-            phone: phone_number,
-            email: Email,
-          });
-        } else {
-          setError("Failed to load gym details.");
-        }
-      } catch (err) {
-        setError("Error fetching gym details.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchGymDetails();
-  }, []);
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-
+export default function ViewGymDetails({
+  gymDetails,
+}: {
+  gymDetails: GymDetails;
+}) {
+  // const [loading, setLoadi
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-6">Gym Details</h1>
@@ -75,7 +37,7 @@ export default function ViewGymDetails() {
                   alt={`${gymDetails.name} logo`}
                   width={100}
                   height={100}
-                  className="rounded-lg border border-gray-200"
+                  className="rounded-lg border border-gray-200 o"
                 />
               )}
             </div>

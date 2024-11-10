@@ -9,7 +9,6 @@ import {
   ClipboardList,
   CalendarCheck,
   UserCheck,
-  Settings,
   LogOut,
 } from "lucide-react";
 import IconImage from "@/app/assests/gym-manager.webp";
@@ -41,7 +40,8 @@ export default function Sidebar() {
       subItems: [
         {
           name: "View Details",
-          link: "/gymdetails/viewgymdetails",
+          // currently gymid has the hardcoded value later on the value come from the cookies and the session
+          link: "/gymdetails/viewgymdetails?gymid=7",
           label: "viewGymDetails",
         },
         {

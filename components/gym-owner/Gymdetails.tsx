@@ -1,20 +1,26 @@
 "use client";
 import { useState } from "react";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
+import PostGymDetails from "@/app/actions/PostGymDetailsSA";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 import {
   Building2,
   MapPin,
   Phone,
   Mail,
   Image as ImageIcon,
+  Upload,
 } from "lucide-react";
+import uploadImage from "@/app/actions/UploadImageSA";
+import { set } from "date-fns";
 
 export default function GymDetails() {
+  const router = useRouter();
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     gym_name: "",
     gym_logo: null as File | null,
@@ -53,43 +59,40 @@ export default function GymDetails() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log("Form submitted with data: ", formData);
-    try {
-      let logoBase64 = null;
-      if (formData.gym_logo) {
-        logoBase64 = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          // @ts-nocheck
-          reader.readAsDataURL(formData.gym_logo);
-        });
-      }
 
-      const payload = {
-        gym_name: formData.gym_name,
-        gym_logo: logoBase64, // Base64 encoded image for D1 database
-        address: formData.address,
-        phone_number: formData.phone_number,
-        Email: formData.Email,
-      };
-
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/admin/creategym`,
-        payload,
-        {
+    if (formData.gym_logo && logoPreview) {
+      try {
+        const response = await fetch("/api/uploadimage", {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-        }
-      );
+          body: JSON.stringify({ image: logoPreview }),
+        });
 
-      if (response.status === 200) {
-        console.log("Gym details submitted successfully:", response.data);
-      } else {
-        console.log("Failed to submit gym details:", response.data);
+        const data = await response.json();
+        console.log("Data from the image upload is ", data);
+        if (response.ok) {
+          const gym_image_url = data.url;
+          console.log("gym url from the handleSubmit is ", gym_image_url);
+          setUploadedImageUrl(gym_image_url);
+
+          const gym = await PostGymDetails(formData, gym_image_url);
+          console.log("gym is created", gym);
+          let gymid = gym.id;
+          console.log("gymid is ", gymid);
+          router.push(
+            `/ownerdashboard/gymdetails/viewgymdetails?gymid=${gym.id}`
+          );
+        } else {
+          alert("Image upload failed: " + data.error);
+        }
+      } catch (error) {
+        console.error("Error uploading image or posting gym details:", error);
+        alert("An error occurred during upload.");
       }
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } else {
+      alert("Please upload the image");
     }
   };
 

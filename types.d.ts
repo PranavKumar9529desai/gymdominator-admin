@@ -6,6 +6,14 @@ interface mockUsersType {
   todaysAttendance: boolean;
 }
 
+type GymDetails = {
+  name: string;
+  logo: string;
+  address: string;
+  phone: string;
+  email: string;
+};
+
 interface FormData {
   username: string;
   password: string;

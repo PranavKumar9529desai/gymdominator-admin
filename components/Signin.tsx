@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/card";
 import { User, Mail, Lock, Key } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { coustomAlert } from "./common/Alerts/CustomAlerts";
+import signin from "@/app/signin/page";
 
 export default function SignIn() {
   const [username, setUsername] = useState("");
@@ -28,6 +30,24 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [gym, setGym] = useState("");
+
+  const handleGoogleSubmit = async () => {
+    if (!role && !gym) {
+      coustomAlert("error", "Please select Role First");
+    } else {
+      // Store additional data in cookies
+      document.cookie = `tempRole=${role}; path=/; max-age=300`; // Expires in 5 minutes
+      document.cookie = `tempGym=${gym}; path=/; max-age=300`; // Expires in 5 minutes
+
+      console.log("Cookies set:", document.cookie);
+
+      // Initiate Google sign-in
+      await signIn("google", {
+        callbackUrl: "/", // Redirect after sign-in
+        redirect: true,
+      });
+    }
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -45,12 +65,12 @@ export default function SignIn() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Sign Up</CardTitle>
-        <CardDescription>Create your account to get started</CardDescription>
+        <CardTitle>Sign IN</CardTitle>
+        <CardDescription>Sign in to your account </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="username">Username</Label>
             <div className="relative">
               <User className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -63,7 +83,7 @@ export default function SignIn() {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-          </div>
+          </div> */}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <div className="relative">
@@ -101,12 +121,8 @@ export default function SignIn() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="GYMOWNER">Gym Owner</SelectItem>
-                <SelectItem value="TRAINER" >
-                  Trainer
-                </SelectItem>
-                <SelectItem value="SALES" >
-                  Sales
-                </SelectItem>
+                <SelectItem value="TRAINER">Trainer</SelectItem>
+                <SelectItem value="SALES">Sales</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -118,9 +134,11 @@ export default function SignIn() {
                   <SelectValue placeholder="Select your gym" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="gym1">Fitness First</SelectItem>
-                  <SelectItem value="gym2">Gold's Gym</SelectItem>
-                  <SelectItem value="gym3">24 Hour Fitness</SelectItem>
+                  <SelectItem value="Fitness First">Fitness First</SelectItem>
+                  <SelectItem value="Gold's Gym">Gold's Gym</SelectItem>
+                  <SelectItem value="24 Hour Fitness">
+                    24 Hour Fitness
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -140,7 +158,7 @@ export default function SignIn() {
             </div>
           )}
           <Button type="submit" className="w-full">
-            Register
+            Sign IN
           </Button>
         </form>
         <div className="relative my-4">
@@ -157,7 +175,8 @@ export default function SignIn() {
           className="w-full"
           variant="outline"
           onClick={() => {
-            signIn("google");
+            console.log("button is clicked");
+            handleGoogleSubmit();
           }}
         >
           <svg

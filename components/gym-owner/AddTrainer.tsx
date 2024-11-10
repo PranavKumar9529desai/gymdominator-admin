@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import WarningAlert from "../alerts/WarningAlert";
+import { AddTrainerSA } from "@/app/actions/AddTrainerSA";
 
 type ShifType = "morning" | "evening";
 
@@ -106,18 +107,18 @@ export default function AddTrainer() {
               Shift
             </label>
             <select
-              value={"morning"}
+              value={shift}
               required
               onChange={(e) => setShift(e.target.value as ShifType)}
-              className={`block w-full text-sm bg-white border text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200`}
+              className="block w-full text-sm bg-white border text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
             >
-              {ShiftArray.map((shift, index) => (
-                <>
-                  {/* <option value="Select Shift" key={index}>Select Shift</option> */}
-                  <option key={index} value={shift.name}>
-                    {shift.name}
-                  </option>
-                </>
+              <option value="" hidden>
+                Select Shift
+              </option>
+              {ShiftArray.map((shiftItem, index) => (
+                <option key={index} value={shiftItem.name}>
+                  {shiftItem.name}
+                </option>
               ))}
             </select>
           </div>
@@ -162,7 +163,10 @@ export default function AddTrainer() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full bg-gradient-to-tr from-blue-600 to-violet-600 ">
+          <Button
+            type="submit"
+            className="w-full bg-gradient-to-tr from-blue-600 to-violet-600 "
+          >
             Add Trainer
           </Button>
         </CardFooter>

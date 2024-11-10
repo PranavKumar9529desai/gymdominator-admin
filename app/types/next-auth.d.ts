@@ -1,9 +1,24 @@
 // next-auth.d.ts
 import NextAuth from "next-auth";
 import { DefaultSession } from "next-auth";
-
+import { NextRequest } from "next/server";
 type Rolestype = "GYMOWNER" | "TRAINER" | "SALES";
 // Extend the default Session type to include custom fields
+
+interface Callbacks {
+  signIn: (
+    params: {
+      user: User | AdapterUser;
+      account: Account | null;
+      profile?: Profile;
+      email?: { verificationRequest?: boolean };
+      credentials?: Record<string, unknown>;
+    },
+    /** Added context parameter */
+    req: NextApiRequest
+  ) => Awaitable<boolean | string>;
+}
+
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
@@ -23,12 +38,14 @@ declare module "next-auth" {
     email: string;
     name: string;
     Role: Rolestypeu;
+    Gym: string;
   }
 }
 // Extend the default JWT type to include custom fields
 declare module "next-auth/jwt" {
   interface JWT {
     Role: Rolestype;
+    req: NextRequest;
     Gym: string;
     accessToken?: string;
     user: {
