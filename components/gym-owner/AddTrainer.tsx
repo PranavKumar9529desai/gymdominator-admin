@@ -1,11 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Upload, Star, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Swal from "sweetalert2";
-import result from "sweetalert2";
 import {
   Card,
   CardContent,
@@ -16,12 +15,21 @@ import {
 import WarningAlert from "../alerts/WarningAlert";
 import { AddTrainerSA } from "@/app/actions/AddTrainerSA";
 
-type ShifType = "morning" | "evening";
+type ShiftType = "morning" | "evening";
+
+interface AddTrainerProps {
+  addTrainerProps: {
+    id?: number;
+    name?: string;
+    shift?: ShiftType;
+    rating?: number;
+  };
+}
 
 const ShiftArray = [
   {
     name: "Morning",
-    label: "morniong",
+    label: "morning",
   },
   {
     name: "Evening",
@@ -29,12 +37,23 @@ const ShiftArray = [
   },
 ];
 
-// TODO do a backend call add the trainers to the api .
-export default function AddTrainer() {
-  const [name, setName] = useState("");
+// TODO: Implement backend call to add the trainers to the API.
+export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
+  const [name, setName] = useState<string>(addTrainerProps.name || "");
   const [image, setImage] = useState<File | null>(null);
-  const [rating, setRating] = useState(0);
-  const [shift, setShift] = useState<ShifType>("morning");
+  const [rating, setRating] = useState<number>(addTrainerProps.rating || 0);
+  const [shift, setShift] = useState<ShiftType>(
+    addTrainerProps.shift || "morning"
+  );
+
+  useEffect(() => {
+    if (addTrainerProps.id) {
+      // If an ID is present, you might want to fetch additional details.
+      // This is optional based on your requirements.
+      // For now, we're initializing state based on props.
+      console.log("Editing Trainer with ID:", addTrainerProps.id);
+    }
+  }, [addTrainerProps.id]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

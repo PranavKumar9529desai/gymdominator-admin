@@ -1,10 +1,16 @@
 import ViewTrainersList from "@/components/gym-owner/viewTrainers";
-import React from "react";
+import FetchTrainers from "@/app/actions/FetchtrainersSA";
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: { gymid: string };
+}) {
+  let gymid = searchParams.gymid || "1";
+  const trainers: Trainer[] = await FetchTrainers({ gymid: gymid });
 
-export default function page() {
   return (
     <>
-      <ViewTrainersList />
+      <ViewTrainersList Trainers={trainers} />
     </>
   );
 }

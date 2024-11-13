@@ -8,11 +8,9 @@ interface FormData {
 }
 export default async function PostGymDetails(
   formData: FormData,
-  image: string 
+  image: string
 ) {
   try {
-    
-
     const payload = {
       gym_name: formData.gym_name,
       gym_logo: image, // Base64 encoded image for D1 database

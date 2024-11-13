@@ -6,6 +6,18 @@ interface mockUsersType {
   todaysAttendance: boolean;
 }
 
+interface Trainer{
+  id: number;
+  name: string;
+  assignedClients: number;
+  shift: "Morning" | "Evening";
+}
+
+interface TrainersResponse {
+  msg: string;
+  trainers: Trainer[];
+}
+
 type GymDetails = {
   name: string;
   logo: string;

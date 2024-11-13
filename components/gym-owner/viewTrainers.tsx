@@ -1,47 +1,70 @@
-"use client"
-import React, { useState, useEffect } from 'react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, UserCheck, Clock } from 'lucide-react'
+"use client";
+import React, { useState, useEffect } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Users, UserCheck, Clock } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Trainer {
-  id: number
-  name: string
-  assignedClients: number
-  shift: 'Morning' | 'Evening'
+  id: number;
+  name: string;
+  assignedClients: number;
+  shift: "Morning" | "Evening";
 }
 
-export default function ViewTrainersList() {
-  const [trainers, setTrainers] = useState<Trainer[]>([
-    { id: 1, name: "John Doe", assignedClients: 5, shift: "Morning" },
-    { id: 2, name: "Jane Smith", assignedClients: 7, shift: "Evening" },
-    { id: 3, name: "Bob Johnson", assignedClients: 3, shift: "Morning" },
-    { id: 4, name: "Alice Brown", assignedClients: 6, shift: "Evening" },
-    { id: 5, name: "Charlie Wilson", assignedClients: 4, shift: "Morning" },
-  ])
+interface ViewTrainersListProps {
+  Trainers: Trainer[];
+}
 
-  const [searchTerm, setSearchTerm] = useState('')
-  const [shiftFilter, setShiftFilter] = useState<'Morning' | 'Evening' | 'All'>('All')
-  const [filteredTrainers, setFilteredTrainers] = useState<Trainer[]>(trainers)
+export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
+  const router = useRouter();
+  const [trainers, setTrainers] = useState<Trainer[]>(Trainers);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [shiftFilter, setShiftFilter] = useState<"Morning" | "Evening" | "All">("All");
+  const [filteredTrainers, setFilteredTrainers] = useState<Trainer[]>(trainers);
 
   useEffect(() => {
-    const filtered = trainers.filter(trainer => 
-      trainer.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (shiftFilter === 'All' || trainer.shift === shiftFilter)
-    )
-    setFilteredTrainers(filtered)
-  }, [searchTerm, shiftFilter, trainers])
+    const filtered = trainers.filter(
+      (trainer) =>
+        trainer.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (shiftFilter === "All" || trainer.shift === shiftFilter)
+    );
+    setFilteredTrainers(filtered);
+  }, [searchTerm, shiftFilter, trainers]);
+
+  const handleTrainerClick = (trainer: Trainer) => {
+    router.push(
+      `addtrainers?id=${trainer.id}&name=${encodeURIComponent(
+        trainer.name
+      )}&shift=${trainer.shift}&rating=${trainer.assignedClients}`
+    );
+  };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Trainer List</h1>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Trainers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Trainers
+            </CardTitle>
             <Users className="h-10 w-10 text-blue-6p00" />
           </CardHeader>
           <CardContent>
@@ -50,7 +73,9 @@ export default function ViewTrainersList() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Filtered Trainers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Filtered Trainers
+            </CardTitle>
             <UserCheck className="h-10 w-10 text-green-600" />
           </CardHeader>
           <CardContent>
@@ -66,7 +91,12 @@ export default function ViewTrainersList() {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="md:w-1/2"
         />
-        <Select value={shiftFilter} onValueChange={(value: 'Morning' | 'Evening' | 'All') => setShiftFilter(value)}>
+        <Select
+          value={shiftFilter}
+          onValueChange={(value: "Morning" | "Evening" | "All") =>
+            setShiftFilter(value)
+          }
+        >
           <SelectTrigger className="md:w-1/4">
             <SelectValue placeholder="Filter by shift" />
           </SelectTrigger>
@@ -88,7 +118,11 @@ export default function ViewTrainersList() {
         </TableHeader>
         <TableBody>
           {filteredTrainers.map((trainer) => (
-            <TableRow key={trainer.id}>
+            <TableRow
+              key={trainer.id}
+              onClick={() => handleTrainerClick(trainer)}
+              className="cursor-pointer hover:bg-gray-100"
+            >
               <TableCell className="font-medium">{trainer.name}</TableCell>
               <TableCell>{trainer.assignedClients}</TableCell>
               <TableCell className="flex items-center">
@@ -100,5 +134,5 @@ export default function ViewTrainersList() {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
