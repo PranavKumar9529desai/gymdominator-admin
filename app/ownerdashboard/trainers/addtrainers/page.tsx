@@ -1,7 +1,6 @@
 "use client";
-
-import AddTrainer from "@/components/gym-owner/AddTrainer";
 import { useSearchParams } from "next/navigation";
+import AddTrainer from "@/components/gym-owner/AddTrainer";
 
 export default function AddTrainerPage() {
   const searchParams = useSearchParams();
@@ -10,6 +9,7 @@ export default function AddTrainerPage() {
     id: searchParams.get("id") ? parseInt(searchParams.get("id")!) : undefined,
     name: searchParams.get("name") || "",
     shift: (searchParams.get("shift") as "morning" | "evening") || "morning",
+    image: searchParams.get("image"),
     rating: searchParams.get("rating")
       ? parseInt(searchParams.get("rating")!)
       : 0,

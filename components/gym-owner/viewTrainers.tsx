@@ -51,7 +51,7 @@ export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
     router.push(
       `addtrainers?id=${trainer.id}&name=${encodeURIComponent(
         trainer.name
-      )}&shift=${trainer.shift}&rating=${trainer.assignedClients}`
+      )}&shift=${trainer.shift}&image=https://res.cloudinary.com/db4bbyw44/image/upload/v1731221421/gym/wjw8imo0xokwe4vjldlp.webp&rating=${trainer.assignedClients}`
     );
   };
 

@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+
+import React, { useState } from "react";
 import { Upload, Star, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,16 +13,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import WarningAlert from "../alerts/WarningAlert";
-import { AddTrainerSA } from "@/app/actions/AddTrainerSA";
-
-type ShiftType = "morning" | "evening";
+import { addTrainer, updateTrainer } from "@/app/actions/AddTrainerSA";
+import Image from "next/image";
+import {
+  ShiftType,
+  AddTrainerRequest,
+  UpdateTrainerRequest,
+} from "@/app/actions/AddTrainerSA";
 
 interface AddTrainerProps {
   addTrainerProps: {
     id?: number;
     name?: string;
     shift?: ShiftType;
+    image?: string;
     rating?: number;
   };
 }
@@ -37,73 +42,144 @@ const ShiftArray = [
   },
 ];
 
-// TODO: Implement backend call to add the trainers to the API.
 export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
   const [name, setName] = useState<string>(addTrainerProps.name || "");
   const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    typeof addTrainerProps.image === "string" ? addTrainerProps.image : null
+  );
   const [rating, setRating] = useState<number>(addTrainerProps.rating || 0);
   const [shift, setShift] = useState<ShiftType>(
     addTrainerProps.shift || "morning"
   );
-
-  useEffect(() => {
-    if (addTrainerProps.id) {
-      // If an ID is present, you might want to fetch additional details.
-      // This is optional based on your requirements.
-      // For now, we're initializing state based on props.
-      console.log("Editing Trainer with ID:", addTrainerProps.id);
-    }
-  }, [addTrainerProps.id]);
+  const [imageError, setImageError] = useState<string>("");
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+      setImageError("");
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    // call the alret message and based of that figure out whether to submi or not .then
-    Swal.fire({
-      title: "Are you sure?",
-      text: "Users will be able to select a newly created trainer as their assigned trainer!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // TODO show loader complete the backend request if success then show this otherwise jsut show some error occured
-        Swal.fire({
-          title: "Success!",
-          text: "Trainer is sucessfully created.",
-          icon: "success",
-        }).then(() => {
-          console.log("now submitting the form");
-          // submit the form
+
+    setImageError("");
+
+    const isEditing = !!addTrainerProps.id;
+
+    if (!isEditing && !name.trim()) {
+      Swal.fire({
+        title: "Error!",
+        text: "Please enter the trainer's name.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    if (!image && !imagePreview && !isEditing) {
+      setImageError("Please upload an image.");
+      return;
+    }
+
+    let imageUrl: string | undefined = undefined;
+   // TODO add swal alert to this fix this 
+    try {
+      if (image) {
+        const formData = new FormData();
+        formData.append("image", image);
+
+        const response = await fetch("/api/uploadimage", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image: imagePreview }),
         });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          imageUrl = result.url;
+        } else {
+          throw new Error(result.error || "Failed to upload image.");
+        }
+      } else if (imagePreview) {
+        imageUrl = imagePreview;
       }
-    });
-    console.log("this console log works");
+
+      const requestData = isEditing
+        ? {
+            id: addTrainerProps.id!,
+            shift,
+            rating,
+            image: imageUrl,
+          }
+        : {
+            name,
+            shift,
+            rating,
+            image: imageUrl,
+          };
+
+      const responseData = isEditing
+        ? await updateTrainer(requestData as UpdateTrainerRequest)
+        : await addTrainer(requestData as AddTrainerRequest);
+
+      if (
+        (isEditing && responseData.success) ||
+        (!isEditing && responseData.trainer)
+      ) {
+        Swal.fire({
+          title: isEditing ? "Updated!" : "Added!",
+          text: isEditing
+            ? "Trainer details have been updated."
+            : "Trainer has been added.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        // Optionally reset the form or redirect
+      } else {
+        throw new Error(responseData.msg || "An error occurred.");
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error!",
+        text:
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   };
 
   return (
-    <Card className="w-full h-full ">
+    <Card className="w-full h-full">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-center">
-          Add Trainer
+          {addTrainerProps.id ? "Edit Trainer" : "Add Trainer"}
         </CardTitle>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="flex justify-center">
             <div className="w-32 h-32 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-              {image ? (
-                <img
-                  src={URL.createObjectURL(image)}
+              {imagePreview ? (
+                <Image
+                  src={imagePreview}
                   alt="Trainer"
+                  width={128}
+                  height={128}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -111,45 +187,51 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
               )}
             </div>
           </div>
+
+          {
+            <div>
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                disabled={!!addTrainerProps.name}
+                placeholder="Enter trainer's name"
+              />
+            </div>
+          }
+
           <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter trainer's name"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="shift" className="text-sm">
-              Shift
-            </label>
+            <Label htmlFor="shift">Shift</Label>
             <select
+              id="shift"
+              name="shift"
               value={shift}
-              required
-              onChange={(e) => setShift(e.target.value as ShifType)}
+              onChange={(e) => setShift(e.target.value as ShiftType)}
               className="block w-full text-sm bg-white border text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
             >
               <option value="" hidden>
                 Select Shift
               </option>
               {ShiftArray.map((shiftItem, index) => (
-                <option key={index} value={shiftItem.name}>
+                <option key={index} value={shiftItem.label}>
                   {shiftItem.name}
                 </option>
               ))}
             </select>
           </div>
+
           <div>
             <Label htmlFor="image">Trainer Image</Label>
             <div className="flex items-center space-x-2">
               <Input
                 id="image"
+                name="image"
                 type="file"
                 onChange={handleImageChange}
-                className="hidden"
                 accept="image/*"
+                className="hidden"
               />
               <Button
                 type="button"
@@ -160,10 +242,18 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
                 Upload Image
               </Button>
               <span className="text-sm text-gray-500">
-                {image ? image.name : "No file chosen"}
+                {image
+                  ? image.name
+                  : imagePreview
+                  ? "Image Selected"
+                  : "No file chosen"}
               </span>
             </div>
+            {imageError && (
+              <p className="text-red-500 text-sm mt-1">{imageError}</p>
+            )}
           </div>
+
           <div>
             <Label>Initial Rating</Label>
             <div className="flex items-center space-x-1">
@@ -182,11 +272,8 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
           </div>
         </CardContent>
         <CardFooter>
-          <Button
-            type="submit"
-            className="w-full bg-gradient-to-tr from-blue-600 to-violet-600 "
-          >
-            Add Trainer
+          <Button type="submit">
+            {addTrainerProps.id ? "Update Trainer" : "Add Trainer"}
           </Button>
         </CardFooter>
       </form>

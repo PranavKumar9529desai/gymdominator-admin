@@ -26,5 +26,3 @@ export default async function FetchTrainers({
     return []; // Return empty array instead of undefined
   }
 }
-
-
