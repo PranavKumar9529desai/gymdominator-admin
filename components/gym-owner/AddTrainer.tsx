@@ -20,7 +20,7 @@ import {
   AddTrainerRequest,
   UpdateTrainerRequest,
 } from "@/app/actions/AddTrainerSA";
-
+import Loader from "../Skeltons/loaders";
 interface AddTrainerProps {
   addTrainerProps: {
     id?: number;
@@ -53,7 +53,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
     addTrainerProps.shift || "morning"
   );
   const [imageError, setImageError] = useState<string>("");
-
+  const [isLoading, setLoading] = useState<boolean>(false);
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -91,8 +91,9 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
     }
 
     let imageUrl: string | undefined = undefined;
-   // TODO add swal alert to this fix this 
+    // TODO add swal alert to this fix this
     try {
+      setLoading(true);
       if (image) {
         const formData = new FormData();
         formData.append("image", image);
@@ -111,6 +112,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
           imageUrl = result.url;
         } else {
           throw new Error(result.error || "Failed to upload image.");
+          setLoading(false);
         }
       } else if (imagePreview) {
         imageUrl = imagePreview;
@@ -138,6 +140,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
         (isEditing && responseData.success) ||
         (!isEditing && responseData.trainer)
       ) {
+        setLoading(false);
         Swal.fire({
           title: isEditing ? "Updated!" : "Added!",
           text: isEditing
@@ -145,7 +148,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
             : "Trainer has been added.",
           icon: "success",
           confirmButtonText: "OK",
-        });
+        }).then(() => {});
         // Optionally reset the form or redirect
       } else {
         throw new Error(responseData.msg || "An error occurred.");
@@ -162,6 +165,15 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
       });
     }
   };
+  if (isLoading) {
+    return (
+      <>
+        <div className="w-full h-screen flex justify-center items-center">
+          <Loader />
+        </div>
+      </>
+    );
+  }
 
   return (
     <Card className="w-full h-full">

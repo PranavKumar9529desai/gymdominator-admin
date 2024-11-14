@@ -25,6 +25,7 @@ interface Trainer {
   name: string;
   assignedClients: number;
   shift: "Morning" | "Evening";
+  image: string;
 }
 
 interface ViewTrainersListProps {
@@ -35,7 +36,9 @@ export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
   const router = useRouter();
   const [trainers, setTrainers] = useState<Trainer[]>(Trainers);
   const [searchTerm, setSearchTerm] = useState("");
-  const [shiftFilter, setShiftFilter] = useState<"Morning" | "Evening" | "All">("All");
+  const [shiftFilter, setShiftFilter] = useState<"Morning" | "Evening" | "All">(
+    "All"
+  );
   const [filteredTrainers, setFilteredTrainers] = useState<Trainer[]>(trainers);
 
   useEffect(() => {
@@ -51,7 +54,7 @@ export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
     router.push(
       `addtrainers?id=${trainer.id}&name=${encodeURIComponent(
         trainer.name
-      )}&shift=${trainer.shift}&image=https://res.cloudinary.com/db4bbyw44/image/upload/v1731221421/gym/wjw8imo0xokwe4vjldlp.webp&rating=${trainer.assignedClients}`
+      )}&shift=${trainer.shift}&image=${trainer.image}`
     );
   };
 

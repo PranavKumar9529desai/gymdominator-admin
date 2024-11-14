@@ -6,11 +6,12 @@ interface mockUsersType {
   todaysAttendance: boolean;
 }
 
-interface Trainer{
+interface Trainer {
   id: number;
   name: string;
   assignedClients: number;
   shift: "Morning" | "Evening";
+  image: string;
 }
 
 interface TrainersResponse {
