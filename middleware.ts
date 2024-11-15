@@ -9,6 +9,8 @@ export default async function middleware(request: NextRequest) {
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
+  console.log("token from the middleware", token);
+
   if (!token) {
     return NextResponse.redirect(new URL("/signin", request.url));
   }

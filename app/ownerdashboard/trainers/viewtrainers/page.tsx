@@ -5,7 +5,7 @@ export default async function Page({
 }: {
   searchParams: { gymid: string };
 }) {
-  let gymid = searchParams.gymid || "1";
+  let gymid = searchParams.gymid || "2";
   const trainers: Trainer[] = await FetchTrainers({ gymid: gymid });
 
   return (

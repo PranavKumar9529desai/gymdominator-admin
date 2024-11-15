@@ -1,15 +1,18 @@
 import ViewGymDetails from "@/components/gym-owner/viewgymdetails";
 import React from "react";
 import FetchGymDetailsSA from "@/app/actions/FetchGymDetailsSA";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import { revalidatePath } from "next/cache";
 export default async function page({
   searchParams,
 }: {
   searchParams: { gymid: string };
 }) {
+  revalidatePath("/ownerdashboard/gymdetails");
   let gymid = searchParams.gymid;
   console.log("gymid is ", gymid);
   let gymdetails = await FetchGymDetailsSA(gymid);
-  console.log("gym details are ", gymdetails);
   if (!gymdetails) {
     return <>Loading plz wait</>;
   } else {

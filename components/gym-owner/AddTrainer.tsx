@@ -91,7 +91,6 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
     }
 
     let imageUrl: string | undefined = undefined;
-    // TODO add swal alert to this fix this
     try {
       setLoading(true);
       if (image) {
@@ -137,7 +136,7 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
         : await addTrainer(requestData as AddTrainerRequest);
 
       if (
-        (isEditing && responseData.success) ||
+        (isEditing && responseData.trainer) ||
         (!isEditing && responseData.trainer)
       ) {
         setLoading(false);
