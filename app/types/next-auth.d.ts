@@ -36,6 +36,7 @@ declare module "next-auth" {
   interface User {
     name: string;
     email: string;
+    password: string;
     name: string;
     Role: Rolestypeu;
     Gym: string;

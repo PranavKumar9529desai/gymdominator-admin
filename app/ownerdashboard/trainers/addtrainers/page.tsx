@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import AddTrainer from "@/components/gym-owner/AddTrainer";
+import AddTrainer from "@/components/gym-owner/EditTrainers";
 
 export default function AddTrainerPage() {
   const searchParams = useSearchParams();

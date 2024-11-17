@@ -5,7 +5,11 @@ export default async function Page({
 }: {
   searchParams: { gymid: string };
 }) {
-  let gymid = searchParams.gymid || "2";
+  let gymid = searchParams.gymid;
+  console.log("gym id fomr the view trainers page is ", gymid);
+  if (searchParams.gymid == undefined) {
+    gymid = "2";
+  }
   const trainers: Trainer[] = await FetchTrainers({ gymid: gymid });
 
   return (

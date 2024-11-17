@@ -2,15 +2,10 @@ import axios, { AxiosResponse } from "axios";
 import { getToken } from "next-auth/jwt";
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
+import GetTokenSA from "./GetTokenSA";
 export default async function FetchGymDetailsSA(gymid: string) {
-  const cookieStore = await cookies();
-  const token = await getToken({
-    // @ts-ignore
-    req: { cookies: cookieStore },
-    secret: process.env.NEXTAUTH_SECRET,
-  });
-
   // console.log("here are the cooploes", cookieStore);
+  let token = await GetTokenSA();
   console.log("token from the FetchGyjmdeatails", token);
   interface responseType {
     msg: string;

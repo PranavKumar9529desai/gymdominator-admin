@@ -14,6 +14,19 @@ interface Trainer {
   image: string;
 }
 
+interface SignupResponse {
+  msg: string;
+  owner: {
+    id: number;
+    gym_auth_token: null;
+    name: string;
+    role: string;
+    email: string;
+    password: string;
+    gym_id: number;
+  };
+}
+
 interface TrainersResponse {
   msg: string;
   trainers: Trainer[];

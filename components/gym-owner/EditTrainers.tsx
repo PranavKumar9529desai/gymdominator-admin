@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Upload, Star, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -67,6 +67,20 @@ export default function AddTrainer({ addTrainerProps }: AddTrainerProps) {
       reader.readAsDataURL(file);
     }
   };
+
+  useEffect(() => {
+    if (addTrainerProps) {
+      Swal.fire({
+        title: "Warning",
+        text: "Do you want to edit the trainer details?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      });
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

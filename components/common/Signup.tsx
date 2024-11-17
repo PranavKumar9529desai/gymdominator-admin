@@ -99,11 +99,11 @@ export default function SignUp() {
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="GYMOWNER">Gym Owner</SelectItem>
-                <SelectItem value="TRAINER" disabled>
+                <SelectItem value="gymOwner">Gym Owner</SelectItem>
+                <SelectItem value="trainer" disabled>
                   Trainer
                 </SelectItem>
-                <SelectItem value="SALES" disabled>
+                <SelectItem value="sales" disabled>
                   Sales
                 </SelectItem>
               </SelectContent>

@@ -31,8 +31,9 @@ export default function Sidebar() {
   const [activePage, setActivePage] = useState<string>("viewGymDetails");
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const router = useRouter();
-
-  let gymid = 2;
+ 
+  // why this harcocded 
+  let gymid = "10";
 
   const menuItems: MenuItem[] = [
     {
@@ -126,7 +127,7 @@ export default function Sidebar() {
         />
       </div>
 
-      <nav className="flex-grow">
+      <nav className="flex-grow px-4 py-2">
         <ul className="space-y-2">
           {menuItems.map((item) => (
             <li key={item.name} className="whitespace-nowrap">

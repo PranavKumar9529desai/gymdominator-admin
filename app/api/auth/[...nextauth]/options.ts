@@ -6,6 +6,8 @@ import { Account, Profile, User } from "next-auth";
 import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "cookie";
 import GoogleProvider from "next-auth/providers/google";
+import SignupSA, { UserExistsSA } from "@/app/actions/SignupSA";
+import { Rolestype } from "@/app/types/next-auth";
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -45,13 +47,44 @@ export const authOptions: NextAuthOptions = {
           name: username || "",
           id: "1",
           email: email || " ",
+          password: password || "",
           Role: role,
           Gym: gym || "",
         };
         console.log("here is the user ", user);
-        if (!role && !user) return null;
-        else {
-          return user;
+        let isUserexist:
+          | false
+          | { name: string; password: string; email: string } =
+          await UserExistsSA(user.Role, user.email, user.name, user.password);
+
+        if (isUserexist == false) {
+          // create the user
+          let name = username;
+          console.log(
+            "values form the  option ts ",
+            role,
+            name,
+            email,
+            password
+          );
+          let response = await SignupSA(
+            user.Role as string,
+            user.name as string,
+            user.email as string,
+            user.password as string
+          );
+          // console.log("created the user this catorgory ", response);
+          console.log("user is created ", response);
+          return response;
+        } else {
+          if (
+            isUserexist.email == user.email &&
+            isUserexist.password == user.password
+          ) {
+            return isUserexist;
+          } else {
+            return null;
+          }
         }
       },
     }),
@@ -66,84 +99,38 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    // async signIn(
-    //   params: {
-    //     user: any;
-    //     account: any;
-    //     profile: any;
-    //     email?: any;
-    //     credentials?: any;
-    //   },
-    //   reqContext: { req: NextApiRequest; res: NextApiResponse }
-    // ): Promise<boolean> {
-    //   const { user, account } = params;
-    //   const { req, res } = reqContext;
+    // async signIn({ user, account, profile }) {
+    //   let isUserexist:
+    //     | false
+    //     | { name: string; password: string; email: string } =
+    //     await UserExistsSA(user.Role, user.email, user.name, user.password);
 
-    //   console.log("SignIn Callback: Triggered.");
-    //   console.log("SignIn Callback: Account Provider:", account?.provider);
-
-    //   if (account?.provider === "google") {
-    //     try {
-    //       // Parse cookies from the request headers
-    //       const cookies = parse(req.headers.cookie || "");
-    //       console.log("SignIn Callback: Parsed cookies:", cookies);
-    //       const role = cookies.tempRole;
-    //       const gym = cookies.tempGym;
-
-    //       if (role && gym) {
-    //         // Attach the role and gym to the user object
-    //         user.role = role;
-    //         user.gym = gym;
-
-    //         console.log(
-    //           "SignIn Callback: Attached role and gym to user:",
-    //           user
-    //         );
-
-    //         // Clear the tempRole and tempGym cookies
-    //         res.setHeader(
-    //           "Set-Cookie",
-    //           [
-    //             `tempRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Strict`,
-    //             `tempGym=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Secure; SameSite=Strict`,
-    //           ].join(", ")
-    //         );
-
-    //         console.log(
-    //           "SignIn Callback: Cleared tempRole and tempGym cookies."
-    //         );
-    //       } else {
-    //         // If role or gym is not found, deny sign-in
-    //         console.log(
-    //           "SignIn Callback: Missing role or gym. Denying sign-in."
-    //         );
-    //         return false;
-    //       }
-    //     } catch (error) {
-    //       console.error(
-    //         "SignIn Callback: Error while processing cookies:",
-    //         error
-    //       );
+    //   if (isUserexist == false) {
+    //     return false;
+    //   } else {
+    //     if (
+    //       isUserexist.email == user.email &&
+    //       isUserexist.password == user.password
+    //     ) {
+    //       return true;
+    //     } else {
     //       return false;
     //     }
     //   }
-
-    //   console.log("SignIn Callback: Sign-in allowed.");
-    //   return true;
     // },
+
     async jwt({ token, user, profile, account }) {
       if (user && account) {
+        // @ts-ignore
+        let response: SignupResponse = await SignupSA(
+          user.name,
+          user.email,
+          user.password
+        );
         token.accessToken = account?.access_token;
-        token.name = user.name;
-        token.role = user.Role;
-        if (account.provider === "credentials") {
-          token.role = user.Role;
-        } else if (account.provider === "google") {
-          // Assign a default role or fetch from your database
-          // this is for the signup attempt once the role is dtermined fomr the backend then we can easily rewrite this
-
-          token.Role = "GYMOWNER"; // Or fetch the role based on user's email
-        }
+        token.name = response.owner.name;
+        token.role = response.owner.role;
+        console.log("response is this ", response);
       }
       return token;
     },
