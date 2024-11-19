@@ -2,9 +2,9 @@ import { AxiosResponse } from "axios";
 import axios from "axios";
 import { headers } from "next/headers";
 
-type Role = "gymOwner" | "trainer"; // Add other roles as needed
+export type Role = "gymOwner" | "trainer"; // Add other roles as needed
 
-interface SignupResponse {
+export interface SignupResponse {
   msg: string;
   user: {
     id: number;
