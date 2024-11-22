@@ -33,6 +33,7 @@ export default {
           user = {
             name,
             email,
+            Role: role,
           };
           console.log("user created in the credemtails provider", user);
           return user;
@@ -61,6 +62,8 @@ export default {
       console.log("jwt is called");
       console.log("user from the jwt", user);
       if (user && user.email && user.name) {
+        token.Role = user.Role;
+        
         // token.user.name = user.name;
         // token.user.email = user.email;
         return token;
@@ -69,7 +72,7 @@ export default {
       return token;
     },
     async session({ token, session }) {
-      console.log("session is called");
+      console.log("session is called", token);
       if (token && token.email && token.name) {
         session.user.name = token.name;
         session.user.email = token.email;
