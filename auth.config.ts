@@ -59,26 +59,26 @@ export default {
   ],
   callbacks: {
     async jwt({ user, account, token }) {
-      console.log("jwt is called");
-      console.log("user from the jwt", user);
+      // console.log("jwt is called");
+      // console.log("user from the jwt", user);
       if (user && user.email && user.name) {
         token.Role = user.Role;
-        
+
         // token.user.name = user.name;
         // token.user.email = user.email;
         return token;
       }
-      console.log("token is this ", token);
+      // console.log("token is this ", token);
       return token;
     },
     async session({ token, session }) {
-      console.log("session is called", token);
+      // console.log("session is called", token);
       if (token && token.email && token.name) {
         session.user.name = token.name;
         session.user.email = token.email;
         return session;
       }
-      console.log("session is this ", token);
+      // console.log("session is this ", token);
       return session;
     },
   },

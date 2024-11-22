@@ -2,7 +2,7 @@
 import NextAuth from "next-auth";
 import { DefaultSession } from "next-auth";
 import { NextRequest } from "next/server";
-type Rolestype = "GYMOWNER" | "TRAINER" | "SALES";
+type Rolestype = "gymOwner" | "trainer" | "sales";
 // Extend the default Session type to include custom fields
 interface GymType {
   name: string;
