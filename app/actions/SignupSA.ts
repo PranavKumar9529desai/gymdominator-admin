@@ -1,3 +1,4 @@
+"use server"
 import { AxiosResponse } from "axios";
 import axios from "axios";
 import { headers } from "next/headers";
@@ -21,7 +22,7 @@ export default async function SignupSA(
   password: string
 ) {
   let role = Role.toLowerCase();
-  console.log("role rom, the signupSa ", role , name , email , password);
+  console.log("role rom, the signupSa ", role, name, email, password);
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/${role}`,
@@ -39,25 +40,27 @@ export default async function SignupSA(
     }
 
     const data = (await response.json()) as SignupResponse;
-    console.log("data from the signupsa",data)
+    console.log("data from the signupsa", data);
     if (!data) {
       throw new Error("No data received");
     }
 
-    return data.user;
+    return data;
   } catch (error) {
     console.error("Error signing up:", error);
     return error;
   }
 }
 
-interface UserExistsResponse {
+export interface UserExistsResponse {
   msg: string;
-  user: null | {
-    name: string;
-    password: string;
-    email: string;
-  };
+  user:
+    | false
+    | {
+        name: string;
+        password: string;
+        email: string;
+      };
 }
 
 // does the user exists
@@ -82,11 +85,7 @@ export async function UserExistsSA(
       },
     }
   );
-  // console.log("response is this ", response);
-  let user = response.data.user;
-  if (user) {
-    return user;
-  } else {
-    return false;
-  }
+  console.log("response is this ", response.data);
+  let user = response.data;
+  return user;
 }

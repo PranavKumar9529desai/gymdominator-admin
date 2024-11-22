@@ -1,4 +1,3 @@
-import { getServerSession } from "next-auth";
 import React from "react";
 import { authOptions } from "../api/auth/[...nextauth]/options";
 import SignUp from "@/components/common/Signup";

@@ -4,26 +4,16 @@ import { DefaultSession } from "next-auth";
 import { NextRequest } from "next/server";
 type Rolestype = "GYMOWNER" | "TRAINER" | "SALES";
 // Extend the default Session type to include custom fields
-
-interface Callbacks {
-  signIn: (
-    params: {
-      user: User | AdapterUser;
-      account: Account | null;
-      profile?: Profile;
-      email?: { verificationRequest?: boolean };
-      credentials?: Record<string, unknown>;
-    },
-    /** Added context parameter */
-    req: NextApiRequest
-  ) => Awaitable<boolean | string>;
+interface GymType {
+  name: string;
+  id: string;
 }
 
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
     Role: Rolestype;
-    Gym: string;
+    Gym: GymType;
     user: {
       name?: string;
       id?: string;
@@ -37,9 +27,8 @@ declare module "next-auth" {
     name: string;
     email: string;
     password: string;
-    name: string;
-    Role: Rolestypeu;
-    Gym: string;
+    Role: Rolestype;
+    Gym?: GymType;
   }
 }
 // Extend the default JWT type to include custom fields
@@ -47,11 +36,11 @@ declare module "next-auth/jwt" {
   interface JWT {
     Role: Rolestype;
     req: NextRequest;
-    Gym: string;
+    Gym: GymType;
     accessToken?: string;
     user: {
-      name?: string;
-      id?: string;
+      name: string;
+      email: string;
       picture?: string;
     };
   }
