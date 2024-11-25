@@ -29,6 +29,7 @@ import {
 } from "../ui/select";
 import { Lock, Mail, User, UserRoundCogIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
+import { sendVerificationEmail } from "@/lib/mail";
 
 // form schema
 const Role = z.enum(["trainer", "gymOwner"]);
@@ -90,9 +91,7 @@ export default function RegisterForm() {
       );
       seterror(response.msg);
       if (response.user != false) {
-        // meaing thr user object returned by the user is not empty
-        // so we can now creatte the user here
-        settype("fail");
+       settype("fail");
       } else {
         // @ts-ignore
         let response: {
@@ -109,7 +108,7 @@ export default function RegisterForm() {
           signIn("credentials", {
             email,
             password,
-            role,
+            Role: role,
             name,
             redirectTo: "/",
           });
@@ -118,6 +117,16 @@ export default function RegisterForm() {
         }
       }
     });
+  }
+
+  async function sendVerficationEmail() {
+    try {
+      console.log("resend proivder is called");
+      console.log("email from the form is ", form.getValues("email"));
+      let response = await sendVerificationEmail(form.getValues("email"));
+    } catch (error) {
+      console.log("signin failed due in resend provider because  ", error);
+    }
   }
 
   return (
@@ -283,6 +292,14 @@ export default function RegisterForm() {
               <FormMessage />
             </form>
           </Form>
+          <Button
+            className="w-full mt-5"
+            type="submit"
+            disabled={ispending}
+            onClick={sendVerficationEmail}
+          >
+            {ispending ? "Submitting" : "Email Login "}
+          </Button>
         </CardContent>
       </Card>
     </>

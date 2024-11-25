@@ -19,10 +19,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { User, Mail, Lock, Key } from "lucide-react";
-import { signIn } from "next-auth/react";
 import { coustomAlert } from "./common/Alerts/CustomAlerts";
-import signin from "@/app/signin/page";
-
+import { signIn } from "next-auth/react";
 export default function SignIn() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -31,7 +29,7 @@ export default function SignIn() {
   const [gym, setGym] = useState("");
 
   const handleGoogleSubmit = async () => {
-    if (!role && !gym) {
+    if (!role) {
       coustomAlert("error", "Please select Role First");
     } else {
       // Store additional data in cookies
@@ -51,11 +49,10 @@ export default function SignIn() {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     await signIn("credentials", {
-      username,
       password,
       email,
-      role,
-      gym,
+      Role: role,
+      // gym,
       redirect: true,
     });
     console.log("Form submitted");
@@ -119,13 +116,13 @@ export default function SignIn() {
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="GYMOWNER">Gym Owner</SelectItem>
-                <SelectItem value="TRAINER">Trainer</SelectItem>
-                <SelectItem value="SALES">Sales</SelectItem>
+                <SelectItem value="gymOwner">Gym Owner</SelectItem>
+                <SelectItem value="trainer">Trainer</SelectItem>
+                <SelectItem value="sales">Sales</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          {role && (
+          {/* {role && (
             <div className="space-y-2">
               <Label htmlFor="gym">Gym</Label>
               <Select onValueChange={setGym} required>
@@ -141,8 +138,8 @@ export default function SignIn() {
                 </SelectContent>
               </Select>
             </div>
-          )}
-          {gym && (
+          )} */}
+          {/* {gym && (
             <div className="space-y-2">
               <Label htmlFor="gymToken">Gym Token</Label>
               <div className="relative">
@@ -155,7 +152,7 @@ export default function SignIn() {
                 />
               </div>
             </div>
-          )}
+          )} */}
           <Button type="submit" className="w-full">
             Sign IN
           </Button>

@@ -6,6 +6,27 @@ interface mockUsersType {
   todaysAttendance: boolean;
 }
 
+ interface RegisterInput {
+  email: string;
+  password: string;
+  name: string;
+  role: Role;
+}
+
+ interface RegisterResponse {
+  msg: string;
+  user: {
+    name: string;
+    email: string;
+  } | null;
+}
+
+interface UserFromDBType {
+  name: string;
+  email: string;
+  password: string;
+}
+
 interface Trainer {
   id: number;
   name: string;

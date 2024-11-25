@@ -48,19 +48,27 @@ export default auth(async function middleware(request) {
    * Default redirect Route
    * @type {string}
    */
-  let DefaultRedirectRoute: string = `/${token?.Role.toLowerCase()}dashboard`;
+  // let DefaultRedirectRoute: string = `/${token?.Role.toLowerCase()}dashboard`;
+  let DefaultRedirectRoute: string = "/";
   console.log("DefaultRedirectRoute", DefaultRedirectRoute);
-
   const isLoggedIn = !!request.auth;
   console.log("isloggedin", isLoggedIn);
-
   let isApiRoute = nextUrl.pathname.startsWith(ApiRoutesPrefix);
   let isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   let isProctectedRoute = ProtectedRoutes.some((route) =>
     nextUrl.pathname.startsWith(route)
   );
   let isAuthRoute = AuthRoutes.includes(nextUrl.pathname);
-  console.log(isApiRoute, isPublicRoute, isProctectedRoute, isAuthRoute);
+  console.log(
+    "isapiRoute",
+    isApiRoute,
+    "isPublicRoute",
+    isPublicRoute,
+    "isProtectedRoute",
+    isProctectedRoute,
+    "isAuthRoute",
+    isAuthRoute
+  );
 
   if (isApiRoute) {
     return NextResponse.next();
@@ -77,29 +85,34 @@ export default auth(async function middleware(request) {
     console.log("public is called ");
     return NextResponse.next();
   }
+
   console.log("token from the middleware", token);
-  if (token) {
-    const path = request.nextUrl.pathname;
-    console.log("paht is this", path);
-    if (path.startsWith("/owner")) {
-      return IsGymOwner(token)
-        ? NextResponse.next()
-        : NextResponse.rewrite(new URL("/unauthorized", request.url));
-    }
+  if (isProctectedRoute) {
+    if (token && token.Role && isLoggedIn) {
+      const path = request.nextUrl.pathname;
+      console.log("paht is this", path);
+      if (path.startsWith("/owner")) {
+        return IsGymOwner(token)
+          ? NextResponse.next()
+          : NextResponse.rewrite(new URL("/unauthorized", request.url));
+      }
 
-    if (path.startsWith("/trainer")) {
-      return IsTrainer(token)
-        ? NextResponse.next()
-        : NextResponse.rewrite(new URL("/unauthorized", request.url));
-    }
+      if (path.startsWith("/trainer")) {
+        return IsTrainer(token)
+          ? NextResponse.next()
+          : NextResponse.rewrite(new URL("/unauthorized", request.url));
+      }
 
-    if (path.startsWith("/sales")) {
-      return IsSales(token)
-        ? NextResponse.next()
-        : NextResponse.rewrite(new URL("/unauthorized", request.url));
-    }
+      if (path.startsWith("/sales")) {
+        return IsSales(token)
+          ? NextResponse.next()
+          : NextResponse.rewrite(new URL("/unauthorized", request.url));
+      }
 
-    return NextResponse.next();
+      return NextResponse.next();
+    } else {
+      return NextResponse.redirect(new URL("/signin", request.url));
+    }
   }
 });
 

@@ -1,4 +1,4 @@
-"use server"
+"use server";
 import { AxiosResponse } from "axios";
 import axios from "axios";
 import { headers } from "next/headers";
@@ -20,7 +20,13 @@ export default async function SignupSA(
   name: string,
   email: string,
   password: string
-) {
+): Promise<{
+  msg: string;
+  user: {
+    name: string;
+    email: string;
+  } | null;
+}> {
   let role = Role.toLowerCase();
   console.log("role rom, the signupSa ", role, name, email, password);
   try {
@@ -48,7 +54,7 @@ export default async function SignupSA(
     return data;
   } catch (error) {
     console.error("Error signing up:", error);
-    return error;
+    return { msg: "Error signing up", user: null };
   }
 }
 
