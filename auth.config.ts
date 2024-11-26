@@ -16,7 +16,7 @@ export default {
         name: {},
         email: {},
         password: {},
-        Role: {},
+        role: {},
       },
       // @ts-ignore
       async authorize(
@@ -28,7 +28,7 @@ export default {
         | {
             name: string;
             email: string;
-            Role: string;
+            role: string;
           }
         | null
         | undefined
@@ -36,23 +36,24 @@ export default {
         let user = null;
         // verify the login schema
         // const { email, password } = await LoginSchema.parseAsync(credentials);
-        const { email, password, name, Role } = credentials as {
+        const { email, password, name, role } = credentials as {
           email: string;
           password: string;
           name: string;
-          Role: string;
+          role: string;
         };
         console.log(
           "credentails received from the sigin are ",
           email,
           password,
           name,
-          Role
+          role
         );
-        if (email && password && Role) {
+        // name is not checked as the it is not necssary for the signin
+        if (email && password && role) {
           let userFromDB: userType | false = await getUserByEmail(
             email,
-            Role as Rolestype
+            role as Rolestype
           );
           console.log("user from the db", userFromDB);
           if (userFromDB && userFromDB.name && userFromDB.email) {
@@ -61,17 +62,14 @@ export default {
               password,
               userFromDB.password
             );
-            console.log("is password match", isPasswordMatch);
             if (isPasswordMatch) {
               user = {
                 name: userFromDB.name,
                 email: userFromDB.email,
-                Role: Role,
+                role: role,
               };
-              console.log("user created in the credemtails provider", user);
               return user;
             } else {
-              console.log("user", user);
               // how to throw the error as the invald password asnd show this is error in the frontend as well
               return null;
             }
@@ -82,16 +80,14 @@ export default {
                 name: string;
                 email: string;
               } | null;
-            } = await SignupSA(Role, name, email, password);
-            console.log("user after signup is ", response);
+            } = await SignupSA(role, name, email, password);
             // check if the user is created
             if (response.user && response.user.name && response.user.email) {
               user = {
                 name: response.user.name,
                 email: response.user.email,
-                Role: Role,
+                role: role,
               };
-              console.log("user created in the credemtails provider", user);
               return user;
             }
           }
@@ -112,19 +108,30 @@ export default {
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account && account.provider === "google") {
-        console.log("account is google");
-        user.Role = "gymOwner";
-        // user.Role = "gymOwner";
+        console.log("user in the google signin", user);
+        if (user && user.email) {
+          let userFromDb: userType | false =
+            (await getUserByEmail(user.email, "gymOwner")) ||
+            (await getUserByEmail(user.email, "trainer")) ||
+            (await getUserByEmail(user.email, "sales"));
+
+          if (userFromDb && userFromDb.name && userFromDb.email) {
+            if (await getUserByEmail(user.email, "gymOwner")) {
+              user.role = "gymOwner";
+            } else if (await getUserByEmail(user.email, "trainer")) {
+              user.role = "trainer";
+            } else if (await getUserByEmail(user.email, "sales")) {
+              user.role = "sales";
+            }
+          }
+        }
       }
-      console.log("sign in is called");
-      console.log("user from the sign in", user);
+      console.log("user in the signin from the sign callback", user);
       return true;
     },
     async jwt({ user, account, token }) {
-      console.log("jwt is called");
-      console.log("user from the jwt", user);
       if (user && user.email && user.name) {
-        token.Role = user.Role;
+        token.role = user.role;
 
         return token;
       }
@@ -136,6 +143,7 @@ export default {
       if (token && token.email && token.name) {
         session.user.name = token.name;
         session.user.email = token.email;
+        session.role = token.role;
         return session;
       }
       // console.log("session is this ", token);

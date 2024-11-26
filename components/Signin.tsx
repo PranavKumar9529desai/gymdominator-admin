@@ -18,7 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { User, Mail, Lock, Key } from "lucide-react";
+import { User, Mail, Lock, Key, Eye, EyeOff } from "lucide-react";
 import { coustomAlert } from "./common/Alerts/CustomAlerts";
 import { signIn } from "next-auth/react";
 export default function SignIn() {
@@ -27,18 +27,12 @@ export default function SignIn() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [gym, setGym] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleGoogleSubmit = async () => {
     if (!role) {
       coustomAlert("error", "Please select Role First");
     } else {
-      // Store additional data in cookies
-      document.cookie = `tempRole=${role}; path=/; max-age=300`; // Expires in 5 minutes
-      document.cookie = `tempGym=${gym}; path=/; max-age=300`; // Expires in 5 minutes
-
-      console.log("Cookies set:", document.cookie);
-
-      // Initiate Google sign-in
       await signIn("google", {
         callbackUrl: "/", // Redirect after sign-in
         redirect: true,
@@ -51,44 +45,29 @@ export default function SignIn() {
     await signIn("credentials", {
       password,
       email,
-      Role: role,
-      // gym,
+      role,
       redirect: true,
     });
     console.log("Form submitted");
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>Sign IN</CardTitle>
-        <CardDescription>Sign in to your account </CardDescription>
+    <Card className="w-full max-w-md mx-auto bg-white shadow-lg rounded-lg">
+      <CardHeader className="text-center pb-6">
+        <CardTitle className="text-2xl font-semibold text-gray-800">Welcome Back</CardTitle>
+        <CardDescription className="text-gray-600">Please sign in to your account</CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
-            <div className="relative">
-              <User className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="username"
-                placeholder="johndoe"
-                className="pl-8"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-          </div> */}
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-sm font-medium text-gray-700">Email Address</Label>
             <div className="relative">
-              <Mail className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Mail className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 id="email"
                 type="email"
                 placeholder="john@example.com"
-                className="pl-8"
+                className="pl-10 h-11 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -96,23 +75,35 @@ export default function SignIn() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-sm font-medium text-gray-700">Password</Label>
             <div className="relative">
-              <Lock className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Lock className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
               <Input
                 id="password"
-                type="password"
-                className="pl-8"
+                type={showPassword ? "text" : "password"}
+                className="pl-10 pr-10 h-11 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 focus:outline-none"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5" />
+                ) : (
+                  <Eye className="h-5 w-5" />
+                )}
+              </button>
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="role" className="text-sm font-medium text-gray-700">Select Role</Label>
             <Select onValueChange={setRole} required>
-              <SelectTrigger>
+              <SelectTrigger className="h-11 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
               <SelectContent>
@@ -122,61 +113,34 @@ export default function SignIn() {
               </SelectContent>
             </Select>
           </div>
-          {/* {role && (
-            <div className="space-y-2">
-              <Label htmlFor="gym">Gym</Label>
-              <Select onValueChange={setGym} required>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your gym" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Fitness First">Fitness First</SelectItem>
-                  <SelectItem value="Gold's Gym">Gold's Gym</SelectItem>
-                  <SelectItem value="24 Hour Fitness">
-                    24 Hour Fitness
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )} */}
-          {/* {gym && (
-            <div className="space-y-2">
-              <Label htmlFor="gymToken">Gym Token</Label>
-              <div className="relative">
-                <Key className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="gymToken"
-                  placeholder="Enter gym token"
-                  className="pl-8"
-                  required
-                />
-              </div>
-            </div>
-          )} */}
-          <Button type="submit" className="w-full">
-            Sign IN
+          <Button 
+            type="submit" 
+            className="w-full h-11 bg-black text-white font-medium rounded-md transition-colors"
+          >
+            Sign In
           </Button>
         </form>
-        <div className="relative my-4">
+
+        <div className="relative my-6">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
+            <span className="w-full border-t border-gray-300" />
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-white text-gray-500">
               Or continue with
             </span>
           </div>
         </div>
+
         <Button
-          className="w-full"
+          className="w-full h-11 bg-white hover:bg-gray-50 text-gray-700 font-medium border border-gray-300 rounded-md transition-colors flex items-center justify-center gap-3"
           variant="outline"
           onClick={() => {
-            console.log("button is clicked");
             handleGoogleSubmit();
           }}
         >
           <svg
-            className="mr-2 h-4 w-4"
+            className="h-5 w-5"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -200,6 +164,15 @@ export default function SignIn() {
           </svg>
           Sign in with Google
         </Button>
+        <div className="text-center text-sm text-muted-foreground mt-5  ">
+              Don't have an account?{" "}
+              <a 
+                href="/signup" 
+                className=" hover:underline font-medium text-blue-600"
+              >
+                Sign Up
+              </a>
+            </div>
       </CardContent>
     </Card>
   );

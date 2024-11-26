@@ -12,8 +12,8 @@ interface GymType {
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
-    Role: Rolestype;
-    Gym: GymType;
+    role: Rolestype;
+    gym: GymType;
     user: {
       name?: string;
       id?: string;
@@ -26,16 +26,16 @@ declare module "next-auth" {
   interface User {
     name: string;
     email: string;
-    Role: Rolestype;
-    Gym?: GymType;
+    role: Rolestype;
+    gym?: GymType;
   }
 }
 // Extend the default JWT type to include custom fields
 declare module "next-auth/jwt" {
   interface JWT {
-    Role: Rolestype;
+    role: Rolestype;
     req: NextRequest;
-    Gym: GymType;
+    gym: GymType;
     accessToken?: string;
     user: {
       name: string;

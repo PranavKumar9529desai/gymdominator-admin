@@ -39,7 +39,6 @@ const { auth } = NextAuth(authConfig);
 
 export default auth(async function middleware(request) {
   const { nextUrl } = request;
-  console.log("request is this ", request.auth);
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
@@ -50,9 +49,7 @@ export default auth(async function middleware(request) {
    */
   // let DefaultRedirectRoute: string = `/${token?.Role.toLowerCase()}dashboard`;
   let DefaultRedirectRoute: string = "/";
-  console.log("DefaultRedirectRoute", DefaultRedirectRoute);
   const isLoggedIn = !!request.auth;
-  console.log("isloggedin", isLoggedIn);
   let isApiRoute = nextUrl.pathname.startsWith(ApiRoutesPrefix);
   let isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   let isProctectedRoute = ProtectedRoutes.some((route) =>
@@ -75,22 +72,19 @@ export default auth(async function middleware(request) {
   }
 
   if (isAuthRoute) {
-    console.log("authRoute is called", isAuthRoute);
     if (isLoggedIn) {
       return NextResponse.redirect(new URL(DefaultRedirectRoute, nextUrl));
     }
   }
 
   if (isPublicRoute) {
-    console.log("public is called ");
     return NextResponse.next();
   }
-
-  console.log("token from the middleware", token);
+  console.log("token", token);
   if (isProctectedRoute) {
-    if (token && token.Role && isLoggedIn) {
+    if (token && token.role && isLoggedIn) {
+      console.log("toke is ", token);
       const path = request.nextUrl.pathname;
-      console.log("paht is this", path);
       if (path.startsWith("/owner")) {
         return IsGymOwner(token)
           ? NextResponse.next()

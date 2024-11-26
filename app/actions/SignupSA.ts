@@ -3,7 +3,7 @@ import { AxiosResponse } from "axios";
 import axios from "axios";
 import { headers } from "next/headers";
 
-export type Role = "gymOwner" | "trainer"; // Add other roles as needed
+export type Role = "gymOwner" | "trainer" | "sales"; // Add other roles as needed
 
 export interface SignupResponse {
   msg: string;
@@ -69,17 +69,24 @@ export interface UserExistsResponse {
       };
 }
 
+export interface UserExistsFormat {
+  msg: string;
+  user: {
+    name: string;
+    email: string;
+  } | null;
+}
 // does the user exists
 export async function UserExistsSA(
-  Role: Role,
+  role: Role,
   email: string,
   name: string,
   password: string
-) {
+): Promise<UserExistsFormat> {
   //  return true if user exists and password is correct
 
   let response: AxiosResponse<UserExistsResponse> = await axios.post(
-    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/isexists/${Role}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/isexists/${role}`,
     {
       email,
       name,
@@ -93,5 +100,18 @@ export async function UserExistsSA(
   );
   console.log("response is this ", response.data);
   let user = response.data;
-  return user;
+
+  if (user.user === false) {
+    return {
+      msg: user.msg,
+      user: null,
+    };
+  }
+
+  let userExists: UserExistsFormat = {
+    msg: user.msg,
+    user: user.user,
+  };
+
+  return userExists;
 }
