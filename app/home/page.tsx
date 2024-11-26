@@ -16,6 +16,7 @@ export default async function HeroSection( request: NextRequest) {
     req: request,
     secret: process.env.AUTH_SECRET,
   });
+  // done some changes
   const session = await auth();
   console.log("session from the hero section  ", session);
   console.log("token from the hero section  ", token);
