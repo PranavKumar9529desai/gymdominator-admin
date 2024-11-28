@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { getToken } from "next-auth/jwt";
-import GetTokenSA from "./GetTokenSA";
+import GetTokenSA from "../GetTokenSA";
 export default async function FetchTrainers({
   gymid,
 }: {

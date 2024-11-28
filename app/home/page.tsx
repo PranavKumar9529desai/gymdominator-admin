@@ -1,25 +1,19 @@
 import { Button } from "@/components/ui/button";
 import LogoImage from "@/app/assests/gymd.webp";
 import TestimonialCard from "./TestimonialsCard";
-import { ArrowRight, BarChart2, Users, Calendar } from "lucide-react";
+import { ArrowRight, BarChart2} from "lucide-react";
 import Image from "next/image";
 import FeatureCard from "./FeatureCard";
 import CustomButton from "./CustomButton";
 import { BackgroundBeams } from "@/components/beams";
 import Footer from "./Footer";
-import { getToken } from "next-auth/jwt";
-import { NextRequest } from "next/server";
 import { auth } from "@/auth";
 import { Rolestype } from "../types/next-auth";
-export default async function HeroSection( request: NextRequest) {
-  const token = await getToken({
-    req: request,
-    secret: process.env.AUTH_SECRET,
-  });
-  // done some changes
+export default async function HeroSection() {
+ 
   const session = await auth();
-  console.log("session from the hero section  ", session);
-  console.log("token from the hero section  ", token);
+  const  role =  session?.role as Rolestype;
+  console.log("role from the hero section", role); 
   return (
     <main className="bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white min-h-screen overflow-hidden">
       <section className="relative pb-16 lg:pb-28">
@@ -38,15 +32,13 @@ export default async function HeroSection( request: NextRequest) {
                   growth with our sophisticated management suite.
                 </p>
               </div>
-              
+
               <div className="flex flex-col sm:flex-row gap-6 mt-8">
-                {/* @ts-ignore */}
-                <CustomButton role={session?.role as Rolestype} />
+                <CustomButton role={ role } />
                 <Button
                   variant="outline"
                   className="hidden sm:flex items-center gap-2 bg-transparent border border-gray-700 text-gray-300 hover:bg-gray-800/50 hover:border-gray-600 font-medium px-6 py-3 rounded-lg transition-all duration-300"
                 >
-
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </div>
@@ -109,6 +101,18 @@ export default async function HeroSection( request: NextRequest) {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <TestimonialCard
+              quote="GymDominator revolutionized our operations. We've seen a 30% increase in member retention."
+              author="Sarah Johnson"
+              role="Fitness Center Owner"
+              className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 hover:border-gray-700 transition-colors duration-300"
+            />
+            <TestimonialCard
+              quote="GymDominator revolutionized our operations. We've seen a 30% increase in member retention."
+              author="Sarah Johnson"
+              role="Fitness Center Owner"
+              className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 hover:border-gray-700 transition-colors duration-300"
+            />
+<TestimonialCard
               quote="GymDominator revolutionized our operations. We've seen a 30% increase in member retention."
               author="Sarah Johnson"
               role="Fitness Center Owner"

@@ -1,5 +1,5 @@
 import ViewTrainersList from "@/components/gym-owner/viewTrainers";
-import FetchTrainers from "@/app/actions/FetchtrainersSA";
+import FetchTrainers from "@/app/actions/gym/FetchtrainersSA";
 export default async function Page({
   searchParams,
 }: {

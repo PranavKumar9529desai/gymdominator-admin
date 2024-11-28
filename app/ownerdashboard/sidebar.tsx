@@ -32,7 +32,6 @@ export default function Sidebar() {
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const router = useRouter();
  
-  // why this harcocded 
   let gymid = "10";
 
   const menuItems: MenuItem[] = [
@@ -43,7 +42,6 @@ export default function Sidebar() {
       subItems: [
         {
           name: "View Details",
-          // currently gymid has the hardcoded value later on the value come from the cookies and the session
           link: `/gymdetails/viewgymdetails?gymid=${gymid}`,
           label: "viewGymDetails",
         },
@@ -52,8 +50,14 @@ export default function Sidebar() {
           link: "/gymdetails/editgymdetails",
           label: "editGymDetails",
         },
+        {
+          name: "Auth Token",
+          label: "authToken",
+          link: "/gymdetails/authtoken",
+        }
       ],
     },
+    ,
     {
       name: "Trainers",
       icon: UserCheck,

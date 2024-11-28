@@ -13,13 +13,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { addTrainer, updateTrainer } from "@/app/actions/AddTrainerSA";
+import { addTrainer, updateTrainer } from "@/app/actions/gym/AddTrainerSA";
 import Image from "next/image";
 import {
   ShiftType,
   AddTrainerRequest,
   UpdateTrainerRequest,
-} from "@/app/actions/AddTrainerSA";
+} from "@/app/actions/gym/AddTrainerSA";
 import Loader from "../Skeltons/loaders";
 interface AddTrainerProps {
   addTrainerProps: {

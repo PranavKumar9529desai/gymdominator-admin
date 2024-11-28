@@ -14,10 +14,8 @@ import {
   Phone,
   Mail,
   Image as ImageIcon,
-  Upload,
 } from "lucide-react";
 import uploadImage from "@/app/actions/UploadImageSA";
-import { set } from "date-fns";
 
 export default function GymDetails() {
   const router = useRouter();
@@ -30,7 +28,7 @@ export default function GymDetails() {
     phone_number: "",
     Email: "",
   });
-
+  console.log("image link is this ",uploadedImageUrl);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
   const handleInputChange = (
@@ -81,7 +79,7 @@ export default function GymDetails() {
 
           const gym = await PostGymDetails(formData, gym_image_url);
           console.log("gym is created", gym);
-          let gymid = gym.id;
+          const  gymid = gym.id;
           console.log("gymid is ", gymid);
           setLoading(false);
           router.push(

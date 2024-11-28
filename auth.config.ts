@@ -116,6 +116,7 @@ export default {
             (await getUserByEmail(user.email, "sales"));
 
           if (userFromDb && userFromDb.name && userFromDb.email) {
+            // login 
             if (await getUserByEmail(user.email, "gymOwner")) {
               user.role = "gymOwner";
             } else if (await getUserByEmail(user.email, "trainer")) {
@@ -124,8 +125,10 @@ export default {
               user.role = "sales";
             }
           }
+          
         }
       }
+      // if the user records not in the datbase then th token formed with the without role 
       console.log("user in the signin from the sign callback", user);
       return true;
     },

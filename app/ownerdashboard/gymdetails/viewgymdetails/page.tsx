@@ -1,6 +1,6 @@
 import ViewGymDetails from "@/components/gym-owner/viewgymdetails";
 import React from "react";
-import FetchGymDetailsSA from "@/app/actions/FetchGymDetailsSA";
+import FetchGymDetailsSA from "@/app/actions/gym/FetchGymDetailsSA";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { revalidatePath } from "next/cache";
