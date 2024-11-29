@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 export default function CustomButton({ role }: { role: string }) {
   const router = useRouter();
   let route = role;
-  if (role === "gymOwner") {
+  if (role === "owner") {
     route = "owner";
   }
 

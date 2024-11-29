@@ -13,6 +13,7 @@ export default async function HeroSection() {
  
   const session = await auth();
   const  role =  session?.role as Rolestype;
+  console.log("session is this ", session);
   console.log("role from the hero section", role); 
   return (
     <main className="bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white min-h-screen overflow-hidden">

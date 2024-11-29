@@ -31,10 +31,11 @@ import { coustomAlert } from "./Alerts/CustomAlerts";
 import GoogleButton from "../ui/googleButton";
 import { Rolestype } from "@/app/types/next-auth";
 import { Toaster, toast as sonnerToast } from "sonner";
+import { updateSessionWithRole } from "@/app/actions/updateSession";
+import { useSession } from "next-auth/react";
 
+type roleType = "owner" | "trainer" | "sales";
 // form schema
-const Role = z.enum(["trainer", "gymOwner", "sales"]);
-
 const formSchema = z.object({
   email: z
     .string()
@@ -58,7 +59,9 @@ const formSchema = z.object({
     .string()
     .min(4, { message: "Username must be at least 4 characters." })
     .max(40, { message: "Username must be at most 40 characters." }),
-  role: Role,
+  role: z.enum(["owner", "trainer", "sales"], {
+    required_error: "Please select a role",
+  }),
 });
 
 export default function RegisterForm() {
@@ -66,7 +69,6 @@ export default function RegisterForm() {
   const [type, settype] = useState<"success" | "fail" | null>();
   const [ispending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
-  const [role, setRole] = useState<Rolestype | null>();
   const [formSubmitted, setformSubmitted] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -74,7 +76,7 @@ export default function RegisterForm() {
       email: "",
       password: "",
       name: "",
-      // role: "" as "trainer" | "gymOwner" | "sales",
+      role: undefined,
     },
   });
 
@@ -82,14 +84,16 @@ export default function RegisterForm() {
     formState: { errors },
   } = form;
 
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("form is submitted values", values);
     const { email, password, name, role } = values;
     startTransition(async () => {
       const response: UserExistsFormat = await UserExistsSA(
-        role,
         email,
         name,
         password
+        
       );
       if (response.user) {
         settype("fail");
@@ -110,264 +114,206 @@ export default function RegisterForm() {
 
   async function handleGoogleSubmit() {
     console.log("role from the form", form.getValues("role"));
-    // if (!form.getValues("role")) {
-    //   coustomAlert("error", "Please select Role First");
-    // }
-    // startTransition(async () => {
+   
+    startTransition(async () => {
+      let result = await signIn("google", {
+        redirect: false,
+      });
+    });
 
-    // });
-    setformSubmitted(true);
+    // when the user sigin is complete coimplete then we allowe user to select the role
   }
 
-  async function handleRoleSubmtt(e: React.FormEvent) {
-    e.preventDefault();
-    console.log("handleRoleSubmit is called");  
-    if( !role){
-      console.log("role is empty");
-      // sonnerToast.
-    }
-  
-  
-  }
 
-  return (
-    // register form
-    <>
-      {!formSubmitted ? (
-        <>
-          <Card className="w-full max-w-md mx-auto shadow-xl rounded-xl border-0 bg-gradient-to-b from-background to-background/80 backdrop-blur-sm">
-            <CardHeader className="space-y-3 pb-8">
-              <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Create Account
-              </CardTitle>
-              <p className="text-sm text-center text-muted-foreground">
-                Enter your details to create your account
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-6"
-                >
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1">
-                        <FormLabel className="flex items-center space-x-2 text-sm font-medium">
-                          <User
-                            className={`w-4 h-4 ${
-                              errors.name
-                                ? "text-destructive"
-                                : "text-primary/70"
-                            }`}
-                          />
-                          <span>Username</span>
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Username"
-                            {...field}
-                            disabled={ispending}
-                            type="text"
-                            className="bg-background/50 border-muted-foreground/20 focus:border-primary transition-colors"
-                          />
-                        </FormControl>
-                        <FormMessage className="text-xs" />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem className="space-y-1">
-                          <FormLabel className="flex items-center space-x-2 text-sm font-medium">
-                            <Mail
-                              className={`w-4 h-4 ${
-                                errors.email
-                                  ? "text-destructive"
-                                  : "text-primary/70"
-                              }`}
-                            />
-                            <span>Email</span>
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="your@email.com"
-                              {...field}
-                              type="email"
-                              disabled={ispending}
-                              className="bg-background/50 border-muted-foreground/20 focus:border-primary transition-colors"
-                            />
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem className="space-y-1">
-                          <FormLabel className="flex items-center space-x-2 text-sm font-medium">
-                            <Lock
-                              className={`w-4 h-4 ${
-                                errors.password
-                                  ? "text-destructive"
-                                  : "text-primary/70"
-                              }`}
-                            />
-                            <span>Password</span>
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                placeholder="••••••••"
-                                {...field}
-                                disabled={ispending}
-                                type={showPassword ? "text" : "password"}
-                                className="bg-background/50 border-muted-foreground/20 focus:border-primary transition-colors pr-10"
-                              />
-                              <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
-                              >
-                                {showPassword ? (
-                                  <EyeOff className="h-4 w-4" />
-                                ) : (
-                                  <Eye className="h-4 w-4" />
-                                )}
-                              </button>
-                            </div>
-                          </FormControl>
-                          <FormMessage className="text-xs" />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <Button
-                    className="w-full font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-lg"
-                    type="submit"
-                    disabled={ispending}
-                    size="lg"
-                  >
-                    {ispending ? (
-                      <div className="flex items-center space-x-2">
-                        <span className="animate-spin">⚪</span>
-                        <span>Registering...</span>
-                      </div>
-                    ) : (
-                      "Create Account"
-                    )}
-                  </Button>
-                </form>
-              </Form>
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-muted-foreground/20" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-              <GoogleButton handleSubmit={handleGoogleSubmit} />
-              <div className="text-center text-sm text-muted-foreground">
-                Already have an account?{" "}
-                <a
-                  href="/signin"
-                  className=" hover:underline font-medium text-blue-600"
-                >
-                  Sign In
-                </a>
-              </div>
-            </CardContent>
-          </Card>
-        </>
-      ) : (
-        // select role component is shown when user choose to login with google
-        <>
-          <Card className="w-full max-w-md mx-auto shadow-xl rounded-xl border-0 bg-gradient-to-b from-background to-background/80 backdrop-blur-sm">
-            <CardHeader className="space-y-3 pb-8">
-              <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Select Role
-              </CardTitle>
-              <p className="text-sm text-center text-muted-foreground">
-                Please select your role to continue
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              <Form {...form}>
-                <form
-                  //                   onSubmit={() =>
-                  // // call the handleRolesubmit
 
-                  //                   }
-                  className="space-y-6"
-                >
-                  <FormField
-                    control={form.control}
-                    name="role"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1">
-                        <FormLabel className="flex items-center space-x-2 text-sm font-medium">
-                          <UserRoundCogIcon
-                            className={`w-4 h-4 ${
-                              errors.role
-                                ? "text-destructive"
-                                : "text-primary/70"
-                            }`}
-                          />
-                          <span>Role</span>
-                        </FormLabel>
-                        <Select
-                          required
-                          onValueChange={(value) => field.onChange(value)}
-                          value={field.value}
+
+
+return (
+
+  <>
+    <Card className="w-full max-w-md mx-auto shadow-xl rounded-xl border-0 bg-gradient-to-b from-background to-background/80 backdrop-blur-sm">
+      <CardHeader className="space-y-3 pb-8">
+        <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+          Create Account
+        </CardTitle>
+        <p className="text-sm text-center text-muted-foreground">
+          Enter your details to create your account
+        </p>
+      </CardHeader>
+      <CardContent className="space-y-8">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-6"
+          >
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel className="flex items-center space-x-2 text-sm font-medium">
+                    <User
+                      className={`w-4 h-4 ${errors.name
+                        ? "text-destructive"
+                        : "text-primary/70"
+                        }`}
+                    />
+                    <span>Username</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Username"
+                      {...field}
+                      disabled={ispending}
+                      type="text"
+                      className="bg-background/50 border-muted-foreground/20 focus:border-primary transition-colors"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel className="flex items-center space-x-2 text-sm font-medium">
+                      <Mail
+                        className={`w-4 h-4 ${errors.email
+                          ? "text-destructive"
+                          : "text-primary/70"
+                          }`}
+                      />
+                      <span>Email</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="your@email.com"
+                        {...field}
+                        type="email"
+                        disabled={ispending}
+                        className="bg-background/50 border-muted-foreground/20 focus:border-primary transition-colors"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel className="flex items-center space-x-2 text-sm font-medium">
+                      <Lock
+                        className={`w-4 h-4 ${errors.password
+                          ? "text-destructive"
+                          : "text-primary/70"
+                          }`}
+                      />
+                      <span>Password</span>
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          placeholder="••••••••"
+                          {...field}
                           disabled={ispending}
+                          type={showPassword ? "text" : "password"}
+                          className="bg-background/50 border-muted-foreground/20 focus:border-primary transition-colors pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary transition-colors"
                         >
-                          <FormControl>
-                            <SelectTrigger className="bg-background/50 border-muted-foreground/20 focus:border-primary transition-colors">
-                              <SelectValue placeholder="Select your Role" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="gymOwner">Gym Owner</SelectItem>
-                            <SelectItem value="trainer">Trainer</SelectItem>
-                            <SelectItem value="sales">Sales</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage className="text-xs" />
-                      </FormItem>
-                    )}
-                  />
-                  {/* <Button
-                    className="w-full font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-lg"
-                    type="submit"
-                    disabled={ispending}
-                    size="lg"
-                  >
-                    {ispending ? (
-                      <div className="flex items-center space-x-2">
-                        <span className="animate-spin">⚪</span>
-                        <span>Loading...</span>
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
                       </div>
-                    ) : (
-                      "Continue"
-                    )}
-                  </Button> */}
-                  <GoogleButton handleSubmit={handleRoleSubmtt} />
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
-        </>
-      )}
+                    </FormControl>
+                    <FormMessage className="text-xs" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem className="space-y-1 w-full mt-4">
+                  <FormLabel className="flex items-center space-x-2 text-sm font-medium">
+                    <UserRoundCogIcon
+                      className={`w-4 h-4 ${
+                        errors.role ? "text-destructive" : "text-primary/70"
+                      }`}
+                    />
+                    <span>Role</span>
+                  </FormLabel>
+                  <Select
+                    
+                    onValueChange={(value) => field.onChange(value)}
+                    value={field.value}
+                    disabled={ispending}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full bg-background/50 border-muted-foreground/20 focus:border-primary transition-colors">
+                        <SelectValue placeholder="Select your Role" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="owner">Gym Owner</SelectItem>
+                      <SelectItem value="trainer">Trainer</SelectItem>
+                      <SelectItem value="sales">Sales</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage className="text-xs" />
+                </FormItem>
+              )}
+            />
+            <Button
+              className="w-full font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-lg"
+              type="submit"
+              disabled={ispending}
+              size="lg"
+            >
+              {ispending ? (
+                <div className="flex items-center space-x-2">
+                  <span className="animate-spin">⚪</span>
+                  <span>Registering...</span>
+                </div>
+              ) : (
+                "Create Account"
+              )}
+            </Button>
+          </form>
+        </Form>
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-muted-foreground/20" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
+        </div>
+        <GoogleButton handleSubmit={handleGoogleSubmit} />
+        <div className="text-center text-sm text-muted-foreground">
+          Already have an account?{" "}
+          <a
+            href="/signin"
+            className=" hover:underline font-medium text-blue-600"
+          >
+            Sign In
+          </a>
+        </div>
+      </CardContent>
+    </Card>
     </>
-  );
-}
+  )}   

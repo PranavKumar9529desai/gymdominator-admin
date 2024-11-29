@@ -130,7 +130,7 @@ export default function FormCard( { form, onSubmit, ispending, error, type } ) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="gymOwner">Gym Owner</SelectItem>
+                  <SelectItem value="owner">Gym Owner</SelectItem>
                   <SelectItem value="trainer">Trainer</SelectItem>
                 </SelectContent>
               </Select>

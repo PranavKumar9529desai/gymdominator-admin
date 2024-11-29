@@ -1,118 +1,125 @@
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
-import { IsGymOwner } from "./lib/isGymOwner";
+import { IsOwner } from "./lib/isGymOwner";
 import { IsTrainer } from "./lib/isTrainer";
 import { IsSales } from "./lib/isSales";
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 
 /**
- * public routes are not checked for authentication as they are open to all
+ * Public routes that are accessible without authentication
  * @type {string[]}
  */
-let publicRoutes: string[] = ["/"];
+const publicRoutes: string[] = ["/"];
 
 /**
- * ApiRoutesPrefix is prefix for the all authentication routes that should be checked
- *  * @type {string}
+ * Prefix for all authentication-related API routes
+ * @type {string}
  */
-let ApiRoutesPrefix: string = "/api/auth";
+const ApiRoutesPrefix: string = "/api/auth";
+
 /**
- * Routes starting with /owner /trainer /sales are protected routes
+ * Routes used for authentication purposes (login/signup)
  * @type {string[]}
  */
-
-let AuthRoutes: string[] = ["/signin", "/signup"];
-
-/**
- * AuthRoute auth are used by the authentication purposes
- * if user is logged in redirect to defaultredirectRoute
- */
-let ProtectedRoutes: string[] = ["/owner", "/trainer", "/sales"];
+const AuthRoutes: string[] = ["/signin", "/signup"];
 
 /**
- * Middleware to check if the user is authenticated
- * @param request
- * @returns
+ * Protected routes that require authentication and specific roles
+ * @type {string[]}
  */
+const ProtectedRoutes: string[] = ["/owner", "/trainer", "/sales"];
+
 const { auth } = NextAuth(authConfig);
 
+/**
+ * Middleware function to handle authentication and authorization
+ * @param {NextRequest} request - The incoming request object
+ * @returns {Promise<NextResponse>} The response object with appropriate redirects or access
+ */
 export default auth(async function middleware(request) {
   const { nextUrl } = request;
+  
+  /**
+   * Get the authentication token from the request
+   * @type {JWT | null}
+   */
   const token = await getToken({
     req: request,
     secret: process.env.AUTH_SECRET,
   });
+  
   /**
-   * Default redirect Route
-   * @type {string}
+   * Check if the user is currently logged in
+   * @type {boolean}
    */
-  // let DefaultRedirectRoute: string = `/${token?.Role.toLowerCase()}dashboard`;
-  let DefaultRedirectRoute: string = "/";
   const isLoggedIn = !!request.auth;
-  let isApiRoute = nextUrl.pathname.startsWith(ApiRoutesPrefix);
-  let isPublicRoute = publicRoutes.includes(nextUrl.pathname);
-  let isProctectedRoute = ProtectedRoutes.some((route) =>
+  
+  /**
+   * Route type checks
+   * @type {boolean}
+   */
+  const isApiRoute = nextUrl.pathname.startsWith(ApiRoutesPrefix);
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isProtectedRoute = ProtectedRoutes.some((route) => 
     nextUrl.pathname.startsWith(route)
   );
-  let isAuthRoute = AuthRoutes.includes(nextUrl.pathname);
-  console.log(
-    "isapiRoute",
-    isApiRoute,
-    "isPublicRoute",
-    isPublicRoute,
-    "isProtectedRoute",
-    isProctectedRoute,
-    "isAuthRoute",
-    isAuthRoute
-  );
+  const isAuthRoute = AuthRoutes.includes(nextUrl.pathname);
 
-  if (isApiRoute) {
-    return NextResponse.next();
-  }
+  // Allow API routes to pass through
+  if (isApiRoute) return NextResponse.next();
 
+  /**
+   * Handle authentication routes (signin/signup)
+   * Redirect to role-specific dashboard if already authenticated
+   */
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL(DefaultRedirectRoute, nextUrl));
+      return NextResponse.redirect(new URL(`/${token?.role}dashboard`, nextUrl));
     }
-  }
-
-  if (isPublicRoute) {
     return NextResponse.next();
   }
-  console.log("token", token);
-  if (isProctectedRoute) {
-    if (token && token.role && isLoggedIn) {
-      console.log("toke is ", token);
-      const path = request.nextUrl.pathname;
-      if (path.startsWith("/owner")) {
-        return IsGymOwner(token)
-          ? NextResponse.next()
-          : NextResponse.rewrite(new URL("/unauthorized", request.url));
-      }
 
-      if (path.startsWith("/trainer")) {
-        return IsTrainer(token)
-          ? NextResponse.next()
-          : NextResponse.rewrite(new URL("/unauthorized", request.url));
-      }
+  // Allow access to public routes
+  if (isPublicRoute) return NextResponse.next();
 
-      if (path.startsWith("/sales")) {
-        return IsSales(token)
-          ? NextResponse.next()
-          : NextResponse.rewrite(new URL("/unauthorized", request.url));
-      }
-
-      return NextResponse.next();
-    } else {
+  /**
+   * Handle protected routes with role-based access control
+   */
+  if (isProtectedRoute) {
+    // Redirect to signin if not authenticated
+    if (!isLoggedIn) {
       return NextResponse.redirect(new URL("/signin", request.url));
     }
+
+    // Redirect to role selection if no role is assigned
+    if (!token?.role) {
+      return NextResponse.redirect(new URL("/selectrole", request.url));
+    }
+
+    /**
+     * Check role-based access permissions
+     * Redirect to unauthorized page if role doesn't match the route
+     */
+    const path = request.nextUrl.pathname;
+    if (
+      (path.startsWith("/owner") && !IsOwner(token)) ||
+      (path.startsWith("/trainer") && !IsTrainer(token)) ||
+      (path.startsWith("/sales") && !IsSales(token))
+    ) {
+      return NextResponse.rewrite(new URL("/unauthorized", request.url));
+    }
+
+    return NextResponse.next();
   }
 });
 
+/**
+ * Matcher configuration for the middleware
+ * Excludes specific paths from middleware processing
+ */
 export const config = {
   matcher: [
-    // Exclude authentication on the following paths:
     "/((?!api|_next/static|_next/image|favicon.ico).*)",
   ],
 };

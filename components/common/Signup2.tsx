@@ -111,7 +111,7 @@ export default function SignupForm() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="sales">Sales</SelectItem>
-                  <SelectItem value="gymowner">Gym Owner</SelectItem>
+                  <SelectItem value="owner">Gym Owner</SelectItem>
                   <SelectItem value="trainer">Trainer</SelectItem>
                 </SelectContent>
               </Select>

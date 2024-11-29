@@ -50,13 +50,13 @@ export default {
           role
         );
         // name is not checked as the it is not necssary for the signin
-        if (email && password && role) {
+        if (email && password ) {
           let userFromDB: userType | false = await getUserByEmail(
             email,
-            role as Rolestype
           );
           console.log("user from the db", userFromDB);
-          if (userFromDB && userFromDB.name && userFromDB.email) {
+           // signin 
+          if (userFromDB && userFromDB.name && userFromDB.email&& userFromDB.role) {
             // check the password
             let isPasswordMatch = await bcrypt.compare(
               password,
@@ -66,7 +66,7 @@ export default {
               user = {
                 name: userFromDB.name,
                 email: userFromDB.email,
-                role: role,
+                role: userFromDB.role,
               };
               return user;
             } else {
@@ -74,6 +74,7 @@ export default {
               return null;
             }
           } else {
+            // as record doesn't exist signing up
             let response: {
               msg: string;
               user: {
@@ -111,33 +112,46 @@ export default {
         console.log("user in the google signin", user);
         if (user && user.email) {
           let userFromDb: userType | false =
-            (await getUserByEmail(user.email, "gymOwner")) ||
+            (await getUserByEmail(user.email, "owner")) ||
             (await getUserByEmail(user.email, "trainer")) ||
             (await getUserByEmail(user.email, "sales"));
 
           if (userFromDb && userFromDb.name && userFromDb.email) {
-            // login 
-            if (await getUserByEmail(user.email, "gymOwner")) {
-              user.role = "gymOwner";
+            // login
+            if (await getUserByEmail(user.email, "owner")) {
+              user.role = "owner";
             } else if (await getUserByEmail(user.email, "trainer")) {
               user.role = "trainer";
             } else if (await getUserByEmail(user.email, "sales")) {
               user.role = "sales";
             }
           }
-          
+
         }
       }
-      // if the user records not in the datbase then th token formed with the without role 
+      // if the user records not in the datbase then th token formed with the without role
       console.log("user in the signin from the sign callback", user);
       return true;
     },
-    async jwt({ user, account, token }) {
-      if (user && user.email && user.name) {
-        token.role = user.role;
-
+    async jwt({ user, account, token, trigger, session }) {
+      console.log("trigger is this ", trigger);
+      console.log("session is this ", session);
+      if (trigger === "update") {
+        console.log(
+          "token is updating...",
+          token,
+          session?.user?.role,
+          session?.role
+        );
+        token.role = session?.user?.role || session?.role;
+        console.log("token is updated to this ", token);
         return token;
       }
+      if (user && user.email && user.name) {
+        token.role = user.role;
+        return token;
+      }
+      //  as we can't update the token directly so we are updating the session then using the session callback we are updating the token
       // console.log("token is this ", token);
       return token;
     },
