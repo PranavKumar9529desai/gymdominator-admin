@@ -6,7 +6,7 @@ export default function page() {
     <>
       {/*  show the welcome page here  */}
       <div className="text-4xl flex justify-center items-center w-full h-full bg-black">
-        <Image src={LogoImage} alt="LogoIcon"  className=""/>
+        <h1>Welcome to the Owner Dashboard</h1>
       </div>
     </>
   );

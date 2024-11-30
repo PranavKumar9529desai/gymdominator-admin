@@ -1,12 +1,11 @@
 import React from "react";
-import Sidebar from "./sidebar";
 import BottomNavigation from "./bottomNavigation";
+import Sidebar from "./sidebar";
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="flex ">
-        {/* sidebarj*/}
-        <div className="w-[350px] hidden lg:block">
+        <div className=" md:block h-screen w-[350px]">
           <Sidebar />
         </div>
 

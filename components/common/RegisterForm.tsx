@@ -27,14 +27,9 @@ import {
 import { Lock, Mail, User, UserRoundCogIcon, Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { UserExistsFormat } from "@/app/actions/SignupSA";
-import { coustomAlert } from "./Alerts/CustomAlerts";
 import GoogleButton from "../ui/googleButton";
-import { Rolestype } from "@/app/types/next-auth";
-import { Toaster, toast as sonnerToast } from "sonner";
-import { updateSessionWithRole } from "@/app/actions/updateSession";
-import { useSession } from "next-auth/react";
 
-type roleType = "owner" | "trainer" | "sales";
+// type roleType = "owner" | "trainer" | "sales";
 // form schema
 const formSchema = z.object({
   email: z
@@ -69,7 +64,6 @@ export default function RegisterForm() {
   const [type, settype] = useState<"success" | "fail" | null>();
   const [ispending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
-  const [formSubmitted, setformSubmitted] = useState<boolean>(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {

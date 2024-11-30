@@ -33,7 +33,7 @@ export default function Sidebar() {
   const router = useRouter();
  
   let gymid = "10";
-
+  console.log("the sidebar is called");
   const menuItems: MenuItem[] = [
     {
       name: "Gym Details",
@@ -57,7 +57,6 @@ export default function Sidebar() {
         }
       ],
     },
-    ,
     {
       name: "Trainers",
       icon: UserCheck,
@@ -122,7 +121,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col bg-gray-900 text-white w-64 h-screen">
+    <div className="flex flex-col bg-gray-900 text-white w-64 h-screen  ">
       <div className="px-4 w-full flex items-center justify-center ">
         <Image
           src={IconImage}

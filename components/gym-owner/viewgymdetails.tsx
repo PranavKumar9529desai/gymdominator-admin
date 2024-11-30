@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, MapPin, Phone, Mail } from "lucide-react";
 
-// Define types for the gym data
 export type GymDetails = {
   name: string;
   logo: string;
@@ -17,7 +16,6 @@ export default function ViewGymDetails({
 }: {
   gymDetails: GymDetails;
 }) {
-  // const [loading, setLoadi
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-6">Gym Details</h1>

@@ -1,18 +1,19 @@
 import ViewGymDetails from "@/components/gym-owner/viewgymdetails";
-import React from "react";
-import FetchGymDetailsSA from "@/app/actions/gym/FetchGymDetailsSA";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/options";
-import { revalidatePath } from "next/cache";
+import FetchGymDetailsSA, { sessionType } from "@/app/actions/gym/FetchGymDetailsSA";
+import { auth } from "@/auth";
 export default async function page({
   searchParams,
 }: {
   searchParams: { gymid: string };
 }) {
-  revalidatePath("/ownerdashboard/gymdetails");
   let gymid = searchParams.gymid;
-  console.log("gymid is ", gymid);
-  let gymdetails = await FetchGymDetailsSA(gymid);
+  // use session then then passdown it to the fetch gym details
+  let session = await auth();
+  console.log("session fron the view gym details page is ", session);
+  if (!session) {
+    return <>Loading plz wait</>;
+  }
+  let gymdetails = await FetchGymDetailsSA({gymid , session : session as sessionType});
   if (!gymdetails) {
     return <>Loading plz wait</>;
   } else {
