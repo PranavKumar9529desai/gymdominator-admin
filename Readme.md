@@ -67,12 +67,12 @@ _Manage your gym with ease using the owner dashboard._
 
 **Owner Side Image 1**  
 <div>
-     <img src="/app/assests/owner-1.png" alt="Owner Side Screenshot 1" width="500" height="300" style="object-fit: cover;"/>
+     <img src="/app/assests/owner-1.png" alt="Owner Side Screenshot 1" width="600" height="300" style="object-fit: cover;"/>
 </div>
 
 **Owner Side Image 2**  
 <div>
-    <img src="/app/assests/owner-2.png" alt="Owner Side Screenshot 2" width="500" height="500" style="object-fit: cover;"/>
+    <img src="/app/assests/owner-2.png" alt="Owner Side Screenshot 2" width="300" height="500" style="object-fit: cover;"/>
 </div>
 
 ---
@@ -82,12 +82,12 @@ _Empower trainers with the tools they need to manage clients effectively._
 
 **Trainer Side Image 1**  
 <div>
-    <img src="/app/assests/trainer-1.png" alt="Trainer Side Screenshot 1" width="500" height="300" style="object-fit: cover;"/>
+    <img src="/app/assests/trainer-1.png" alt="Trainer Side Screenshot 1" width="600" height="300" style="object-fit: cover;"/>
 </div>
 
 **Trainer Side Image 2**  
 <div>
-    <img src="/app/assests/trainer-2.png" alt="Trainer Side Screenshot 2" width="500" height="500" style="object-fit: cover;"/>
+    <img src="/app/assests/trainer-2.png" alt="Trainer Side Screenshot 2" width="300" height="500" style="object-fit: cover;"/>
 </div>
 
 ---
