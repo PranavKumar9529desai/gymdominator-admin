@@ -66,10 +66,10 @@ GymDominator Admin is a professional and robust web application designed to tran
 _Manage your gym with ease using the owner dashboard._  
 
 **Owner Side Image 1**  
-![Owner Side Screenshot 1](/app/assests/owner-1.png)  
+![Owner Side Screenshot 1](/admin/gymdominator-admin-2/app/assests/owner-1.png)  
 
 **Owner Side Image 2**  
-![Owner Side Screenshot 2](/app/assests/owner-2.png)  
+![Owner Side Screenshot 2](/admin/gymdominator-admin-2/app/assests/owner-2.png)  
 
 ---
 
@@ -77,10 +77,10 @@ _Manage your gym with ease using the owner dashboard._
 _Empower trainers with the tools they need to manage clients effectively._  
 
 **Trainer Side Image 1**  
-![Trainer Side Screenshot 1](/app/assests/trainer-1.png)  
+![Trainer Side Screenshot 1](/admin/gymdominator-admin-2/app/assests/trainer-1.png)  
 
 **Trainer Side Image 2**  
-![Trainer Side Screenshot 2](/app/assests/trainer-2.png)  
+![Trainer Side Screenshot 2](/admin/gymdominator-admin-2/app/assests/trainer-2.png)  
 
 ---
 
