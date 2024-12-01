@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GymDominator Admin  
 
-## Getting Started
+[![GymDominator](https://img.shields.io/badge/version-1.0.0-brightgreen)]()  
+[![Next.js](https://img.shields.io/badge/Framework-Next.js-000?logo=nextdotjs)](https://nextjs.org/)  
+[![Hono](https://img.shields.io/badge/Backend-Hono-yellow)](https://hono.dev/)  
+[![Cloudflare Workers](https://img.shields.io/badge/Deployment-Cloudflare%20Workers-orange)](https://workers.cloudflare.com/)  
+[![Prisma](https://img.shields.io/badge/Database-Prisma-blue)](https://www.prisma.io/)  
 
-First, run the development server:
+GymDominator Admin is a professional and robust web application designed to transform the way gym owners manage their business operations. This platform simplifies gym management by offering a feature-rich dashboard for administrators and trainers. It allows gym owners to oversee trainers, users, and sales operations while also providing trainers with tools to manage their assigned clients effectively.  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## **Features**  
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **For Gym Owners**  
+- **Comprehensive Dashboard:**  
+  Manage trainers, members, and sales activities with an intuitive and user-friendly interface.  
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Trainer Management:**  
+  Assign trainers to gym members and track their performance.  
 
-## Learn More
+- **User Management:**  
+  View and manage gym member profiles, including attendance, personalized plans, and progress reports.  
 
-To learn more about Next.js, take a look at the following resources:
+- **Sales Tracking:**  
+  Monitor subscription packages, membership renewals, and revenue generated.  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### **For Trainers**  
+- **Client Management:**  
+  View assigned gym members and their personalized workout and diet plans.  
 
-## Deploy on Vercel
+- **Attendance Management:**  
+  Generate unique QR codes for gym members to scan, ensuring valid entry and attendance tracking.  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Workout Planner:**  
+  Create and assign workout routines with detailed descriptions and video guides.  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## **Technology Stack**  
+
+- **Frontend:**  
+  - Next.js 14 (Modern App Router)  
+  - NextAuth v5 for authentication  
+  - ShadCN for UI components  
+  - Tailwind CSS for styling  
+  - Framer Motion for animations  
+
+- **Backend:**  
+  - Built with Hono  
+  - Deployed on Cloudflare Workers  
+
+- **Database:**  
+  - Cloudflare's D1 serverless database integrated with Prisma ORM  
+
+- **Images:**  
+  - Managed via Cloudinary  
+
+---
+
+## **Screenshots**  
+
+### **Owner Dashboard**  
+_Manage your gym with ease using the owner dashboard._  
+
+**Owner Side Image 1**  
+![Owner Side Screenshot 1](/app/assests/owner-1.png)  
+
+**Owner Side Image 2**  
+![Owner Side Screenshot 2](/app/assests/owner-2.png)  
+
+---
+
+### **Trainer Dashboard**  
+_Empower trainers with the tools they need to manage clients effectively._  
+
+**Trainer Side Image 1**  
+![Trainer Side Screenshot 1](/app/assests/trainer-1.png)  
+
+**Trainer Side Image 2**  
+![Trainer Side Screenshot 2](/app/assests/trainer-2.png)  
+
+---
+
+## **How to Run Locally**  
+
+1. Clone the repository:  
+   ```bash
+   git clone https://github.com/your-username/gymdominator-admin.git
+   cd gymdominator-admin

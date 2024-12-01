@@ -5,7 +5,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="flex ">
-        <div className=" md:block h-screen w-[350px]">
+        <div className="hidden md:block h-screen w-[350px]">
           <Sidebar />
         </div>
 

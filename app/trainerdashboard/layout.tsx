@@ -6,7 +6,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
     <>
       <div className="flex ">
         {/* sidebarj*/}
-        <div className="w-[350px] hidden lg:block">
+        <div className="w-[350px]  lg:block">
           <SidebarGym />
         </div>
 
