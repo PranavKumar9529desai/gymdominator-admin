@@ -65,22 +65,34 @@ GymDominator Admin is a professional and robust web application designed to tran
 ### **Owner Dashboard**  
 _Manage your gym with ease using the owner dashboard._  
 
-**Owner Side Image 1**  
-<img src="/app/assests/owner-1.png" alt="Owner Side Screenshot 1" width="600"/>  
+<div style="display: flex; flex-direction: column; gap: 20px;">
+    <div>
+        <p><strong>Owner Side Image 1</strong></p>
+        <img src="/app/assests/owner-1.png" alt="Owner Side Screenshot 1" width="500" height="300" style="object-fit: cover;"/>
+    </div>
 
-**Owner Side Image 2**  
-<img src="/app/assests/owner-2.png" alt="Owner Side Screenshot 2" width="600"/>  
+    <div>
+        <p><strong>Owner Side Image 2</strong></p>
+        <img src="/app/assests/owner-2.png" alt="Owner Side Screenshot 2" width="500" height="300" style="object-fit: cover;"/>
+    </div>
+</div>
 
 ---
 
 ### **Trainer Dashboard**  
 _Empower trainers with the tools they need to manage clients effectively._  
 
-**Trainer Side Image 1**  
-<img src="/app/assests/trainer-1.png" alt="Trainer Side Screenshot 1" width="600"/>  
+<div style="display: flex; flex-direction: column; gap: 20px;">
+    <div>
+        <p><strong>Trainer Side Image 1</strong></p>
+        <img src="/app/assests/trainer-1.png" alt="Trainer Side Screenshot 1" width="500" height="300" style="object-fit: cover;"/>
+    </div>
 
-**Trainer Side Image 2**  
-<img src="/app/assests/trainer-2.png" alt="Trainer Side Screenshot 2" width="600"/>  
+    <div>
+        <p><strong>Trainer Side Image 2</strong></p>
+        <img src="/app/assests/trainer-2.png" alt="Trainer Side Screenshot 2" width="500" height="300" style="object-fit: cover;"/>
+    </div>
+</div>
 
 ---
 
