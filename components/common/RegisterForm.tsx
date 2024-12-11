@@ -16,7 +16,6 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import FormError from "../ui/form-error";
-import { UserExistsSA } from "@/app/actions/SignupSA";
 import {
   Select,
   SelectItem,
@@ -26,7 +25,8 @@ import {
 } from "../ui/select";
 import { Lock, Mail, User, UserRoundCogIcon, Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
-import { UserExistsFormat } from "@/app/actions/SignupSA";
+import { UserExistsFormat } from "@/app/actions/signup/SignUpWithCrendentails";
+import { UserExistsSA } from "@/app/actions/signup/SignUpWithCrendentails";
 import GoogleButton from "../ui/googleButton";
 
 // type roleType = "owner" | "trainer" | "sales";
@@ -89,7 +89,7 @@ export default function RegisterForm() {
         password
         
       );
-      if (response.user) {
+      if ( response && response.msg && response.user) {
         settype("fail");
         seterror(response.msg);
       } else {
@@ -101,7 +101,7 @@ export default function RegisterForm() {
           email,
           role,
         });
-        console.log("User created successfully:", response.user);
+        console.log("user is created and signed in", response);
       }
     });
   }
@@ -110,11 +110,13 @@ export default function RegisterForm() {
     console.log("role from the form", form.getValues("role"));
    
     startTransition(async () => {
-      let result = await signIn("google", {
-        redirect: false,
+      const result = await signIn("google", {
+        redirect: true,
+        redirectTo: "/selectrole",
       });
+      console.log("result from the google signin", result?.status);
     });
-
+     
     // when the user sigin is complete coimplete then we allowe user to select the role
   }
 
@@ -282,11 +284,16 @@ return (
                   <span>Registering...</span>
                 </div>
               ) : (
-                "Create Account"
+                "Create Account"  
               )}
             </Button>
           </form>
         </Form>
+{
+      error && type ?
+          <FormError FormErrorProps={{message: error, type: type as "success" | "fail" }} />
+          : null
+}
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <span className="w-full border-t border-muted-foreground/20" />

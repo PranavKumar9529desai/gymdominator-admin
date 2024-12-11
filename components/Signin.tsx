@@ -224,9 +224,8 @@ export default function SignIn() {
           description: "Redirecting to dashboard...",
         });
         // Short delay for the toast to be visible
-        setTimeout(() => {
-          router.push("/dashboard");
-        }, 1000);
+        // refresh the page
+        router.refresh();
       }
     } catch (error) {
       setError("An unexpected error occurred");
@@ -239,7 +238,6 @@ export default function SignIn() {
     setLoading(true);
     try {
       await signIn("google", {
-        callbackUrl: "/dashboard",
       });
     } catch (error) {
       setError("Failed to sign in with Google");

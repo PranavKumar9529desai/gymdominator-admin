@@ -9,17 +9,17 @@ interface CreateTokenButtonProps {
   onTokenCreated: (token: string) => void;
 }
 
-export default function CreateTokenButton({ session, onTokenCreated }: CreateTokenButtonProps) {
+export default function CreateTokenButton({
+   existingToken
+} : { existingToken: string | null  }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleClick = async () => {
     try {
       setIsLoading(true);
-      const result = await CreateAuthToken({ session });
-      if (result.success && result.token) {
-        onTokenCreated(result.token);
-      }
-    } catch (error) {
+      const result = await CreateAuthToken();
+      window.location.reload();
+   } catch (error) {
       console.error("Failed to create token:", error);
     } finally {
       setIsLoading(false);
@@ -27,10 +27,7 @@ export default function CreateTokenButton({ session, onTokenCreated }: CreateTok
   };
 
   return (
-    <Button 
-      onClick={handleClick} 
-      disabled={isLoading}
-    >
+    <Button onClick={handleClick} disabled={isLoading}>
       {isLoading ? "Creating..." : "Generate Token"}
     </Button>
   );

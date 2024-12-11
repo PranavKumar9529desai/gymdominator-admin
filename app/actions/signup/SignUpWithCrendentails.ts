@@ -1,10 +1,6 @@
 "use server";
 import { AxiosResponse } from "axios";
 import axios from "axios";
-import { headers } from "next/headers";
-
-export type Role = "owner" | "trainer" | "sales"; // Add other roles as needed
-
 export interface SignupResponse {
   msg: string;
   user: {
@@ -27,7 +23,7 @@ export default async function SignupSA(
     email: string;
   } | null;
 }> {
-  let role = Role.toLowerCase();
+  const role = Role.toLowerCase();
   console.log("role rom, the signupSa ", role, name, email, password);
   try {
     const response = await fetch(
@@ -84,7 +80,7 @@ export async function UserExistsSA(
 ): Promise<UserExistsFormat> {
   //  return true if user exists and password is correct
 
-  let response: AxiosResponse<UserExistsResponse> = await axios.post(
+  const response: AxiosResponse<UserExistsResponse> = await axios.post(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/isexists`,
     {
       email,
@@ -97,8 +93,8 @@ export async function UserExistsSA(
       },
     }
   );
-  console.log("response is this ", response.data);
-  let user = response.data;
+  console.log("response is this from  signup credentails ", response.data);
+  const user = response.data;
 
   if (user.user === false) {
     return {
@@ -107,7 +103,7 @@ export async function UserExistsSA(
     };
   }
 
-  let userExists: UserExistsFormat = {
+  const userExists: UserExistsFormat = {
     msg: user.msg,
     user: user.user,
   };

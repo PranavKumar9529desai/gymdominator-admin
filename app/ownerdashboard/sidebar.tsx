@@ -31,8 +31,9 @@ export default function Sidebar() {
   const [activePage, setActivePage] = useState<string>("viewGymDetails");
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const router = useRouter();
- 
-  let gymid = "10";
+  
+  // this gymid will come from the backend call 
+
   console.log("the sidebar is called");
   const menuItems: MenuItem[] = [
     {
@@ -42,7 +43,7 @@ export default function Sidebar() {
       subItems: [
         {
           name: "View Details",
-          link: `/gymdetails/viewgymdetails?gymid=${gymid}`,
+          link: `/gymdetails/viewgymdetails`,
           label: "viewGymDetails",
         },
         {

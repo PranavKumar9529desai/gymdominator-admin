@@ -29,7 +29,6 @@ declare module "next-auth" {
     role: Rolestype;
     gym?: GymType;
   }
-}
 // Extend the default JWT type to include custom fields
 declare module "next-auth/jwt" {
   interface JWT {

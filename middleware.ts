@@ -75,8 +75,10 @@ export default auth(async function middleware(request) {
    */
   if (isAuthRoute) {
     if (isLoggedIn) {
+      // if the user is already logged in then redirect to the role-specific dashboard
       return NextResponse.redirect(new URL(`/${token?.role}dashboard`, nextUrl));
     }
+    console.log("auth route is called for the signin or signin", token?.role);
     return NextResponse.next();
   }
 
@@ -92,10 +94,13 @@ export default auth(async function middleware(request) {
       return NextResponse.redirect(new URL("/signin", request.url));
     }
 
-    // Redirect to role selection if no role is assigned
-    if (!token?.role) {
+    // Redirect to role selection only if the role in the token is empty if no role is assigned
+    if( token && !token?.role ) {
+      console.log("role is empty", token?.role);
       return NextResponse.redirect(new URL("/selectrole", request.url));
     }
+    
+    
 
     /**
      * Check role-based access permissions

@@ -1,6 +1,6 @@
 // app/api/upload/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import uploadImage from '@/app/actions/UploadImageSA';
+import uploadImage from '@/app/actions/clouldnary/UploadImageSA';
 
 export async function POST(req: NextRequest) {
   try {
@@ -19,10 +19,11 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb', // Adjust the size limit as needed
-    },
-  },
-};;
+// export const config = {
+//   api: {
+//     bodyParser: {
+//       sizeLimit: '10mb', // Adjust the size limit as needed
+//     },
+//   },
+
+// }

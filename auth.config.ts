@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
 import Resend from "next-auth/providers/resend";
-import SignupSA from "./app/actions/SignupSA";
-import getUserByEmail, { userType } from "./app/actions/getUserByEmail";
+import SignupSA from "./app/actions/signup/SignUpWithCrendentails";
+import getUserByEmail, { userType } from "./app/actions/signup/getUserByEmail";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
@@ -109,25 +109,28 @@ export default {
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account && account.provider === "google") {
+        // google signin and signup
         console.log("user in the google signin", user);
         if (user && user.email) {
-          let userFromDb: userType | false =
-            (await getUserByEmail(user.email, "owner")) ||
-            (await getUserByEmail(user.email, "trainer")) ||
-            (await getUserByEmail(user.email, "sales"));
-
-          if (userFromDb && userFromDb.name && userFromDb.email) {
+          // check if the user is already in the database
+          let userFromDb: userType | false = await getUserByEmail(
+            user.email,
+          );
+          if (userFromDb && userFromDb.name && userFromDb.email && userFromDb.role) {
             // login
-            if (await getUserByEmail(user.email, "owner")) {
-              user.role = "owner";
-            } else if (await getUserByEmail(user.email, "trainer")) {
-              user.role = "trainer";
-            } else if (await getUserByEmail(user.email, "sales")) {
-              user.role = "sales";
-            }
+              user.role = userFromDb.role as Rolestype;
+              user.name = userFromDb.name;
+              user.email = userFromDb.email;
           }
-
+            // signup
+            // as without role we dont know what to type of user ,
+             // here allow user to signup once the user selecs the role we do backend call to create the user in the database[
+            console.log("user is this from the google signin callback", user);
+            return true;
         }
+        console.log("user objeect seem to be empty", user);
+         return false;
+
       }
       // if the user records not in the datbase then th token formed with the without role
       console.log("user in the signin from the sign callback", user);
@@ -135,7 +138,9 @@ export default {
     },
     async jwt({ user, account, token, trigger, session }) {
       console.log("trigger is this ", trigger);
-      console.log("session is this ", session);
+      console.log("session from the jwt callback ", session);
+      console.log("token from the jwt callback ", token);
+      console.log("user from the jwt callback ", user);
       if (trigger === "update") {
         console.log(
           "token is updating...",
@@ -156,14 +161,15 @@ export default {
       return token;
     },
     async session({ token, session }) {
-      // console.log("session is called", token);
+      console.log("token from the session callback ", token);
       if (token && token.email && token.name) {
         session.user.name = token.name;
         session.user.email = token.email;
         session.role = token.role;
+        console.log("session is this from the session callback ", session);
         return session;
       }
-      // console.log("session is this ", token);
+      console.log("session is this from the session callback ", session);
       return session;
     },
   },

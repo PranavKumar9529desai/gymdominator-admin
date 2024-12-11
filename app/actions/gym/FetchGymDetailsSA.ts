@@ -1,9 +1,6 @@
 "use server";
 import axios, { AxiosResponse } from "axios";
-import { getToken } from "next-auth/jwt";
-import { NextRequest } from "next/server";
-import { cookies } from "next/headers";
-import GetTokenSA from "../GetTokenSA";
+import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
 
 export interface sessionType {
   role: string;
@@ -14,26 +11,30 @@ export interface sessionType {
   };
 }
 
-export default async function FetchGymDetailsSA({gymid , session}: {gymid: string , session  : sessionType}) {
+export default async function FetchGymDetailsSA() {
   // console.log("here are the cooploes", cookieStore);
   interface responseType {
     msg: string;
-    gym: {
-      name: string;
-      logo: string;
+    gym : {
+      gym_name: string;
+      gym_logo: string;
       address: string;
-      phone: string;
-      email: string;
-    };
+      phone_number: string;
+      Email: string;
+    }
   }
 
   try {
-    const response: AxiosResponse<responseType> = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/owner/gymdetails/${gymid}`,
-      { headers: { Authorization: `${JSON.stringify(session)}` } }
+    // Initialize Axios instance with Authorization header
+    const ownerAxios = await OwnerReqConfig();
+    const response: AxiosResponse<responseType> = await ownerAxios.get(
+      `/api/v1/owner/gymdetails`
     );
+
+    console.log("Gym details fetched successfully:", response.data.gym);
     return response.data.gym;
-  } catch (err) {
-    console.log("error fetching gym details", err);
+  } catch (err: any) {
+    console.error("Error fetching gym details:", err.response?.data || err.message);
+    return null; // Return null or handle the error as needed
   }
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { Rolestype } from "../types/next-auth"
+import { Rolestype } from "../../types/next-auth"
 
 export async function updateSessionWithRole(
   role: Rolestype, 
@@ -10,6 +10,7 @@ export async function updateSessionWithRole(
     const newRole = role;
     // Update the session using the passed update function
     const updateSession = await update({ role: newRole });
+    // we will do a backend call pass down the role 
     console.log("updateSession is this ", updateSession);
     return { success: true }
   } catch (error) {

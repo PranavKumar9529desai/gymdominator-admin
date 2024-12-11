@@ -1,12 +1,12 @@
 import { cookies } from "next/headers";
 import { getToken } from "next-auth/jwt";
-import GetTokenSA from "../GetTokenSA";
+// import GetTokenSA from "../GetTokenSA";
 export default async function FetchTrainers({
   gymid,
 }: {
   gymid: string;
 }): Promise<Trainer[]> {
-  let token = await GetTokenSA();
+  // let token = await GetTokenSA();
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/owner/trainers/${gymid}`,

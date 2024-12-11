@@ -1,15 +1,15 @@
 "use client"
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Rolestype } from "@/app/types/next-auth";
-import { updateSessionWithRole } from "@/app/actions/updateSession";
+import { updateSessionWithRole } from "@/app/actions/session/updateSession";
 import { useSession } from "next-auth/react";
-
+import SignupWithGoogle from "@/app/actions/signup/SignupWithGoogle";
+import type { SignupWithGoogleReturnType } from "@/app/actions/signup/SignupWithGoogle";
 const roles = [
   {
     title: "Gym Owner",
@@ -38,13 +38,16 @@ export default function SelectRole() {
   const handleRoleSelect = async (role: string) => {
     setSelectedRole(role);
     setLoading(true);
-
+    console.log("role is this ", role);
     try {
       await new Promise(async (resolve) => {
-        const result = await updateSessionWithRole(role as Rolestype, update);
-        setTimeout(() => {
-          resolve(result);
-        }, 1500);
+        if(session?.user?.name && session?.user?.email) {
+          const response : SignupWithGoogleReturnType = await SignupWithGoogle(session?.user?.name, session?.user?.email, role as "owner" | "trainer" | "sales");
+        if( response && response.name && response.role ){
+              const result = await updateSessionWithRole(response.role as Rolestype, update);
+              resolve(result);
+          }
+        }
       });
       
       router.push(`/${role}dashboard`);
@@ -57,9 +60,9 @@ export default function SelectRole() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[600px] bg-gray-900 text-white border-gray-800">
+      <DialogContent className="sm:max-w-[600px] bg-white text-gray-800 border-gray-200">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold text-center">
+          <DialogTitle className="text-2xl font-bold text-center text-gray-900">
             Select Your Role
           </DialogTitle>
         </DialogHeader>
@@ -75,13 +78,13 @@ export default function SelectRole() {
               >
                 <Card
                   className={`cursor-pointer transition-all duration-300 hover:scale-105 
-                    ${selectedRole === role.value ? 'border-blue-500 bg-blue-900/20' : 'bg-gray-800 border-gray-700'}
+                    ${selectedRole === role.value ? 'border-blue-500 bg-blue-50' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'}
                     ${loading ? 'pointer-events-none opacity-50' : ''}`}
                   onClick={() => handleRoleSelect(role.value)}
                 >
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{role.title}</h3>
-                    <p className="text-gray-400">{role.description}</p>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{role.title}</h3>
+                    <p className="text-gray-600">{role.description}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -90,7 +93,7 @@ export default function SelectRole() {
         </div>
 
         {loading && (
-          <div className="flex items-center justify-center gap-2">
+          <div className="flex items-center justify-center gap-2 text-gray-700">
             <Loader2 className="h-5 w-5 animate-spin" />
             <span>Setting up your account...</span>
           </div>

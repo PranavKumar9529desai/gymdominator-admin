@@ -1,7 +1,5 @@
 import GymDetails from "@/components/gym-owner/EditGymDetails";
 import React from "react";
-import Loader from "./loading";
-import { Suspense } from "react";
 export default function page() {
   return (
     <>

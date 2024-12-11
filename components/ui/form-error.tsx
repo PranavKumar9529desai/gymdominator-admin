@@ -11,7 +11,7 @@ export default function FormError({
   FormErrorProps: FormErrorPropsType;
 }) {
   return (
-    <div className="text-center h-full flex *:rounded-lg ">
+    <div className="text-center h-6  flex *:rounded-lg ">
       {FormErrorProps && FormErrorProps.type == "fail" ? (
         <div className="w-full bg-red-100 h-full flex items-center gap-1 justify-center">
           <BsExclamationCircle className=" w-4 h-4 text-red-600 " />

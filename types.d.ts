@@ -1,4 +1,7 @@
 type gender = "Male" | "Female";
+
+type Rolestype = "owner" | "trainer" | "sales";
+
 interface mockUsersType {
   id: number;
   name: string;

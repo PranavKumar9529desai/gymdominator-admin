@@ -13,6 +13,8 @@ export default async function HeroSection() {
  
   const session = await auth();
   const  role =  session?.role as Rolestype;
+  let signinRedirect : boolean = !role ? true : false;
+  console.log("signinRedirect from the hero section", signinRedirect);
   console.log("session is this ", session);
   console.log("role from the hero section", role); 
   return (
@@ -35,7 +37,7 @@ export default async function HeroSection() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-6 mt-8">
-                <CustomButton role={ role } />
+                <CustomButton role={ role } redirect={signinRedirect} />
                 <Button
                   variant="outline"
                   className="hidden sm:flex items-center gap-2 bg-transparent border border-gray-700 text-gray-300 hover:bg-gray-800/50 hover:border-gray-600 font-medium px-6 py-3 rounded-lg transition-all duration-300"

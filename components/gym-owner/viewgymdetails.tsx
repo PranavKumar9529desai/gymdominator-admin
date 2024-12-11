@@ -1,20 +1,20 @@
-import { useState } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, MapPin, Phone, Mail } from "lucide-react";
 
-export type GymDetails = {
-  name: string;
-  logo: string;
-  address: string;
-  phone: string;
-  email: string;
+
+interface GymDetails {
+      gym_name: string;
+      gym_logo: string;
+      address: string;
+      phone_number: string;
+      Email: string;
 };
 
 export default function ViewGymDetails({
   gymDetails,
 }: {
-  gymDetails: GymDetails;
+ gymDetails :  GymDetails;
 }) {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -23,16 +23,16 @@ export default function ViewGymDetails({
         <CardHeader className="bg-indigo-700 text-white">
           <CardTitle className="text-2xl flex items-center gap-2">
             <Building2 className="h-6 w-6" />
-            {gymDetails?.name}
+            {gymDetails?.gym_name}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-8">
             <div className="flex-shrink-0">
-              {gymDetails?.logo && (
+              {gymDetails?.gym_logo && (
                 <Image
-                  src={gymDetails.logo}
-                  alt={`${gymDetails.name} logo`}
+                  src={gymDetails.gym_logo}
+                  alt={`${gymDetails.gym_name} logo`}
                   width={100}
                   height={100}
                   className="rounded-lg border border-gray-200 o"
@@ -55,14 +55,14 @@ export default function ViewGymDetails({
                   <h2 className="text-lg font-semibold text-gray-900">
                     Phone Number
                   </h2>
-                  <p className="text-gray-700">{gymDetails?.phone}</p>
+                  <p className="text-gray-700">{gymDetails?.phone_number}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
                 <Mail className="h-6 w-6 text-indigo-600 mt-1" />
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">Email</h2>
-                  <p className="text-gray-700">{gymDetails?.email}</p>
+                  <p className="text-gray-700">{gymDetails?.Email}</p>
                 </div>
               </div>
             </div>

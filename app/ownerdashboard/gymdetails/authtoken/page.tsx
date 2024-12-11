@@ -1,4 +1,3 @@
-"use client";
 import { auth } from "@/auth";
 import { sessionType } from "@/app/actions/gym/FetchGymDetailsSA";
 import CreateTokenButton from "./createTokenButton";
@@ -6,25 +5,18 @@ import { useSession } from "next-auth/react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
 import axios from "axios";
+import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
 
-async function getExistingToken(session: sessionType) {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/owner/getauthtoken`, {
-    headers: {
-      Authorization: ` ${JSON.stringify(session)}`
-    }
-  });
+async function getExistingToken() {
+  "use server";
+  const ownerAxios = await OwnerReqConfig();
+  const response = await ownerAxios.get(`/api/v1/owner/getauthtoken`);
   return response.data.token;
 }
 
 export default async function AuthTokenPage() {
-  const { data: session } = await useSession();
-  
-  if (!session) {
-    return <>Loading please wait</>;
-  }
-
-  const existingToken = await getExistingToken(session as sessionType);
-
+  const existingToken = await getExistingToken();
+  console.log("existingToken", existingToken);
   return (
     <div className="container mx-auto p-6">
       <Card>
@@ -45,14 +37,11 @@ export default async function AuthTokenPage() {
           ) : (
             <div className="space-y-4">
               <p className="text-gray-600">
-                No active token found. Generate a new authentication token for your gym.
+                No active token found. Generate a new authentication token for
+                your gym.
               </p>
-              <CreateTokenButton 
-                session={session as sessionType}
-                onTokenCreated={(token) => {
-                  // This will trigger a server refresh
-                  window.location.reload();
-                }}
+              <CreateTokenButton
+               existingToken={ existingToken }
               />
             </div>
           )}

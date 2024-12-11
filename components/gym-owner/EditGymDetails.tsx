@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import PostGymDetails from "@/app/actions/PostGymDetailsSA";
+import PostGymDetails from "@/app/actions/gym/PostGymDetailsSA";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,7 @@ import {
   Mail,
   Image as ImageIcon,
 } from "lucide-react";
-import uploadImage from "@/app/actions/UploadImageSA";
+import uploadImage from "@/app/actions/clouldnary/UploadImageSA";
 
 export default function GymDetails() {
   const router = useRouter();
@@ -76,10 +76,12 @@ export default function GymDetails() {
           const gym_image_url = data.url;
           console.log("gym url from the handleSubmit is ", gym_image_url);
           setUploadedImageUrl(gym_image_url);
-
-          const gym = await PostGymDetails(formData, gym_image_url);
+          console.log("gym url from the handleSubmit is ", uploadedImageUrl);
+          console.log("Form data is ", formData);
+          console.log("postgym is called", PostGymDetails);
+          const gym = await PostGymDetails(JSON.stringify(formData), gym_image_url);
           console.log("gym is created", gym);
-          const  gymid = gym.id;
+          const  gymid = gym.id 
           console.log("gymid is ", gymid);
           setLoading(false);
           router.push(
