@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./provider";
-// import RecoilContextProvider from "@/lib/RecoilContextProvider";
+import RecoilContextProvider from "@/lib/RecoilContextProvider";
 
 export default function RootLayout({
   children,
@@ -11,7 +11,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-        <body>{children}</body>
+        <RecoilContextProvider>
+          <body>{children}</body>
+        </RecoilContextProvider>
       </Providers>
     </html>
   );

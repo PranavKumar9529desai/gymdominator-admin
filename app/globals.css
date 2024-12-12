@@ -80,3 +80,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.swal2-container {
+    z-index: 100 !important; /* Adjust this value as needed */
+}

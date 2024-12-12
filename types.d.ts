@@ -2,6 +2,11 @@ type gender = "Male" | "Female";
 
 type Rolestype = "owner" | "trainer" | "sales";
 
+interface gym {
+  id: string;
+  name: string;
+  img: string;
+}
 interface mockUsersType {
   id: number;
   name: string;
@@ -9,14 +14,14 @@ interface mockUsersType {
   todaysAttendance: boolean;
 }
 
- interface RegisterInput {
+interface RegisterInput {
   email: string;
   password: string;
   name: string;
   role: Role;
 }
 
- interface RegisterResponse {
+interface RegisterResponse {
   msg: string;
   user: {
     name: string;
