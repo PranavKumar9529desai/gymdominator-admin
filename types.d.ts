@@ -1,12 +1,35 @@
 type gender = "Male" | "Female";
 
 type Rolestype = "owner" | "trainer" | "sales";
+type GenderType = "Male" | "Female";
+
+interface UserHealthProfileType {
+  id: number;
+  fullname: string;
+  gender: GenderType;
+  goal: string;
+  contact: string;
+  weight: number;
+  height: number;
+  address: string;
+  userid: number;
+}
+
+interface UserType {
+  name: string;
+  email: string;
+  id: number;
+  trainerid?: number | null;
+  trainer?: TrainerType;
+  HealthProfile: UserHealthProfileType;
+}
 
 interface gym {
   id: string;
   name: string;
   img: string;
 }
+
 interface mockUsersType {
   id: number;
   name: string;
@@ -35,7 +58,7 @@ interface UserFromDBType {
   password: string;
 }
 
-interface Trainer {
+interface TrainerType {
   id: number;
   name: string;
   assignedClients: number;

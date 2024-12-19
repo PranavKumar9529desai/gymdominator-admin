@@ -6,15 +6,13 @@ import axios, { AxiosInstance } from "axios";
 
 export const TrainerReqConfig = async (): Promise<AxiosInstance> => {
   const session = await auth();
-
+  console.log("session information is this trainer axios", session);
   const trainerAxios: AxiosInstance = axios.create({
     baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
     headers: {
       Authorization: `${JSON.stringify(session)}`,
     },
   });
-
-  console.log("trainerAxios from the trainerAxios file is ", trainerAxios);
 
   return trainerAxios;
 };

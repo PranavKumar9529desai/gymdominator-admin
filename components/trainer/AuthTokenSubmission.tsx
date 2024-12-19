@@ -14,8 +14,14 @@ import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { VerifyAuthToken } from "@/app/actions/gym/Token/VerifyAuthToken";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import {
+  updateSesionWithGym,
+} from "@/app/actions/session/updateSessionWithGym";
 
 export default function AuthTokenSubmission() {
+  const { data: session, update } = useSession();
+  console.log("session is ", session);
   const router = useRouter();
   const [authToken, setAuthToken] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,6 +44,12 @@ export default function AuthTokenSubmission() {
       console.log("response is ", response);
       if (response.success) {
         console.log("auth token is correct");
+        const updatedSesion = await updateSesionWithGym(gym, update);
+        console.log(
+          "updated the session with the gym is from the AuthToken submission is ",
+          updatedSesion,
+          gym
+        );
         router.push("/trainerdashboard");
         onClose();
       } else {

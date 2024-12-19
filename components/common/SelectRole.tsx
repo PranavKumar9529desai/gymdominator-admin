@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Rolestype } from "@/app/types/next-auth";
-import { updateSessionWithRole } from "@/app/actions/session/updateSession";
+import { updateSessionWithRole } from "@/app/actions/session/updateSessionWithRole";
 import { useSession } from "next-auth/react";
 import SignupWithGoogle from "@/app/actions/signup/SignupWithGoogle";
 import type { SignupWithGoogleReturnType } from "@/app/actions/signup/SignupWithGoogle";

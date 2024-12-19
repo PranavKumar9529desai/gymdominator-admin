@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
+import { menuItems } from "./sidebar";
 
 interface SubItem {
   name: string;
@@ -37,71 +38,71 @@ export default function BottomNavigation() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const menuItems: MenuItem[] = [
-    {
-      name: "Gym Details",
-      icon: Users,
-      label: "gymDetails",
-      subItems: [
-        {
-          name: "View Details",
-          link: "/gymdetails/viewgymdetails",
-          label: "viewGymDetails",
-          icon: Eye,
-        },
-        {
-          name: "Edit Details",
-          link: "/gymdetails/editgymdetails",
-          label: "editGymDetails",
-          icon: Edit,
-        },
-      ],
-    },
-    {
-      name: "Trainers",
-      icon: UserCheck,
-      label: "trainers",
-      subItems: [
-        {
-          name: "View Trainers",
-          link: "/trainers/viewtrainers",
-          label: "viewTrainers",
-          icon: Eye,
-        },
-        {
-          name: "Add Trainers",
-          link: "/trainers/addtrainers",
-          label: "addTrainers",
-          icon: UserCheck,
-        },
-      ],
-    },
-    {
-      name: "Assignment",
-      icon: ClipboardList,
-      link: "/userstrainersassignment",
-      label: "userstrainersassignment",
-    },
-    {
-      name: "Attendance",
-      icon: CalendarCheck,
-      label: "attendance",
-      subItems: [
-        {
-          name: "Today's Attendance",
-          link: "/attendance/todaysattendance",
-          label: "todaysAttendance",
-          icon: CalendarCheck,
-        },
-        {
-          name: "Show QR",
-          link: "/attendance/showqr",
-          label: "showQR",
-          icon: QrCode,
-        },
-      ],
-    },
-  ];
+  // const menuItems: MenuItem[] = [
+  //   {
+  //     name: "Gym Details",
+  //     icon: Users,
+  //     label: "gymDetails",
+  //     subItems: [
+  //       {
+  //         name: "View Details",
+  //         link: "/gymdetails/viewgymdetails",
+  //         label: "viewGymDetails",
+  //         icon: Eye,
+  //       },
+  //       {
+  //         name: "Edit Details",
+  //         link: "/gymdetails/editgymdetails",
+  //         label: "editGymDetails",
+  //         icon: Edit,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     name: "Trainers",
+  //     icon: UserCheck,
+  //     label: "trainers",
+  //     subItems: [
+  //       {
+  //         name: "View Trainers",
+  //         link: "/trainers/viewtrainers",
+  //         label: "viewTrainers",
+  //         icon: Eye,
+  //       },
+  //       {
+  //         name: "Add Trainers",
+  //         link: "/trainers/addtrainers",
+  //         label: "addTrainers",
+  //         icon: UserCheck,
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     name: "Assignment",
+  //     icon: ClipboardList,
+  //     link: "/userstrainersassignment",
+  //     label: "userstrainersassignment",
+  //   },
+  //   {
+  //     name: "Attendance",
+  //     icon: CalendarCheck,
+  //     label: "attendance",
+  //     subItems: [
+  //       {
+  //         name: "Today's Attendance",
+  //         link: "/attendance/todaysattendance",
+  //         label: "todaysAttendance",
+  //         icon: CalendarCheck,
+  //       },
+  //       {
+  //         name: "Show QR",
+  //         link: "/attendance/showqr",
+  //         label: "showQR",
+  //         icon: QrCode,
+  //       },
+  //     ],
+  //   },
+  // ];
 
   const openSubRoutes = (label: string) => {
     setIsOpening(true);

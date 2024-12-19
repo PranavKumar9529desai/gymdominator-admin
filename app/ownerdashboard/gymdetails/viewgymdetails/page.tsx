@@ -1,5 +1,5 @@
 import ViewGymDetails from "@/components/gym-owner/viewgymdetails";
-import FetchGymDetailsSA  from "@/app/actions/gym/FetchGymDetailsSA";
+import FetchGymDetailsSA  from "@/app/actions/gym/owner/GetGymDetails";
 import { auth } from "@/auth";
 import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
 import GymDetails from "@/components/gym-owner/EditGymDetails";

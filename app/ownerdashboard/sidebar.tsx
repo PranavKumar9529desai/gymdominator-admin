@@ -27,74 +27,84 @@ interface MenuItem {
   link?: string;
 }
 
+export const menuItems: MenuItem[] = [
+  {
+    name: "Gym Details",
+    icon: Users,
+    label: "gymDetails",
+
+    subItems: [
+      {
+        name: "View Details",
+        link: `/gymdetails/viewgymdetails`,
+        label: "viewGymDetails",
+      },
+      {
+        name: "Edit Details",
+        link: "/gymdetails/editgymdetails",
+        label: "editGymDetails",
+      },
+      {
+        name: "Auth Token",
+        label: "authToken",
+        link: "/gymdetails/authtoken",
+      },
+    ],
+  },
+  {
+    name: "Trainers",
+    icon: UserCheck,
+    label: "trainers",
+    subItems: [
+      {
+        name: "View Trainers",
+        link: "/trainers/viewtrainers",
+        label: "viewTrainers",
+      },
+      {
+        name: "Assign Trainers",
+        link: "/userstrainersassignment",
+        label: "userstrainersassignment",
+      },
+    ],
+  },
+  {
+    name: "On-boarding",
+    label: "Onboarding",
+    icon: ClipboardList,
+    link: "/onboarding/onboarding",
+    subItems: [
+      {
+        name: "Onboarded Users",
+        label: "onboarded users",
+        link: "/onboarding/onboardedusers",
+      },
+      {
+        name: "Onboarding QR",
+        label: "onboarding QR",
+        link: "/onboarding/onboardingqr",
+      },
+    ],
+  },
+  {
+    name: "Attendance",
+    icon: CalendarCheck,
+    label: "attendance",
+    subItems: [
+      {
+        name: "Today's Attendance",
+        link: "/attendance/todaysattendance",
+        label: "todaysAttendance",
+      },
+      { name: "Show QR", link: "/attendance/showqr", label: "showQR" },
+    ],
+  },
+];
+
 export default function Sidebar() {
   const [activePage, setActivePage] = useState<string>("viewGymDetails");
   const [openMenus, setOpenMenus] = useState<{ [key: string]: boolean }>({});
   const router = useRouter();
-  
-  // this gymid will come from the backend call 
-
-  console.log("the sidebar is called");
-  const menuItems: MenuItem[] = [
-    {
-      name: "Gym Details",
-      icon: Users,
-      label: "gymDetails",
-      subItems: [
-        {
-          name: "View Details",
-          link: `/gymdetails/viewgymdetails`,
-          label: "viewGymDetails",
-        },
-        {
-          name: "Edit Details",
-          link: "/gymdetails/editgymdetails",
-          label: "editGymDetails",
-        },
-        {
-          name: "Auth Token",
-          label: "authToken",
-          link: "/gymdetails/authtoken",
-        }
-      ],
-    },
-    {
-      name: "Trainers",
-      icon: UserCheck,
-      label: "trainers",
-      subItems: [
-        {
-          name: "View Trainers",
-          link: "/trainers/viewtrainers",
-          label: "viewTrainers",
-        },
-        {
-          name: "Add Trainers",
-          link: "/trainers/addtrainers",
-          label: "addTrainers",
-        },
-      ],
-    },
-    {
-      name: "Users-Trainers Assignment",
-      icon: ClipboardList,
-      link: "/userstrainersassignment",
-      label: "userstrainersassignment",
-    },
-    {
-      name: "Attendance",
-      icon: CalendarCheck,
-      label: "attendance",
-      subItems: [
-        {
-          name: "Today's Attendance",
-          link: "/attendance/todaysattendance",
-          label: "todaysAttendance",
-        },
-        { name: "Show QR", link: "/attendance/showqr", label: "showQR" },
-      ],
-    },
-  ];
 
   const handleItemClick = (item: MenuItem) => {
     if (item.subItems) {

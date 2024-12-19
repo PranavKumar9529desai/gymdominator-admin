@@ -19,29 +19,26 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, UserCheck, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-interface Trainer {
-  id: number;
-  name: string;
-  assignedClients: number;
-  shift: "Morning" | "Evening";
-  image: string;
-}
+import { useRecoilState } from "recoil";
+import { TrainersAtom } from "@/app/state/Atoms/TrainersAtom";
 
 interface ViewTrainersListProps {
-  Trainers: Trainer[];
+  Trainers: TrainerType[];
 }
 
 export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
   const router = useRouter();
-  const [trainers, setTrainers] = useState<Trainer[]>(Trainers);
+  const [trainersAtoms] = useRecoilState(TrainersAtom);
+  const [trainers] = useState<TrainerType[]>(Trainers);
   const [searchTerm, setSearchTerm] = useState("");
   const [shiftFilter, setShiftFilter] = useState<"Morning" | "Evening" | "All">(
     "All"
   );
-  const [filteredTrainers, setFilteredTrainers] = useState<Trainer[]>(trainers);
+  const [filteredTrainers, setFilteredTrainers] =
+    useState<TrainerType[]>(trainers);
 
   useEffect(() => {
+    console.log("Trainers are ", trainersAtoms);
     const filtered = trainers.filter(
       (trainer) =>
         trainer.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -63,26 +60,36 @@ export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
       <h1 className="text-2xl font-bold mb-4">Trainer List</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <Card>
+        <Card className="bg-gradient-to-br from-blue-500 to-purple-600">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-xl font-bold text-white">
               Total Trainers
             </CardTitle>
-            <Users className="h-10 w-10 text-blue-6p00" />
+            <Users className="h-12 w-12 text-white" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{trainers.length}</div>
+            <div className="text-4xl font-bold text-white pb-2">
+              {trainers.length}
+            </div>
+            <p className="text-sm font-light text-white">
+              The total number of trainers available in your gym.
+            </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="bg-gradient-to-br from-green-500 via-teal-500 to-green-600">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+            <CardTitle className="text-xl font-bold text-white">
               Filtered Trainers
             </CardTitle>
-            <UserCheck className="h-10 w-10 text-green-600" />
+            <UserCheck className="h-12 w-12 text-white" />
           </CardHeader>
           <CardContent>
-            <div className="text-4xl font-bold">{filteredTrainers.length}</div>
+            <div className="text-4xl font-bold text-white pb-2">
+              {filteredTrainers.length}
+            </div>
+            <p className="text-sm font-light text-white">
+              The number of trainers that match the current filter criteria.
+            </p>
           </CardContent>
         </Card>
       </div>

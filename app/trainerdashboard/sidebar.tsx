@@ -7,7 +7,6 @@ import {
   LogOut,
   ChevronDown,
   Dumbbell,
-  UserRoundPlusIcon,
   CalendarCheck,
   UtensilsCrossedIcon,
 } from "lucide-react";
@@ -19,22 +18,26 @@ interface MenuItem {
   name: string;
   icon: React.ElementType;
   label: string;
-  subItems?: { name: string; label: string }[];
+  link: string;
+  subItems?: { name: string; label: string; link: string }[];
 }
 
-const menuItems: MenuItem[] = [
+export const menuItems: MenuItem[] = [
   {
     name: "Workouts",
     label: "workouts",
     icon: Dumbbell,
+    link: "/trainerdashboard/workouts",
     subItems: [
       {
         name: "Create Workouts",
         label: "addworkout",
+        link: "/workouts/addworkout",
       },
       {
         name: "Assign Workout",
         label: "assignworkout",
+        link: "/workouts/assignworkout",
       },
     ],
   },
@@ -42,14 +45,17 @@ const menuItems: MenuItem[] = [
     name: "Diet",
     label: "diet",
     icon: UtensilsCrossedIcon,
+    link: "/trainerdashboard/diet",
     subItems: [
       {
         name: "Create diet-plan",
         label: "createdietplan",
+        link: "/diet/createdietplan",
       },
       {
         name: "Assign Diet plan",
         label: "assigndietplan",
+        link: "/diet/assigndietplan",
       },
     ],
   },
@@ -57,9 +63,18 @@ const menuItems: MenuItem[] = [
     name: "Attendance",
     icon: CalendarCheck,
     label: "attendance",
+    link: "/trainerdashboard/attendance",
     subItems: [
-      { name: "Today's Attendance", label: "todaysattendance" },
-      { name: "Show QR", label: "showqr" },
+      {
+        name: "Today's Attendance",
+        label: "todaysattendance",
+        link: "/attendance/todaysattendance",
+      },
+      {
+        name: "Show QR",
+        label: "showqr",
+        link: "/attendance/showqr",
+      },
     ],
   },
 ];

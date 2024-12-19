@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import Image from "next/image";
 import { Phone, MapPin, TrendingUp, Award, Calendar } from "lucide-react";
@@ -20,7 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import UserprofileImage from "@/app/assests/gymd.webp"
+import UserprofileImage from "@/app/assests/gymd.webp";
 // TOOD send data to the backend
 export default function UserProfileCard() {
   const [userData, setUserData] = useState({

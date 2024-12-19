@@ -1,6 +1,6 @@
 import React from 'react'
 import SelectGym from '@/components/trainer/SelectGym';
-import FetchallGyms from '@/app/actions/gym/FetchallGyms';
+import FetchallGyms from '@/app/actions/gym/owner/GetallGyms';
 
 export default async function Page() {
   const gyms: gym[] | [] = await FetchallGyms();

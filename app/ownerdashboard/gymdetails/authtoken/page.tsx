@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { sessionType } from "@/app/actions/gym/FetchGymDetailsSA";
+import { sessionType } from "@/app/actions/gym/owner/GetGymDetails";
 import CreateTokenButton from "./createTokenButton";
 import { useSession } from "next-auth/react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";

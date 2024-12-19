@@ -6,8 +6,11 @@ import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import LoginSchema from "./app/schema/LoginSchem";
-import { NextResponse } from "next/server";
+import { JWT } from "next-auth/jwt";
+import { Session } from "next-auth";
+import { User } from "next-auth";
+import { Account } from "next-auth";
+import { Profile } from "next-auth";
 import { Rolestype } from "./app/types/next-auth";
 export default {
   providers: [
@@ -50,13 +53,16 @@ export default {
           role
         );
         // name is not checked as the it is not necssary for the signin
-        if (email && password ) {
-          let userFromDB: userType | false = await getUserByEmail(
-            email,
-          );
+        if (email && password) {
+          let userFromDB: userType | false = await getUserByEmail(email);
           console.log("user from the db", userFromDB);
-           // signin 
-          if (userFromDB && userFromDB.name && userFromDB.email&& userFromDB.role) {
+          // signin
+          if (
+            userFromDB &&
+            userFromDB.name &&
+            userFromDB.email &&
+            userFromDB.role
+          ) {
             // check the password
             let isPasswordMatch = await bcrypt.compare(
               password,
@@ -75,7 +81,7 @@ export default {
             }
           } else {
             // as record doesn't exist signing up
-            let response: {
+            const response: {
               msg: string;
               user: {
                 name: string;
@@ -107,69 +113,79 @@ export default {
   // TODO once the gym is created then add the gym details to the sesstion
 
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       if (account && account.provider === "google") {
-        // google signin and signup
         console.log("user in the google signin", user);
+        // google signin and signup
         if (user && user.email) {
           // check if the user is already in the database
-          let userFromDb: userType | false = await getUserByEmail(
-            user.email,
-          );
-          if (userFromDb && userFromDb.name && userFromDb.email && userFromDb.role) {
+          const userFromDb: userType | false = await getUserByEmail(user.email);
+          if (
+            userFromDb &&
+            userFromDb.name &&
+            userFromDb.email &&
+            userFromDb.role
+          ) {
             // login
-              user.role = userFromDb.role as Rolestype;
-              user.name = userFromDb.name;
-              user.email = userFromDb.email;
+            user.role = userFromDb.role as Rolestype;
+            user.name = userFromDb.name;
+            user.email = userFromDb.email;
           }
-            // signup
-            // as without role we dont know what to type of user ,
-             // here allow user to signup once the user selecs the role we do backend call to create the user in the database[
-            console.log("user is this from the google signin callback", user);
-            return true;
+          // signup
+          // as without role we dont know what to type of user ,
+          // here allow user to signup once the user selecs the role we do backend call to create the user in the database[
+          return true;
         }
-        console.log("user objeect seem to be empty", user);
-         return false;
-
+        console.log("false is the user is not in the database");
+        return false;
       }
       // if the user records not in the datbase then th token formed with the without role
-      console.log("user in the signin from the sign callback", user);
       return true;
     },
-    async jwt({ user, account, token, trigger, session }) {
-      console.log("trigger is this ", trigger);
-      console.log("session from the jwt callback ", session);
-      console.log("token from the jwt callback ", token);
-      console.log("user from the jwt callback ", user);
+    async jwt({
+      token,
+      user,
+      trigger,
+      session,
+    }: {
+      token: JWT;
+      user?: User;
+      account?: Account | null;
+      profile?: Profile;
+      trigger?: "signIn" | "signUp" | "update";
+      session?: Session;
+    }) {
       if (trigger === "update") {
-        console.log(
-          "token is updating...",
-          token,
-          session?.user?.role,
-          session?.role
-        );
-        token.role = session?.user?.role || session?.role;
-        console.log("token is updated to this ", token);
+        console.log("session updates is triggered", session);
+        console.log("token is updating...", token);
+        console.log("updated token is ", token);
+        token.gym = session?.gym;
+        if (!token.role) {
+          token.role = session?.user?.role || session?.role;
+        }
         return token;
       }
       if (user && user.email && user.name) {
         token.role = user.role;
+        console.log("token when credentails are correct", token);
         return token;
       }
+      console.log(" token before passing to sesion callback", token);
       //  as we can't update the token directly so we are updating the session then using the session callback we are updating the token
       // console.log("token is this ", token);
+
       return token;
     },
     async session({ token, session }) {
       console.log("token from the session callback ", token);
-      if (token && token.email && token.name) {
+      if (token && token.email && token.name && token.role ) {
         session.user.name = token.name;
         session.user.email = token.email;
-        session.role = token.role;
-        console.log("session is this from the session callback ", session);
+        session.gym = token.gym as gym;
+        session.role = token.role as Rolestype;
+        console.log("updated sesion from the session callback ", session);
         return session;
       }
-      console.log("session is this from the session callback ", session);
       return session;
     },
   },

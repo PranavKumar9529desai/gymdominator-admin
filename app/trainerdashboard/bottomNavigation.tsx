@@ -1,21 +1,10 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
-import {
-  Users,
-  UserCheck,
-  Dumbbell,
-  UtensilsCrossed,
-  ClipboardList,
-  CalendarCheck,
-  ChevronDown,
-  Eye,
-  Edit,
-  QrCode,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
+import { menuItems } from "./sidebar";
+import { ChevronDown } from "lucide-react";
 
 interface SubItem {
   name: string;
@@ -38,67 +27,6 @@ export default function BottomNavigation() {
   const [isOpening, setIsOpening] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-
-  const menuItems: MenuItem[] = [
-    {
-      name: "Workouts",
-      label: "workouts",
-      icon: Dumbbell,
-      subItems: [
-        {
-          name: "Create Workouts",
-          label: "addworkout",
-          icon: ClipboardList,
-          link: "/workouts/addworkout", // Add a link if needed
-      
-        },
-        {
-          name: "Assign Workout",
-          label: "assignworkout",
-          icon: UserCheck,
-          link: "/workouts/assignworkout", // Add a link if needed
-        },
-      ],
-    },
-    {
-      name: "Diet",
-      label: "diet",
-      icon: UtensilsCrossed,
-      subItems: [
-        {
-          name: "Create diet-plan",
-          label: "createdietplan",
-          icon: ClipboardList,
-          link: "/diet/createdietplan", // Add a link if needed
-        },
-        {
-          name: "Assign Diet plan",
-          label: "assigndietplan",
-          icon: UserCheck,
-          link: "/diet/assigndietplan", // Add a link if needed
-        },
-      ],
-    },
-    {
-      name: "Attendance",
-      icon: CalendarCheck,
-      label: "attendance",
-      subItems: [
-        {
-          name: "Today's Attendance",
-          label: "todaysattendance",
-          icon: CalendarCheck,
-          link: "/attendance/todaysattendance", // Add a link if needed
-        },
-        {
-          name: "Show QR",
-          label: "showqr",
-          icon: QrCode,
-          link: "/attendance/showqr", // Add a link if needed
-        },
-      ],
-    },
-  ];
 
   const openSubRoutes = (label: string) => {
     setIsOpening(true);
