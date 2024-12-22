@@ -1,4 +1,4 @@
-import UserAttendance from "@/components/common/Attendance/UserAttendance";
+import UserAttendance from "@/app/ownerdashboard/attendance/todaysattendance/UserAttendance";
 import React from "react";
 
 export default function page() {

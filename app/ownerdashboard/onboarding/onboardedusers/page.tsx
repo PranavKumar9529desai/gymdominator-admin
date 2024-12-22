@@ -1,107 +1,172 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Users,
-  UserCheck,
-  ClockIcon as UserClock,
-  LucideIcon,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { EnrollmentTable } from "./enrollmenttable";
-import { EnrollmentCards } from "./enrollmentcard";
-import { Enrollment } from "./types";
+import { useState, useEffect } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { Users, UserCheck, User, ArrowUpDown } from "lucide-react";
+import { DataTable } from "@/components/Table/UsersTable";
+import { DataCard } from "@/components/Table/UserCard";
+import { StatusCard } from "@/components/common/StatusCard";
+import { Button } from "@/components/ui/button";
+import { GetOnBoardingUser } from "./GetOnBoardingUser";
 
-export default function GymManagement() {
-  const [enrollments, setEnrollments] = useState<Enrollment[]>([
-    {
-      id: "1",
-      userName: "John Doe",
-      startDate: new Date("2023-06-01"),
-      endDate: new Date("2023-12-31"),
-      status: "active",
-    },
-    {
-      id: "2",
-      userName: "Jane Smith",
-      startDate: new Date("2023-06-15"),
-      endDate: new Date("2023-12-31"),
-      status: "pending",
-    },
-    {
-      id: "3",
-      userName: "Bob Johnson",
-      startDate: new Date("2023-07-01"),
-      endDate: new Date("2024-01-31"),
-      status: "inactive",
-    },
-  ]);
+interface User {
+  id: number;
+  name: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  status: "active" | "pending" | "inactive";
+}
 
-  const totalUsers = enrollments.length;
-  const allowedUsers = enrollments.filter((e) => e.status === "active").length;
-  const pendingUsers = enrollments.filter((e) => e.status === "pending").length;
+const calculateStatus = (startDate: Date | null, endDate: Date | null): User['status'] => {
+  if (!startDate || !endDate) {
+    return "pending";
+  }
+  // Active status logic - other statuses will be added later
+  return "active";
+};
+
+export default function OnboardedUsersPage() {
+  const [users, setUsers] = useState<User[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await GetOnBoardingUser();
+      if (response) {
+        const transformedUsers: User[] = response.users.map(user => ({
+          ...user,
+          status: calculateStatus(user.startDate, user.endDate)
+        }));
+        setUsers(transformedUsers);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+  const totalUsers = users.length;
+  const activeUsers = users.filter((u) => u.status === "active").length;
+  const pendingUsers = users.filter((u) => u.status === "pending").length;
+
+  const statusCards = [
+    {
+      title: "Total Users",
+      value: totalUsers,
+      icon: Users,
+      gradient: "blue",
+    },
+    {
+      title: "Active Users",
+      value: activeUsers,
+      icon: UserCheck,
+      gradient: "green",
+    },
+    {
+      title: "Pending Users",
+      value: pendingUsers,
+      icon: User,
+      gradient: "yellow",
+    },
+  ] as const;
+
+  const columns: ColumnDef<User>[] = [
+    {
+      accessorKey: "name",
+      header: ({ column }) => (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          User Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      ),
+    },
+    {
+      accessorKey: "startDate",
+      header: "Start Date",
+      cell: ({ row }) => {
+        const date = row.getValue("startDate") as Date;
+        return <div>{date ? date.toLocaleDateString() : "N/A"}</div>;
+      },
+    },
+    {
+      accessorKey: "endDate",
+      header: "End Date",
+      cell: ({ row }) => {
+        const date = row.getValue("endDate") as Date;
+        return <div>{date ? date.toLocaleDateString() : "N/A"}</div>;
+      },
+    },
+    {
+      accessorKey: "status",
+      header: "Status",
+      cell: ({ row }) => {
+        const status = row.getValue("status") as string;
+        return (
+          <div
+            className={`
+            w-fit rounded-full px-4 py-1 text-xs font-semibold text-center
+            ${
+              status === "active"
+                ? "bg-green-100 text-green-800"
+                : status === "pending"
+                ? "bg-yellow-100 text-yellow-800"
+                : "bg-red-100 text-red-800"
+            }
+          `}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </div>
+        );
+      },
+    },
+  ];
 
   return (
     <div className="container mx-auto p-6 space-y-8">
-      <h1 className="text-3xl font-bold text-center mb-8">
-        Gym Enrollment Management
-      </h1>
+      <h1 className="text-3xl font-bold text-center mb-8">Onboarding Users</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard
-          title="Total Users"
-          value={totalUsers}
-          icon={Users}
-          gradient="from-blue-500 to-blue-600"
-        />
-        <StatCard
-          title="Allowed Users"
-          value={allowedUsers}
-          icon={UserCheck}
-          gradient="from-green-500 to-green-600"
-        />
-        <StatCard
-          title="Pending Users"
-          value={pendingUsers}
-          icon={UserClock}
-          gradient="from-yellow-500 to-yellow-600"
-        />
+        {statusCards.map((card) => (
+          <StatusCard key={card.title} {...card} />
+        ))}
       </div>
 
       <div className="hidden md:block">
-        <EnrollmentTable
-          enrollments={enrollments}
-          setEnrollments={setEnrollments}
-        />
+        <DataTable data={users} columns={columns} filterColumn="name" />
       </div>
 
       <div className="md:hidden">
-        <EnrollmentCards enrollments={enrollments} />
+        <DataCard
+          data={users}
+          renderCard={(user) => (
+            <div className="p-4">
+              <h3 className="font-medium">{user.name}</h3>
+              <p className="text-sm text-gray-500">
+                Start: {user.startDate ? user.startDate.toLocaleDateString() : "N/A"}
+              </p>
+              <p className="text-sm text-gray-500">
+                End: {user.endDate ? user.endDate.toLocaleDateString() : "N/A"}
+              </p>
+              <div
+                className={`
+                mt-2 inline-block rounded-full px-2 py-1 text-xs font-semibold 
+                ${
+                  user.status === "active"
+                    ? "bg-green-100 text-green-800"
+                    : user.status === "pending"
+                    ? "bg-yellow-100 text-yellow-800"
+                    : "bg-red-100 text-red-800"
+                }
+              `}
+              >
+                {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+              </div>
+            </div>
+          )}
+        />
       </div>
     </div>
   );
 }
 
-function StatCard({
-  title,
-  value,
-  icon: Icon,
-  gradient,
-}: {
-  title: string;
-  value: number;
-  icon: LucideIcon;
-  gradient: string;
-}) {
-  return (
-    <Card className={`bg-gradient-to-br ${gradient} text-white`}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <Icon className="h-8 w-8 opacity-75 text-white" />
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-      </CardContent>
-    </Card>
-  );
-}
+

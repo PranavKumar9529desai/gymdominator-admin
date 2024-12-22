@@ -18,7 +18,7 @@ const GymQRCodeOnboarding: React.FC<GymQRCodeOnboardingProps> = ({
   gymName,
 }) => {
   return (
-    <Card className="w-full max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+    <Card className="w-full max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden h-[100vh] md:h-auto">
       <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-800 text-white text-center py-6">
         <CardTitle className="text-2xl font-bold">{gymName}</CardTitle>
         <CardDescription className="text-blue-100 mt-2">

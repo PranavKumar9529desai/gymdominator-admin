@@ -1,15 +1,15 @@
-import GymQRCodeOnboarding from "@/components/gym-owner/Onboarding";
+import GymQRCodeOnboarding from "@/components/gym-owner/QrCode";
 import React from "react";
-import { OnBoadingQrData } from "@/app/actions/gym/owner/OnBordingQrData";
+import { OnBoadingQrData } from "./GetOnBordingQrData";
 
 export default async function page() {
-  const { hash, gymname , gymid} = await OnBoadingQrData();
+  const { hash, gymname, gymid } = await OnBoadingQrData();
   const QrData = {
     OnboardingAction: {
-      hash : hash ,
-      gymname : gymname,
-      gymid : gymid
-    }
+      hash: hash,
+      gymname: gymname,
+      gymid: gymid,
+    },
   };
 
   return (

@@ -1,5 +1,5 @@
-import ViewTrainersList from "@/components/gym-owner/viewTrainers";
-import { getTrainerAssociatedWithGym } from "@/app/actions/gym/owner/GetTrainerAssociatedWithGym";
+import ViewTrainersList from "@/app/ownerdashboard/trainers/viewtrainers/viewTrainers";
+import { getTrainerAssociatedWithGym } from "@/app/ownerdashboard/trainers/userstrainersassignment/GetTrainerAssociatedWithGym";
 export default async function Page() {
   const trainers : TrainerType[]  | [] = await getTrainerAssociatedWithGym();
 

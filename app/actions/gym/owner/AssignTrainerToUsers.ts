@@ -1,7 +1,5 @@
 "use server";
-
 import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
-
 interface AssignTrainerResponse {
   msg: string;
   trainer?: {

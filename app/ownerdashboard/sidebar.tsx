@@ -63,7 +63,7 @@ export const menuItems: MenuItem[] = [
       },
       {
         name: "Assign Trainers",
-        link: "/userstrainersassignment",
+        link: "/trainers/userstrainersassignment",
         label: "userstrainersassignment",
       },
     ],
@@ -75,7 +75,7 @@ export const menuItems: MenuItem[] = [
     link: "/onboarding/onboarding",
     subItems: [
       {
-        name: "Onboarded Users",
+        name: "Onboarding Users",
         label: "onboarded users",
         link: "/onboarding/onboardedusers",
       },
