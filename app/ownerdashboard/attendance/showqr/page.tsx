@@ -3,7 +3,7 @@ import { GetAttendanceQrData } from "./GetAttendanceQrData";
 
 export default async function AttendanceComponent() {
   const gymData = await GetAttendanceQrData();
-  
+
   const qrValue = JSON.stringify({
     AttendanceAction: {
       gymname: gymData.gymname,
