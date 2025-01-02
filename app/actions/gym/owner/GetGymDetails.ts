@@ -1,5 +1,5 @@
 "use server";
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
 
 export interface sessionType {
@@ -28,7 +28,7 @@ export default async function FetchGymDetailsSA() {
     // Initialize Axios instance with Authorization header
     const ownerAxios = await OwnerReqConfig();
     const response: AxiosResponse<responseType> = await ownerAxios.get(
-      `/api/v1/owner/gymdetails`
+      `/gymdetails`
     );
 
     console.log("Gym details fetched successfully:", response.data.gym);

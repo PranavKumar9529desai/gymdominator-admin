@@ -3,7 +3,7 @@ import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
 export  async function OnBoadingQrData() {
   const ownerAxios = await OwnerReqConfig();
   try {
-    const response = await ownerAxios.get(`/api/v1/owner/onboardingqrdata`);
+    const response = await ownerAxios.get(`/onboardingqrdata`);
     const data = response.data;
     console.log("onboarding qr data is from the onboardingqrdata ", data);
     return data;

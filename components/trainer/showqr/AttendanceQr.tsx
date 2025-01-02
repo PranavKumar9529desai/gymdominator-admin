@@ -1,19 +1,14 @@
-import GymQRCodeOnboarding from "@/components/gym-owner/QrCode";
+import GymQRCode from "@/components/gym-owner/QrCode";
 
-export default function AttendanceQr() {
-  const currentDate = new Date().toLocaleDateString("en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+interface AttendanceQrProps {
+  qrValue: string;
+  gymName: string;
+}
 
-  // Generate QR value with date and token
-  const qrValue = `gymdominator-attendance-${currentDate} and the unique token is pranav desai`;
-
+export default function AttendanceQr({ qrValue, gymName }: AttendanceQrProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
-      <GymQRCodeOnboarding qrdata={qrValue} gymName="Today's Attendance" />
+      <GymQRCode qrdata={qrValue} gymName={gymName} />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
 export default async function CreateAuthToken() {
   try {
     const ownerAxios = await OwnerReqConfig();
-    const response = await ownerAxios.post(`/api/v1/owner/createauthtoken`, {});
+    const response = await ownerAxios.post(`/createauthtoken`, {});
 
     if (response.data) {
       return {

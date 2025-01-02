@@ -2,12 +2,19 @@
 
 import { useState, useEffect } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Users, UserCheck, User, ArrowUpDown } from "lucide-react";
+import { Users, UserCheck, User, ArrowUpDown, MoreVertical } from "lucide-react";
 import { DataTable } from "@/components/Table/UsersTable";
 import { DataCard } from "@/components/Table/UserCard";
 import { StatusCard } from "@/components/common/StatusCard";
 import { Button } from "@/components/ui/button";
 import { GetOnBoardingUser } from "./GetOnBoardingUser";
+import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface User {
   id: number;
@@ -25,8 +32,18 @@ const calculateStatus = (startDate: Date | null, endDate: Date | null): User['st
   return "active";
 };
 
+const formatDate = (date: Date | null): string => {
+  if (!date) return "N/A";
+  return date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+};
+
 export default function OnboardedUsersPage() {
   const [users, setUsers] = useState<User[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -34,12 +51,18 @@ export default function OnboardedUsersPage() {
       if (response) {
         const transformedUsers: User[] = response.users.map(user => ({
           ...user,
-          status: calculateStatus(user.startDate, user.endDate)
+          startDate: user.startDate ? new Date(user.startDate) : null,
+          endDate: user.endDate ? new Date(user.endDate) : null,
+          status: calculateStatus(
+            user.startDate ? new Date(user.startDate) : null,
+            user.endDate ? new Date(user.endDate) : null
+          )
         }));
         setUsers(transformedUsers);
       }
     };
     fetchUsers();
+    console.log("Fetching onboarding users.. user array is " , users);
   }, []);
 
   const totalUsers = users.length;
@@ -67,6 +90,16 @@ export default function OnboardedUsersPage() {
     },
   ] as const;
 
+  const handleRowClick = (user: User) => {
+    const params = new URLSearchParams({
+      userid: user.id.toString(),
+      username: user.name,
+      startdate: user.startDate?.toISOString() || '',
+      enddate: user.endDate?.toISOString() || ''
+    });
+    router.push(`/ownerdashboard/onboarding/editactiveperiod?${params.toString()}`);
+  };
+
   const columns: ColumnDef<User>[] = [
     {
       accessorKey: "name",
@@ -79,21 +112,21 @@ export default function OnboardedUsersPage() {
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       ),
-    },
-    {
+        },
+        {
       accessorKey: "startDate",
       header: "Start Date",
       cell: ({ row }) => {
-        const date = row.getValue("startDate") as Date;
-        return <div>{date ? date.toLocaleDateString() : "N/A"}</div>;
+        const date = row.getValue("startDate") as (Date | null);
+        return <div>{formatDate(date)}</div>;
       },
-    },
-    {
+        },
+        {
       accessorKey: "endDate",
       header: "End Date",
       cell: ({ row }) => {
-        const date = row.getValue("endDate") as Date;
-        return <div>{date ? date.toLocaleDateString() : "N/A"}</div>;
+        const date = row.getValue("endDate") as (Date | null);
+        return <div>{formatDate(date)}</div>;
       },
     },
     {
@@ -116,6 +149,26 @@ export default function OnboardedUsersPage() {
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </div>
+        );
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreVertical className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleRowClick(row.original)}>
+                Edit Active Period
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       },
     },
@@ -142,10 +195,10 @@ export default function OnboardedUsersPage() {
             <div className="p-4">
               <h3 className="font-medium">{user.name}</h3>
               <p className="text-sm text-gray-500">
-                Start: {user.startDate ? user.startDate.toLocaleDateString() : "N/A"}
+                Start: {user.startDate ? formatDate(user.startDate) : "N/A"}
               </p>
               <p className="text-sm text-gray-500">
-                End: {user.endDate ? user.endDate.toLocaleDateString() : "N/A"}
+                End: {user.endDate ? formatDate(user.endDate) : "N/A"}
               </p>
               <div
                 className={`

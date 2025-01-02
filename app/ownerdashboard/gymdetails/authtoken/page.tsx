@@ -10,7 +10,7 @@ import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
 async function getExistingToken() {
   "use server";
   const ownerAxios = await OwnerReqConfig();
-  const response = await ownerAxios.get(`/api/v1/owner/getauthtoken`);
+  const response = await ownerAxios.get(`/getauthtoken`);
   return response.data.token;
 }
 

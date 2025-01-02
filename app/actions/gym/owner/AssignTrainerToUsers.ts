@@ -14,7 +14,7 @@ export async function AssignTrainerToUsers(
 ): Promise<AssignTrainerResponse> {
   try {
     const ownerAxios = await OwnerReqConfig();
-    const response = await ownerAxios.post(`/api/v1/owner/assigntrainer`, {
+    const response = await ownerAxios.post(`/assigntrainer`, {
       userid: parseInt(userid),
       trainerid: parseInt(trainerid),
     });

@@ -111,7 +111,7 @@ export const addTrainer = async (
   };
 
   return await handleApiRequest<AddTrainerResponse>(
-    "/api/v1/owner/addtrainer",
+    "/addtrainer",
     "POST",
     payload
   );
@@ -146,7 +146,7 @@ export const updateTrainer = async (
   };
 
   return await handleApiRequest<UpdateTrainerResponse>(
-    "/api/v1/owner/addtrainerdetails",
+    "/addtrainerdetails",
     "PUT",
     payload
   );
