@@ -9,6 +9,7 @@ import {
   Dumbbell,
   CalendarCheck,
   UtensilsCrossedIcon,
+  Users, // Add Users icon import
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -23,6 +24,12 @@ interface MenuItem {
 }
 
 export const menuItems: MenuItem[] = [
+  {
+    name: "Assigned Users",
+    label: "assignedusers",
+    icon: Users,
+    link: "/trainerdashboard/assignedusers",
+  },
   {
     name: "Workouts",
     label: "workouts",
@@ -89,7 +96,7 @@ export default function SideBar() {
     if (item.subItems) {
       setOpenMenus((prev) => ({ ...prev, [item.label]: !prev[item.label] }));
     } else {
-      router.push(`/trainerdashboard/${item.label}`);
+      router.push(item.link); // Changed to use full link directly
     }
   };
 

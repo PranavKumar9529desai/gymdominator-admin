@@ -1,5 +1,5 @@
 import React from 'react'
-import SelectGym from '@/components/trainer/SelectGym';
+import SelectGym from '@/app/selectgym/SelectGym';
 import FetchallGyms from '@/app/actions/gym/owner/GetallGyms';
 
 export default async function Page() {

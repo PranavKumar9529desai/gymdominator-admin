@@ -1,4 +1,4 @@
-import AuthTokenSubmission from "@/components/trainer/AuthTokenSubmission";
+import AuthTokenSubmission from "@/app/selectgym/[gymid]/AuthTokenSubmission";
 import React from "react";
 
 export default function page({ params }: { params: { gymid: string } }) {

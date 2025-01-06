@@ -2,7 +2,7 @@ import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
 export default async function FetchallGyms() {
   const trainerAxios = await TrainerReqConfig();
   try {
-    const response = await trainerAxios.get("/api/v1/trainer/aviablegyms");
+    const response = await trainerAxios.get("/api/v1/trainer/availablegyms");
     const data = response.data.gyms as gym[];
     console.log("gyms data is from the fetchallgyms ", data);
     return data;

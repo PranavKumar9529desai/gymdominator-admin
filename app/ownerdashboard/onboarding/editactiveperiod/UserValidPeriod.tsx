@@ -22,6 +22,7 @@ import { UpdateUserActivePeriod } from "@/app/ownerdashboard/onboarding/editacti
 import { toast, Toaster } from "react-hot-toast";
 import { validateUserValidity } from "./actions/typecheck";
 import Swal from 'sweetalert2';
+import { useRouter } from "next/navigation";
 
 interface UserValidityPeriodProps {
   userId: string;
@@ -38,6 +39,7 @@ export function UserValidityPeriod({
   initialStartDate,
   initialEndDate,
 }: UserValidityPeriodProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [startDate, setStartDate] = useState<Date>(
     initialStartDate || new Date()
@@ -123,6 +125,11 @@ export function UserValidityPeriod({
             duration: 3000,
             position: 'top-center',
           });
+          
+          // Add delay before navigation to show the success toast
+          setTimeout(() => {
+            router.push('/ownerdashboard/onboarding/onboardedusers');
+          }, 1500);
         } else {
           toast.error(updateResult.msg || 'Failed to update validity period');
         }

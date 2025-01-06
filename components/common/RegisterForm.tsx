@@ -254,7 +254,7 @@ export default function RegisterForm() {
                       <SelectContent>
                         <SelectItem value="owner">Gym Owner</SelectItem>
                         <SelectItem value="trainer">Trainer</SelectItem>
-                        <SelectItem value="sales">Sales</SelectItem>
+                        {/* <SelectItem value="sales">Sales</SelectItem> */}
                       </SelectContent>
                     </Select>
                     <FormMessage className="text-xs" />
