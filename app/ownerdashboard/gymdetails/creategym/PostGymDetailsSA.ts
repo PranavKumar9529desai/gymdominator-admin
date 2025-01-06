@@ -25,13 +25,13 @@ export default async function PostGymDetails(
   formData: string,
   image: string
 ) {
-  console.log("received the request from the postgymdetais ", image , formData);
+  console.log("received the request from the postgymdetails ", image, formData);
   try {
-    const formdata : FormData  = JSON.parse(formData);
+    const formdata: FormData = JSON.parse(formData);
     const ownerAxios = await OwnerReqConfig();
     const payload = {
       gym_name: formdata.gym_name,
-      gym_logo: image, // Base64 encoded image for D1 database
+      gym_logo: image, // Use the provided image URL directly
       address: formdata.address,
       phone_number: formdata.phone_number,
       Email: formdata.Email,
@@ -39,7 +39,7 @@ export default async function PostGymDetails(
 
     console.log("payload is ", payload);
     const response: AxiosResponse<GymResponse> = await ownerAxios.post(
-      `/api/v1/owner/creategym`,
+      `creategym`,
       payload,
       {
         headers: {

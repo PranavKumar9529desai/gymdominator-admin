@@ -7,21 +7,21 @@ export interface sessionType {
   user: {
     name: string;
     email: string;
-  picture?: string | null;
+    picture?: string | null;
   };
 }
 
 export default async function FetchGymDetailsSA() {
-  // console.log("here are the cooploes", cookieStore);
   interface responseType {
     msg: string;
-    gym : {
+    gym: {
       gym_name: string;
       gym_logo: string;
       address: string;
       phone_number: string;
       Email: string;
-    }
+      gymauthtoken : string;
+    };
   }
 
   try {
@@ -34,7 +34,10 @@ export default async function FetchGymDetailsSA() {
     console.log("Gym details fetched successfully:", response.data.gym);
     return response.data.gym;
   } catch (err: any) {
-    console.error("Error fetching gym details:", err.response?.data || err.message);
+    console.error(
+      "Error fetching gym details:",
+      err.response?.data || err.message
+    );
     return null; // Return null or handle the error as needed
   }
 }

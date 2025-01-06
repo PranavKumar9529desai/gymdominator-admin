@@ -4,17 +4,17 @@ import { Building2, MapPin, Phone, Mail } from "lucide-react";
 
 
 interface GymDetails {
-      gym_name: string;
-      gym_logo: string;
-      address: string;
-      phone_number: string;
-      Email: string;
+  gym_name: string;
+  gym_logo: string;
+  address: string;
+  phone_number: string;
+  Email: string;
 };
 
 export default function ViewGymDetails({
   gymDetails,
 }: {
- gymDetails :  GymDetails;
+  gymDetails: GymDetails;
 }) {
   return (
     <div className="container mx-auto px-4 py-8">
@@ -28,20 +28,24 @@ export default function ViewGymDetails({
         </CardHeader>
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-8">
-            <div className="flex-shrink-0">
+            {/* Image container with fixed dimensions */}
+            <div className="w-48 h-48 flex-shrink-0">
               {gymDetails?.gym_logo && (
-                <Image
-                  src={gymDetails.gym_logo}
-                  alt={`${gymDetails.gym_name} logo`}
-                  width={100}
-                  height={100}
-                  className="rounded-lg border border-gray-200 o"
-                />
+                <div className="relative w-full h-full rounded-lg border border-gray-200 overflow-hidden">
+                  <Image
+                    src={gymDetails.gym_logo}
+                    alt={`${gymDetails.gym_name} logo`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 192px"
+                  />
+                </div>
               )}
             </div>
-            <div className="flex-grow space-y-4">
+            {/* Details section with full height */}
+            <div className="flex-grow space-y-6">
               <div className="flex items-start gap-3">
-                <MapPin className="h-6 w-6 text-indigo-600 mt-1" />
+                <MapPin className="h-6 w-6 text-indigo-600 flex-shrink-0" />
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Address
@@ -50,7 +54,7 @@ export default function ViewGymDetails({
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Phone className="h-6 w-6 text-indigo-600 mt-1" />
+                <Phone className="h-6 w-6 text-indigo-600 flex-shrink-0" />
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Phone Number
@@ -59,7 +63,7 @@ export default function ViewGymDetails({
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Mail className="h-6 w-6 text-indigo-600 mt-1" />
+                <Mail className="h-6 w-6 text-indigo-600 flex-shrink-0" />
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">Email</h2>
                   <p className="text-gray-700">{gymDetails?.Email}</p>

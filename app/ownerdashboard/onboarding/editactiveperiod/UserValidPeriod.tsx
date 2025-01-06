@@ -47,6 +47,13 @@ export function UserValidityPeriod({
   );
   const [shift, setShift] = useState<"morning" | "evening">("morning");
   const defaultImage = "https://randomuser.me/api/portraits";
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
+
+  const getDefaultEndMonth = () => {
+    return addMonths(startDate, 1);
+  };
+
   const handleSubmit = () => {
     startTransition(async () => {
       const userData = {
@@ -129,101 +136,142 @@ export function UserValidityPeriod({
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-8 bg-white rounded-xl shadow-sm space-y-8">
-
+    <div className="w-full max-w-2xl mx-auto p-4 sm:p-8 bg-white rounded-xl shadow-sm space-y-6 sm:space-y-8">
       <Toaster position="top-right" />
-      {/* Header Section with Avatar */}
-      <div className="flex items-center space-x-6 pb-6 border-b border-gray-100">
-        <Avatar className="w-24 h-24 ring-2 ring-gray-100">
-          <AvatarImage
-            src={userImage ? userImage : defaultImage}
-            alt={userName}
-          />
+      
+      {/* Header Section with Avatar - Made responsive */}
+      <div className="flex flex-col sm:flex-row items-center sm:space-x-6 pb-4 sm:pb-6 border-b border-gray-100">
+        <Avatar className="w-20 h-20 sm:w-24 sm:h-24 ring-2 ring-gray-100 mb-4 sm:mb-0">
+          <AvatarImage src={userImage ? userImage : defaultImage} alt={userName} />
           <AvatarFallback className="bg-blue-50 text-blue-700 text-xl font-medium">
-            {userName
-              .split(" ")
-              .map((n) => n[0])
-              .join("")}
+            {userName.split(" ").map((n) => n[0]).join("")}
           </AvatarFallback>
         </Avatar>
-        <div>
-          <h2 className="text-2xl font-semibold text-gray-900">{userName}</h2>
+        <div className="text-center sm:text-left">
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">{userName}</h2>
           <p className="text-sm text-gray-500">Membership Details</p>
         </div>
       </div>
 
-      {/* Form Section */}
-      <div className="space-y-6">
-        {/* Start Date */}
-        <div className="grid grid-cols-3 items-center gap-4">
+      {/* Form Section - Made mobile friendly */}
+      <div className="space-y-4 sm:space-y-6">
+        {/* Start Date - Modified for mobile */}
+        <div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-2 sm:gap-4">
           <label className="text-sm font-medium text-gray-700">Start Date</label>
-          <div className="col-span-2">
-            <Popover>
+          <div className="w-full sm:col-span-2">
+            <Popover open={startDateOpen} onOpenChange={setStartDateOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full justify-start text-left font-normal hover:bg-gray-50"
+                  className="w-full h-12 sm:h-10 justify-start text-left font-normal hover:bg-gray-50 active:scale-[0.98] transition-transform"
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4 text-gray-500" />
+                  <CalendarIcon className="mr-2 h-5 w-5 sm:h-4 sm:w-4 text-gray-500" />
                   {format(startDate, "PPP")}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-[calc(100vw-2rem)] sm:w-auto p-0" align="center">
                 <Calendar
                   mode="single"
                   selected={startDate}
-                  onSelect={(date) => date && setStartDate(date)}
-                  disabled={(date) =>
-                    date < new Date() || date < new Date("1900-01-01")
-                  }
+                  onSelect={(date) => {
+                    if (date) {
+                      setStartDate(date);
+                      setStartDateOpen(false); // Auto close after selection
+                    }
+                  }}
+                  disabled={(date) => date < new Date() || date < new Date("1900-01-01")}
                   initialFocus
+                  className="rounded-md border shadow-lg mx-auto"
+                  classNames={{
+                    months: "space-y-4 sm:space-y-0",
+                    month: "space-y-4",
+                    caption: "flex justify-center pt-1 relative items-center",
+                    caption_label: "text-sm font-medium",
+                    nav: "space-x-1 flex items-center",
+                    table: "w-full border-collapse space-y-1",
+                    head_row: "flex justify-around",
+                    head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+                    row: "flex w-full justify-around mt-2",
+                    cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+                    day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                    day_today: "bg-accent text-accent-foreground",
+                    day_outside: "text-muted-foreground opacity-50",
+                    day_disabled: "text-muted-foreground opacity-50",
+                    day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                    day_hidden: "invisible",
+                  }}
                 />
               </PopoverContent>
             </Popover>
           </div>
         </div>
 
-        {/* End Date */}
-        <div className="grid grid-cols-3 items-center gap-4">
+        {/* End Date - Modified for mobile */}
+        <div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-2 sm:gap-4">
           <label className="text-sm font-medium text-gray-700">End Date</label>
-          <div className="col-span-2">
-            <Popover>
+          <div className="w-full sm:col-span-2">
+            <Popover open={endDateOpen} onOpenChange={setEndDateOpen}>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
-                  className="w-full justify-start text-left font-normal hover:bg-gray-50"
+                  className="w-full h-12 sm:h-10 justify-start text-left font-normal hover:bg-gray-50 active:scale-[0.98] transition-transform"
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4 text-gray-500" />
+                  <CalendarIcon className="mr-2 h-5 w-5 sm:h-4 sm:w-4 text-gray-500" />
                   {format(endDate, "PPP")}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-[calc(100vw-2rem)] sm:w-auto p-0" align="center">
                 <Calendar
                   mode="single"
                   selected={endDate}
-                  onSelect={(date) => date && setEndDate(date)}
-                  disabled={(date) =>
-                    date <= startDate || date < new Date("1900-01-01")
-                  }
+                  defaultMonth={getDefaultEndMonth()} // Add this line
+                  onSelect={(date) => {
+                    if (date) {
+                      setEndDate(date);
+                      setEndDateOpen(false); // Auto close after selection
+                    }
+                  }}
+                  disabled={(date) => date <= startDate || date < new Date("1900-01-01")}
                   initialFocus
+                  className="rounded-md border shadow-lg mx-auto"
+                  classNames={{
+                    months: "space-y-4 sm:space-y-0",
+                    month: "space-y-4",
+                    caption: "flex justify-center pt-1 relative items-center",
+                    caption_label: "text-sm font-medium",
+                    nav: "space-x-1 flex items-center",
+                    table: "w-full border-collapse space-y-1",
+                    head_row: "flex justify-around",
+                    head_cell: "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+                    row: "flex w-full justify-around mt-2",
+                    cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
+                    day: "h-9 w-9 p-0 font-normal aria-selected:opacity-100",
+                    day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                    day_today: "bg-accent text-accent-foreground",
+                    day_outside: "text-muted-foreground opacity-50",
+                    day_disabled: "text-muted-foreground opacity-50",
+                    day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                    day_hidden: "invisible",
+                  }}
                 />
               </PopoverContent>
             </Popover>
           </div>
         </div>
 
-        {/* Shift Selection */}
-        <div className="grid grid-cols-3 items-center gap-4">
+        {/* Shift Selection - Modified for mobile */}
+        <div className="flex flex-col sm:grid sm:grid-cols-3 items-start sm:items-center gap-2 sm:gap-4">
           <label className="text-sm font-medium text-gray-700">Shift</label>
-          <div className="col-span-2">
+          <div className="w-full sm:col-span-2">
             <Select
               onValueChange={(value: "morning" | "evening") => setShift(value)}
               defaultValue={shift}
             >
-              <SelectTrigger className="w-full hover:bg-gray-50">
+              <SelectTrigger className="w-full h-12 sm:h-10 hover:bg-gray-50">
                 <SelectValue placeholder="Select a shift" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position="popper" className="w-full">
                 <SelectItem value="morning">Morning</SelectItem>
                 <SelectItem value="evening">Evening</SelectItem>
               </SelectContent>
@@ -232,10 +280,11 @@ export function UserValidityPeriod({
         </div>
       </div>
 
-      {/* Submit Button */}
-      <div className="pt-6">
+      {/* Submit Button - Made touch-friendly */}
+      <div className="pt-4 sm:pt-6">
         <Button
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5"
+          className="w-full h-12 sm:h-10 bg-blue-600 hover:bg-blue-700 text-white font-medium text-lg sm:text-base 
+                     active:scale-[0.98] transition-transform"
           onClick={handleSubmit}
           disabled={isPending}
         >

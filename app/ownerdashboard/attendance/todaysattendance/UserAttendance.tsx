@@ -8,39 +8,25 @@ import { DataCard } from "@/components/Table/UserCard";
 import { StatusCard } from "@/components/common/StatusCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AttendanceUser {
   id: number;
   name: string;
-  gender: string;
   shift: "Morning" | "Evening";
   todaysAttendance: boolean;
+  attendanceTime: string | null;
 }
 
-const mockUsers: AttendanceUser[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    gender: "Male",
-    shift: "Morning",
-    todaysAttendance: false,
-  },
-  {
-    id: 3,
-    name: "Bob Johnson",
-    gender: "Male",
-    shift: "Morning",
-    todaysAttendance: true,
-  },
-  {
-    id: 5,
-    name: "Charlie Wilson",
-    gender: "Male",
-    shift: "Evening",
-    todaysAttendance: true,
-  },
-];
+interface UserAttendanceProps {
+  initialUsers: AttendanceUser[];
+}
 
 const columns: ColumnDef<AttendanceUser>[] = [
   {
@@ -54,14 +40,55 @@ const columns: ColumnDef<AttendanceUser>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
+    cell: ({ row }) => {
+      return <div className="ml-4">{row.getValue("name")}</div>;
+    },
   },
   {
-    accessorKey: "gender",
-    header: "Gender",
+    accessorKey: "attendanceTime",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Time
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => {
+      const time = row.getValue("attendanceTime") as string | null;
+      if (!time) return <div className="flex ml-4">- -</div>;
+      try {
+        // Parse the UTC time and convert to IST
+        const utcDate = new Date(time);
+        if (isNaN(utcDate.getTime())) return "-";
+
+        // Using explicit IST timezone for conversion
+        return (
+          <div className="ml-4 ">
+            {utcDate
+              .toLocaleTimeString("en-IN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+                timeZone: "Asia/Kolkata",
+              })
+              .toUpperCase()}
+          </div>
+        );
+      } catch (error) {
+        console.error("Error formatting time:", error);
+        return <div className="">-</div>;
+      }
+    },
   },
   {
     accessorKey: "shift",
     header: "Shift",
+    cell: ({ row }) => {
+      const shift = row.getValue("shift") as string;
+      return <div className="">{shift}</div>;
+    },
   },
   {
     accessorKey: "todaysAttendance",
@@ -69,7 +96,11 @@ const columns: ColumnDef<AttendanceUser>[] = [
     cell: ({ row }) => {
       const attendance = row.getValue("todaysAttendance") as boolean;
       return (
-        <div className={`font-medium ${attendance ? "text-green-600" : "text-red-600"}`}>
+        <div
+          className={`font-medium ${
+            attendance ? "text-green-600" : "text-red-600"
+          }`}
+        >
           {attendance ? "Present" : "Absent"}
         </div>
       );
@@ -77,14 +108,18 @@ const columns: ColumnDef<AttendanceUser>[] = [
   },
 ];
 
-export default function UserAttendance() {
+export default function UserAttendance({ initialUsers }: UserAttendanceProps) {
+  const [users, setUsers] = useState<AttendanceUser[]>(initialUsers);
   const [searchTerm, setSearchTerm] = useState("");
-  const [shiftFilter, setShiftFilter] = useState<"Morning" | "Evening" | "All">("All");
-  const [filteredUsers, setFilteredUsers] = useState<AttendanceUser[]>(mockUsers);
+  const [shiftFilter, setShiftFilter] = useState<"Morning" | "Evening" | "All">(
+    "All"
+  );
+  const [filteredUsers, setFilteredUsers] =
+    useState<AttendanceUser[]>(initialUsers);
 
   // Calculate stats
-  const totalUsers = mockUsers.length;
-  const presentUsers = mockUsers.filter(user => user.todaysAttendance).length;
+  const totalUsers = users.length;
+  const presentUsers = users.filter((user) => user.todaysAttendance).length;
   const absentUsers = totalUsers - presentUsers;
 
   const statusCards = [
@@ -92,30 +127,30 @@ export default function UserAttendance() {
       title: "Total Users",
       value: totalUsers,
       icon: Users,
-      gradient: "blue"
+      gradient: "blue",
     },
     {
       title: "Present Today",
       value: presentUsers,
       icon: UserCheck,
-      gradient: "green"
+      gradient: "green",
     },
     {
       title: "Absent Today",
       value: absentUsers,
       icon: UserX,
-      gradient: "red"
+      gradient: "red",
     },
   ] as const;
 
   useEffect(() => {
-    const filtered = mockUsers.filter(
+    const filtered = users.filter(
       (user) =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
         (shiftFilter === "All" || user.shift === shiftFilter)
     );
     setFilteredUsers(filtered);
-  }, [searchTerm, shiftFilter]);
+  }, [searchTerm, shiftFilter, users]);
 
   return (
     <div className="container mx-auto p-6 space-y-8">
@@ -138,7 +173,9 @@ export default function UserAttendance() {
         />
         <Select
           value={shiftFilter}
-          onValueChange={(value: "Morning" | "Evening" | "All") => setShiftFilter(value)}
+          onValueChange={(value: "Morning" | "Evening" | "All") =>
+            setShiftFilter(value)
+          }
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select shift" />
@@ -153,11 +190,7 @@ export default function UserAttendance() {
 
       {/* Desktop View */}
       <div className="hidden md:block">
-        <DataTable
-          data={filteredUsers}
-          columns={columns}
-          filterColumn="name"
-        />
+        <DataTable data={filteredUsers} columns={columns} filterColumn="name" />
       </div>
 
       {/* Mobile View */}
@@ -165,17 +198,14 @@ export default function UserAttendance() {
         <DataCard
           data={filteredUsers}
           renderCard={(user) => (
-            <div className="p-4">
+            <div className="p-4 space-y-1">
               <h3 className="font-medium">{user.name}</h3>
-              <p className="text-sm text-gray-500">
-                Gender: {user.gender}
-              </p>
-              <p className="text-sm text-gray-500">
-                Shift: {user.shift}
-              </p>
-              <p className={`text-sm font-medium ${
-                user.todaysAttendance ? "text-green-600" : "text-red-600"
-              }`}>
+              <p className="text-sm text-gray-500">Shift: {user.shift}</p>
+              <p
+                className={`text-sm font-medium ${
+                  user.todaysAttendance ? "text-green-600" : "text-red-600"
+                }`}
+              >
                 Status: {user.todaysAttendance ? "Present" : "Absent"}
               </p>
             </div>

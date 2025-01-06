@@ -3,6 +3,10 @@ import { GetAttendanceQrData } from "./GetAttendanceQrData";
 
 export default async function AttendanceComponent() {
   const gymData = await GetAttendanceQrData();
+  
+  if (!gymData) {
+    return <div>Unable to load gym data</div>;
+  }
 
   const qrValue = JSON.stringify({
     AttendanceAction: {

@@ -108,7 +108,7 @@ export default function SideBar() {
         </div> */}
         {/* <h1 className="text-2xl font-bold">Gym Management</h1> */}
       </div>
-
+    
       <nav className="flex-grow">
         <ul className="space-y-3">
           {menuItems.map((item) => (

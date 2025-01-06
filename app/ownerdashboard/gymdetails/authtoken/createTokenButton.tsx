@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { sessionType } from "@/app/actions/gym/owner/GetGymDetails";
+import { sessionType } from "@/app/ownerdashboard/gymdetails/viewgymdetails/GetGymDetails";
 import CreateAuthToken from "@/app/actions/gym/Token/CreateAuthToken";
 
 interface CreateTokenButtonProps {

@@ -13,8 +13,11 @@ export default async function page() {
   };
 
   return (
-    <div className="h-screen bg-[#f0f0f0] flex justify-center items-center w-full">
-      <GymQRCodeOnboarding qrdata={JSON.stringify(QrData)} gymName={gymname} />;
+    <div className="h-screen  flex justify-center items-center w-full p-4">
+      <GymQRCodeOnboarding qrdata={JSON.stringify(QrData)} 
+       title=""
+       subtitle="Please scan the QR code to complete your onboarding process"
+      />;
     </div>
   );
 }
