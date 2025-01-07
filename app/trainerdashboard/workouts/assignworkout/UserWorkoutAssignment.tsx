@@ -16,6 +16,8 @@ import {
 } from "@/components/ui/select";
 import { WorkoutPlan } from './Getworkout';
 import * as LucideIcons from "lucide-react";
+import { attachWorkoutPlanToUser } from './AttachWorkoutplantoUser';
+import { toast } from "sonner";
 
 // Update StatusCardProps interface
 interface StatusCardProps {
@@ -30,7 +32,8 @@ interface UserType {
   name: string;
   gender: "Male" | "Female";
   goal: string;
-  assignedWorkout?: string;
+  workoutPlanId?: number;  // Add this field
+  workoutPlanName?: string;  // Add this field
 }
 
 const defaultWorkouts = [
@@ -47,7 +50,7 @@ interface UserWorkoutAssignmentProps {
 }
 
 // Update the Select component in the columns definition to use workoutPlans
-const createColumns = (workoutPlans: WorkoutPlan[]): ColumnDef<UserType>[] => [
+const createColumns = (workoutPlans: WorkoutPlan[], handleAssignment: (userId: number, workoutPlanId: string) => Promise<void>): ColumnDef<UserType>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -74,27 +77,46 @@ const createColumns = (workoutPlans: WorkoutPlan[]): ColumnDef<UserType>[] => [
     accessorKey: "assignedWorkout",
     header: "Assign Workout",
     cell: ({ row }) => {
-      const hasWorkout = !!row.original.assignedWorkout;
+      const hasWorkout = !!row.original.workoutPlanId;
+      const currentPlan = workoutPlans.find(plan => plan.id === row.original.workoutPlanId);
+      
       return (
-        <Select
-          value={row.original.assignedWorkout}
-          onValueChange={(value) => {
-            console.log(`Assigning ${value} to user ${row.original.id}`);
-          }}
-        >
-          <SelectTrigger className={`w-[180px] ${
-            hasWorkout ? 'bg-green-50' : 'bg-red-50'
-          }`}>
-            <SelectValue placeholder="Select workout" />
-          </SelectTrigger>
-          <SelectContent>
-            {workoutPlans.map((plan) => (
-              <SelectItem key={plan.id} value={plan.id.toString()}>
-                {plan.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex flex-col gap-1">
+          <Select
+            value={row.original.workoutPlanId?.toString()}
+            onValueChange={(value) => {
+              if (hasWorkout) {
+                if (confirm('This will replace the current workout plan. Continue?')) {
+                  handleAssignment(row.original.id, value);
+                }
+              } else {
+                handleAssignment(row.original.id, value);
+              }
+            }}
+          >
+            <SelectTrigger className={`w-[200px] ${
+              hasWorkout ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+            }`}>
+              <SelectValue placeholder={
+                hasWorkout 
+                  ? `Current: ${currentPlan?.name || 'Unknown Plan'}` 
+                  : "No workout assigned"
+              } />
+            </SelectTrigger>
+            <SelectContent>
+              {workoutPlans.map((plan) => (
+                <SelectItem key={plan.id} value={plan.id.toString()}>
+                  {plan.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {hasWorkout && (
+            <p className="text-xs text-green-600">
+              Active Plan: {currentPlan?.name}
+            </p>
+          )}
+        </div>
       );
     },
   },
@@ -110,7 +132,44 @@ export default function UserWorkoutAssignment({
   const [assignmentFilter, setAssignmentFilter] = useState<"all" | "assigned" | "unassigned">("all");
   const [filteredUsers, setFilteredUsers] = useState<UserType[]>(Users);
 
-  const columns = useMemo(() => createColumns(workoutPlans), [workoutPlans]);
+  const handleWorkoutAssignment = async (userId: number, workoutPlanId: string) => {
+    try {
+      const previousPlan = Users.find(u => u.id === userId)?.workoutPlanId;
+      const newPlan = workoutPlans.find(p => p.id === parseInt(workoutPlanId));
+
+      await attachWorkoutPlanToUser(userId.toString(), workoutPlanId);
+      
+      // Update local state
+      setFilteredUsers(current =>
+        current.map(user =>
+          user.id === userId
+            ? { ...user, workoutPlanId: parseInt(workoutPlanId), workoutPlanName: newPlan?.name }
+            : user
+        )
+      );
+
+      // Show success toast with plan details
+      toast.success(
+        previousPlan
+          ? `Workout plan updated to "${newPlan?.name}"`
+          : `Workout plan "${newPlan?.name}" assigned successfully`,
+        {
+          description: "The user's workout plan has been updated.",
+          duration: 3000,
+        }
+      );
+    } catch (error) {
+      console.error("Error assigning workout plan:", error);
+      toast.error("Failed to assign workout plan", {
+        description: "Please try again or contact support if the issue persists.",
+      });
+    }
+  };
+
+  const columns = useMemo(
+    () => createColumns(workoutPlans, handleWorkoutAssignment),
+    [workoutPlans]
+  );
 
   // Helper function to get icon component
   const getIcon = (iconName: string) => {
@@ -208,17 +267,15 @@ export default function UserWorkoutAssignment({
               <p className="text-sm text-gray-500">Goal: {user.goal}</p>
               <Select
                 value={user.assignedWorkout}
-                onValueChange={(value) => {
-                  console.log(`Assigning ${value} to user ${user.id}`);
-                }}
+                onValueChange={(value) => handleWorkoutAssignment(user.id, value)}
               >
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select workout" />
                 </SelectTrigger>
                 <SelectContent>
-                  {defaultWorkouts.map((workout) => (
-                    <SelectItem key={workout} value={workout}>
-                      {workout}
+                  {workoutPlans.map((plan) => (
+                    <SelectItem key={plan.id} value={plan.id.toString()}>
+                      {plan.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

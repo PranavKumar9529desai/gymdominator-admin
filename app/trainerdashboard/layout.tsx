@@ -14,7 +14,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
           <BottomNavigation />
         </div>
         {/* another componenth */}
-        <div className="w-full h-screen overflow-auto">{children}</div>
+        <div className="w-full lg:h-screen h-[80%] py-10 lg:py-2 overflow-auto">{children}</div>
       </div>
     </>
   );
