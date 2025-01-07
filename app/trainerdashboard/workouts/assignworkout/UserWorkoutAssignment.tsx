@@ -50,7 +50,7 @@ interface UserWorkoutAssignmentProps {
 }
 
 // Update the Select component in the columns definition to use workoutPlans
-const createColumns = (workoutPlans: WorkoutPlan[], handleAssignment: (userId: number, workoutPlanId: string) => Promise<void>): ColumnDef<UserType>[] => [
+const createColumns = (workoutPlans: WorkoutPlan[], handleWorkoutAssignment: (userId: number, workoutPlanId: string) => Promise<void>): ColumnDef<UserType>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -84,29 +84,34 @@ const createColumns = (workoutPlans: WorkoutPlan[], handleAssignment: (userId: n
         <div className="flex flex-col gap-1">
           <Select
             value={row.original.workoutPlanId?.toString()}
-            onValueChange={(value) => {
-              if (hasWorkout) {
-                if (confirm('This will replace the current workout plan. Continue?')) {
-                  handleAssignment(row.original.id, value);
-                }
-              } else {
-                handleAssignment(row.original.id, value);
-              }
-            }}
+            onValueChange={(value) => handleWorkoutAssignment(row.original.id, value)}
           >
-            <SelectTrigger className={`w-[200px] ${
-              hasWorkout ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
-            }`}>
-              <SelectValue placeholder={
+            <SelectTrigger 
+              className={`w-[200px] ${
                 hasWorkout 
-                  ? `Current: ${currentPlan?.name || 'Unknown Plan'}` 
-                  : "No workout assigned"
-              } />
+                  ? 'bg-green-50 border-green-200 text-green-700' 
+                  : 'bg-red-50 border-red-200 text-red-700'
+              }`}
+            >
+              <SelectValue 
+                placeholder={
+                  hasWorkout 
+                    ? `Current: ${currentPlan?.name}` 
+                    : "No workout assigned"
+                }
+              />
             </SelectTrigger>
             <SelectContent>
               {workoutPlans.map((plan) => (
-                <SelectItem key={plan.id} value={plan.id.toString()}>
+                <SelectItem 
+                  key={plan.id} 
+                  value={plan.id.toString()}
+                  className={plan.id === row.original.workoutPlanId ? 'bg-green-50' : ''}
+                >
                   {plan.name}
+                  {plan.id === row.original.workoutPlanId && 
+                    <span className="ml-2 text-green-600">•</span>
+                  }
                 </SelectItem>
               ))}
             </SelectContent>
@@ -260,28 +265,57 @@ export default function UserWorkoutAssignment({
       <div className="md:hidden">
         <DataCard
           data={filteredUsers}
-          renderCard={(user) => (
-            <div className="p-4 space-y-2">
-              <h3 className="font-medium">{user.name}</h3>
-              <p className="text-sm text-gray-500">Gender: {user.gender}</p>
-              <p className="text-sm text-gray-500">Goal: {user.goal}</p>
-              <Select
-                value={user.assignedWorkout}
-                onValueChange={(value) => handleWorkoutAssignment(user.id, value)}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select workout" />
-                </SelectTrigger>
-                <SelectContent>
-                  {workoutPlans.map((plan) => (
-                    <SelectItem key={plan.id} value={plan.id.toString()}>
-                      {plan.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
+          renderCard={(user) => {
+            const hasWorkout = !!user.workoutPlanId;
+            const currentPlan = workoutPlans.find(plan => plan.id === user.workoutPlanId);
+            
+            return (
+              <div className="p-4 space-y-2">
+                <h3 className="font-medium">{user.name}</h3>
+                <p className="text-sm text-gray-500">Gender: {user.gender}</p>
+                <p className="text-sm text-gray-500">Goal: {user.goal}</p>
+                <Select
+                  value={user.workoutPlanId?.toString()}
+                  onValueChange={(value) => handleWorkoutAssignment(user.id, value)}
+                >
+                  <SelectTrigger 
+                    className={`w-full ${
+                      hasWorkout 
+                        ? 'bg-green-50 border-green-200 text-green-700' 
+                        : 'bg-red-50 border-red-200 text-red-700'
+                    }`}
+                  >
+                    <SelectValue 
+                      placeholder={
+                        hasWorkout 
+                          ? `Current: ${currentPlan?.name}` 
+                          : "No workout assigned"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {workoutPlans.map((plan) => (
+                      <SelectItem 
+                        key={plan.id} 
+                        value={plan.id.toString()}
+                        className={plan.id === user.workoutPlanId ? 'bg-green-50' : ''}
+                      >
+                        {plan.name}
+                        {plan.id === user.workoutPlanId && 
+                          <span className="ml-2 text-green-600">•</span>
+                        }
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {hasWorkout && (
+                  <p className="text-xs text-green-600">
+                    Active Plan: {currentPlan?.name}
+                  </p>
+                )}
+              </div>
+            );
+          }}
         />
       </div>
     </div>

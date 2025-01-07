@@ -24,10 +24,10 @@ export default async function Page() {
     id: parseInt(user.id),
     name: user.name,
     email: user.email,
-    gender: "Male",
-    goal: "Not set",
-    workoutPlanId: user.workoutPlanId,
-    workoutPlanName: user.workoutPlanName
+    gender: user.HealthProfile?.gender || "Not Set",
+    goal: user.HealthProfile?.goal || "Not Set",
+    workoutPlanId: user.WorkoutPlan?.id || user.workoutPlanId,  // Check both locations
+    workoutPlanName: user.WorkoutPlan?.name
   }));
 
   // Calculate status cards data with workout assignment info

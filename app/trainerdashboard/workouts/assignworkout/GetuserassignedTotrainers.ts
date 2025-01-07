@@ -5,6 +5,15 @@ export interface AssignedUser {
   id: string;
   name: string;
   email: string;
+  HealthProfile?: {
+    gender: string;
+    goal: string;
+  } | null;
+  WorkoutPlan?: {
+    id: number;
+    name: string;
+  } | null;
+  workoutPlanId?: number;
   phone?: string;
   membershipStatus: string;
 }

@@ -5,18 +5,21 @@ export interface AssignedUser {
   id: string;
   name: string;
   email: string;
-  phone?: string;
-  membershipStatus: string;
+  membershipStatus: 'active' | 'inactive';
+  HealthProfile: {
+    weight: number;
+    height: number;
+    goal: string | null;
+    gender: string;
+  } | null;
 }
 
-export const getUsersAssignedToTrainer = async () => {
+export const getUsersAssignedToTrainer = async (): Promise<AssignedUser[]> => {
   const trainerAxios = await TrainerReqConfig();
   try {
     const response = await trainerAxios.get('/assignedusers');
-    const data = response.data;
-    
-    if (data.msg === "success") {
-      return data.users as AssignedUser[];
+    if (response.data.msg === "success" && Array.isArray(response.data.users)) {
+      return response.data.users;
     }
     return [];
   } catch (error) {
