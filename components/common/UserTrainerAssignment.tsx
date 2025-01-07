@@ -83,9 +83,9 @@ export default function TrainerAssignment({
 
         return (
           <div
-            className={`w-fit ${
-              hasTrainer ? "bg-green-50" : "bg-red-50"
-            } rounded-md`}
+            className={`w-full rounded-lg ${
+              hasTrainer ? "bg-green-50/80 border-green-200" : "bg-red-50/80 border-red-200"
+            } border`}
           >
             <Select
               value={
@@ -97,8 +97,8 @@ export default function TrainerAssignment({
                 handleTrainerAssignment(row.original.id, value)
               }
             >
-              <SelectTrigger className="w-[200px] border-none bg-transparent">
-                <SelectValue placeholder="Select trainer" />
+              <SelectTrigger className="w-[200px] border-none bg-transparent hover:bg-white/50 transition-colors">
+                <SelectValue placeholder={hasTrainer ? "Change Trainer" : "Assign Trainer"} />
               </SelectTrigger>
               <SelectContent>
                 {trainers.map((trainer) => (
@@ -229,34 +229,40 @@ export default function TrainerAssignment({
         <DataCard
           data={users}
           dropdownConfig={dropdownConfig}
-          renderCard={(user) => (
-            <div className="p-4">
-              <h3 className="font-medium">{user.name}</h3>
-              <p className="text-sm text-gray-500">
-                {user.HealthProfile?.fullname}
-              </p>
-              <Select
-                value={
-                  assignedTrainers[user.id]?.toString() ||
-                  user.trainerid?.toString()
-                }
-                onValueChange={(value) =>
-                  handleTrainerAssignment(user.id, value)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select trainer" />
-                </SelectTrigger>
-                <SelectContent>
-                  {trainers.map((trainer) => (
-                    <SelectItem key={trainer.id} value={trainer.id.toString()}>
-                      {trainer.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
+          renderCard={(user) => {
+            const hasTrainer = user.trainerid || assignedTrainers[user.id];
+            
+            return (
+              <div className="p-4 space-y-3">
+                <h3 className="font-medium">{user.name}</h3>
+                <p className="text-sm text-gray-500">
+                  {user.HealthProfile?.fullname}
+                </p>
+                <div className={`rounded-lg ${hasTrainer ? 'bg-green-50/80 border-green-200' : 'bg-red-50/80 border-red-200'} border`}>
+                  <Select
+                    value={
+                      assignedTrainers[user.id]?.toString() ||
+                      user.trainerid?.toString()
+                    }
+                    onValueChange={(value) =>
+                      handleTrainerAssignment(user.id, value)
+                    }
+                  >
+                    <SelectTrigger className="w-full border-none bg-transparent hover:bg-white/50 transition-colors">
+                      <SelectValue placeholder={hasTrainer ? "Change Trainer" : "Assign Trainer"} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {trainers.map((trainer) => (
+                        <SelectItem key={trainer.id} value={trainer.id.toString()}>
+                          {trainer.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            );
+          }}
         />
       </div>
     </div>
