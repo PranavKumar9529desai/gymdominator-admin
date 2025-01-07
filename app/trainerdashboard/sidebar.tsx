@@ -14,6 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import IconImage from "@/app/assests/gym-manager.webp";
+import { signOut } from "next-auth/react";
+import Swal from 'sweetalert2';
 
 interface MenuItem {
   name: string;
@@ -115,6 +117,62 @@ export default function SideBar() {
       : activePage === item.label;
   };
 
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: 'Ready to leave?',
+      html: `
+        <div class="bg-white/90 p-6 rounded-xl border border-gray-700">
+          <div class="text-center">
+            <div class="text-red-400 mb-4">
+              <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </div>
+            <p class="text-red-400 text-lg">
+              You will be logged out of your account and redirected to the login page.
+            </p>
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Logout',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        confirmButton: 'bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium',
+        cancelButton: 'bg-gray-600 px-6 py-2 rounded-lg text-white font-medium',
+        title: 'text-white text-xl font-semibold'
+      }
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await signOut({ redirect: false });
+        await Swal.fire({
+          title: 'See you soon!',
+          text: 'You have been successfully logged out',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+          backdrop: `
+            rgba(0,0,0,0.4)
+            url("/images/waving-hand.gif")
+            right top
+            no-repeat
+          `
+        });
+        router.push('/signin');
+      } catch (error) {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Logout failed',
+          icon: 'error',
+          color: '#fff'
+        });
+        console.error('Logout failed:', error);
+      }
+    }
+  };
+
   return (
     <div className="flex flex-col bg-slate-900 text-white w-64 h-screen">
       <div className="px-4 w-full flex items-center justify-center ">
@@ -174,7 +232,10 @@ export default function SideBar() {
       </ScrollArea>
 
       <div className="p-4">
-        <button className="flex items-center w-full px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg transition-colors duration-200">
+        <button 
+          className="flex items-center w-full px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg transition-colors duration-200"
+          onClick={handleLogout}
+        >
           <LogOut className="w-5 h-5 mr-3" />
           <span>Logout</span>
         </button>
