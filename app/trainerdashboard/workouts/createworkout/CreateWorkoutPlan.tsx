@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -40,12 +41,44 @@ const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Sat
 const muscleGroups = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Full Body'];
 
 export default function CreateWorkoutPlan() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [planName, setPlanName] = useState('');
-  const [planDescription, setPlanDescription] = useState('');
-  const [schedules, setSchedules] = useState<DaySchedule[]>([]);
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const router = useRouter();
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [currentStep, setCurrentStep] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return parseInt(localStorage.getItem('workoutPlanStep') || '1');
+    }
+    return 1;
+  });
+
+  const [planName, setPlanName] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('workoutPlanName') || '';
+    }
+    return '';
+  });
+
+  const [planDescription, setPlanDescription] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('workoutPlanDescription') || '';
+    }
+    return '';
+  });
+
+  const [schedules, setSchedules] = useState<DaySchedule[]>(() => {
+    if (typeof window !== 'undefined') {
+      const savedSchedules = localStorage.getItem('workoutSchedules');
+      return savedSchedules ? JSON.parse(savedSchedules) : [];
+    }
+    return [];
+  });
+
+  // Save to localStorage whenever data changes
+  useEffect(() => {
+    localStorage.setItem('workoutPlanStep', currentStep.toString());
+    localStorage.setItem('workoutPlanName', planName);
+    localStorage.setItem('workoutPlanDescription', planDescription);
+    localStorage.setItem('workoutSchedules', JSON.stringify(schedules));
+  }, [currentStep, planName, planDescription, schedules]);
 
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
@@ -64,6 +97,19 @@ export default function CreateWorkoutPlan() {
     );
   };
 
+  // Add checkpoint saving logic
+  const saveCheckpoint = (daySchedule: DaySchedule) => {
+    const checkpoints = JSON.parse(localStorage.getItem('workoutPlanCheckpoints') || '[]');
+    checkpoints.push({
+      step: currentStep,
+      schedule: daySchedule,
+      timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('workoutPlanCheckpoints', JSON.stringify(checkpoints));
+    toast.success('Progress saved');
+  };
+
+  // Modify addExercise to save checkpoint when day is complete
   const addExercise = (day: string) => {
     const newExercise: Exercise = {
       name: '',
@@ -76,20 +122,26 @@ export default function CreateWorkoutPlan() {
     setSchedules(current => {
       const existingSchedule = current.find(s => s.dayOfWeek === day);
       if (existingSchedule) {
+        const updatedSchedule = {
+          ...existingSchedule,
+          exercises: [...existingSchedule.exercises, newExercise]
+        };
+        // Save checkpoint when day has 3 or more exercises
+        if (updatedSchedule.exercises.length >= 3) {
+          saveCheckpoint(updatedSchedule);
+        }
         return current.map(schedule =>
-          schedule.dayOfWeek === day
-            ? { ...schedule, exercises: [...schedule.exercises, newExercise] }
-            : schedule
+          schedule.dayOfWeek === day ? updatedSchedule : schedule
         );
       } else {
-        // Create new schedule for the day if it doesn't exist
-        return [...current, {
+        const newSchedule = {
           dayOfWeek: day,
           muscleTarget: '',
           duration: 60,
           calories: 400,
           exercises: [newExercise]
-        }];
+        };
+        return [...current, newSchedule];
       }
     });
   };
@@ -109,6 +161,7 @@ export default function CreateWorkoutPlan() {
     );
   };
 
+  // Clear localStorage after successful submission
   const handleSubmit = async () => {
     try {
       // Validate schedules data
@@ -136,6 +189,13 @@ export default function CreateWorkoutPlan() {
       const result = await createWorkoutPlan(workoutPlanData);
 
       if (result.success) {
+        // Clear all stored data
+        localStorage.removeItem('workoutPlanCheckpoints');
+        localStorage.removeItem('workoutPlanStep');
+        localStorage.removeItem('workoutPlanName');
+        localStorage.removeItem('workoutPlanDescription');
+        localStorage.removeItem('workoutSchedules');
+        
         toast.success(result.message);
         // Optionally redirect to workout plans list
         router.push('/trainerdashboard/workouts/assignworkout');
@@ -145,6 +205,23 @@ export default function CreateWorkoutPlan() {
     } catch (error) {
       toast.error('Error submitting workout plan');
       console.error(error);
+    }
+  };
+
+  // Add restore checkpoint function
+  const restoreCheckpoint = () => {
+    const checkpoints = JSON.parse(localStorage.getItem('workoutPlanCheckpoints') || '[]');
+    if (checkpoints.length > 0) {
+      const lastCheckpoint = checkpoints[checkpoints.length - 1];
+      setCurrentStep(lastCheckpoint.step);
+      setSchedules(prev => {
+        const existingIndex = prev.findIndex(s => s.dayOfWeek === lastCheckpoint.schedule.dayOfWeek);
+        if (existingIndex >= 0) {
+          return prev.map((s, i) => i === existingIndex ? lastCheckpoint.schedule : s);
+        }
+        return [...prev, lastCheckpoint.schedule];
+      });
+      toast.success('Last checkpoint restored');
     }
   };
 

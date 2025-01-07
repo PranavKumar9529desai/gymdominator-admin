@@ -1,10 +1,10 @@
-"use client";
-import React, { useState, useEffect } from "react";
+'use client';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ColumnDef } from "@tanstack/react-table";
-import { Users, Target, Utensils, ArrowUpDown, LucideIcon, Clock } from "lucide-react";
+import { Users, ArrowUpDown, Search, UserCheck, UtensilsCrossed } from 'lucide-react';
 import { DataTable } from "@/components/Table/UsersTable";
 import { DataCard } from "@/components/Table/UserCard";
-import { StatusCard, StatusCardProps } from "@/components/common/StatusCard";
+import { StatusCard } from "@/components/common/StatusCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,30 +14,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "sonner";
+import { AssignedUser } from './GetuserassignedTotrainers';
+import { DietPlan } from './GetallDiets';
+import { attachDietPlanToUser } from './AttachDietPlanToUser';
 
-interface UserType {
-  id: number;
-  name: string;
-  gender: "Male" | "Female";
-  goal: string;
-  assignedDiet?: string;
+interface Props {
+  users: AssignedUser[];
+  dietPlans: DietPlan[];
 }
 
-const defaultDietPlans = [
-  "Weight Loss Diet",
-  "Muscle Gain Diet",
-  "Maintenance Diet",
-  "Keto Diet"
-];
-
-const sampleUsers: UserType[] = [
-  { id: 1, name: "John Doe", gender: "Male", goal: "Weight Loss" },
-  { id: 2, name: "Jane Smith", gender: "Female", goal: "Muscle Gain" },
-  { id: 3, name: "Mike Johnson", gender: "Male", goal: "Weight Loss" },
-  { id: 4, name: "Sarah Williams", gender: "Female", goal: "Maintenance" },
-];
-
-const columns: ColumnDef<UserType>[] = [
+const createColumns = (
+  dietPlans: DietPlan[], 
+  handleAssignment: (userId: string, dietPlanId: string) => Promise<void>
+): ColumnDef<AssignedUser>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -51,135 +41,137 @@ const columns: ColumnDef<UserType>[] = [
     ),
   },
   {
-    accessorKey: "gender",
-    header: "Gender",
+    accessorKey: "email",
+    header: "Email",
   },
   {
-    accessorKey: "goal",
-    header: "Fitness Goal",
-  },
-  {
-    accessorKey: "assignedDiet",
-    header: "Assign Diet",
+    accessorKey: "diet",
+    header: "Assign Diet Plan",
     cell: ({ row }) => {
-      const hasAssignedDiet = !!row.original.assignedDiet;
+      const hasDiet = !!row.original.dietPlanId;
+      const currentPlan = dietPlans.find(plan => plan.id === row.original.dietPlanId);
+      
       return (
-        <Select
-          value={row.original.assignedDiet}
-          onValueChange={(value) => {
-            console.log(`Assigning diet ${value} to user ${row.original.id}`);
-          }}
-        >
-          <SelectTrigger className={`w-[180px] ${
-            hasAssignedDiet ? 'bg-green-50' : 'bg-red-50'
-          }`}>
-            <SelectValue placeholder="Select diet plan" />
-          </SelectTrigger>
-          <SelectContent>
-            {defaultDietPlans.map((diet) => (
-              <SelectItem key={diet} value={diet}>
-                {diet}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex flex-col gap-1">
+          <Select
+            onValueChange={(value) => {
+              if (hasDiet) {
+                if (confirm('This will replace the current diet plan. Continue?')) {
+                  handleAssignment(row.original.id, value);
+                }
+              } else {
+                handleAssignment(row.original.id, value);
+              }
+            }}
+          >
+            <SelectTrigger className={`w-[200px] ${
+              hasDiet ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+            }`}>
+              <SelectValue placeholder={
+                hasDiet 
+                  ? `Current: ${currentPlan?.name || 'Unknown Plan'}` 
+                  : "No diet plan assigned"
+              } />
+            </SelectTrigger>
+            <SelectContent>
+              {dietPlans.map((plan) => (
+                <SelectItem key={plan.id} value={plan.id.toString()}>
+                  {plan.name} ({plan.targetCalories} cal)
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {hasDiet && (
+            <p className="text-xs text-green-600">
+              Active Plan: {currentPlan?.name}
+            </p>
+          )}
+        </div>
       );
     },
-  },
+  }
 ];
 
-export default function AssignDietToUsers() {
+export default function AssignDietToUsers({ users, dietPlans }: Props) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [genderFilter, setGenderFilter] = useState<"Male" | "Female" | "All">("All");
-  const [assignmentFilter, setAssignmentFilter] = useState<"all" | "assigned" | "unassigned">("all");
-  const [filteredUsers, setFilteredUsers] = useState<UserType[]>(sampleUsers);
+  const [filteredUsers, setFilteredUsers] = useState(users);
 
   // Calculate stats
-  const totalUsers = sampleUsers.length;
-  const assignedUsers = sampleUsers.filter(u => u.assignedDiet).length;
-  const pendingAssignments = totalUsers - assignedUsers;
+  const totalUsers = users.length;
+  const usersWithDiet = users.filter(u => u.dietPlanId).length;
+  const usersWithoutDiet = totalUsers - usersWithDiet;
 
-  const statusCards: StatusCardProps[] = [
+  const statusCards = [
     {
       title: "Total Users",
       value: totalUsers,
-      icon: Users as LucideIcon,
+      icon: Users,
       gradient: "blue"
     },
     {
-      title: "Assigned Diets",
-      value: assignedUsers,
-      icon: Utensils as LucideIcon,
+      title: "Users with Diet Plan",
+      value: usersWithDiet,
+      icon: UserCheck,
       gradient: "green"
     },
     {
-      title: "Pending Assignments",
-      value: pendingAssignments,
-      icon: Clock as LucideIcon,
+      title: "Users without Diet Plan",
+      value: usersWithoutDiet,
+      icon: UtensilsCrossed,
       gradient: "red"
     },
-  ];
+  ] as const;
+
+  const handleDietAssignment = async (userId: string, dietPlanId: string) => {
+    try {
+      const result = await attachDietPlanToUser(userId, dietPlanId);
+      if (result.success) {
+        toast.success(result.message);
+        // Update local state to reflect the change
+        setFilteredUsers(prev => prev.map(user => 
+          user.id === userId ? { ...user, dietPlanId: parseInt(dietPlanId) } : user
+        ));
+      } else {
+        toast.error("Failed to assign diet plan");
+      }
+    } catch (error) {
+      toast.error("Error assigning diet plan");
+    }
+  };
+
+  const columns = useMemo(
+    () => createColumns(dietPlans, handleDietAssignment),
+    [dietPlans]
+  );
 
   useEffect(() => {
-    const filtered = sampleUsers.filter(
-      (user) =>
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (genderFilter === "All" || user.gender === genderFilter) &&
-        (assignmentFilter === "all" ||
-          (assignmentFilter === "assigned" && user.assignedDiet) ||
-          (assignmentFilter === "unassigned" && !user.assignedDiet))
+    const filtered = users.filter(user =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filtered);
-  }, [searchTerm, genderFilter, assignmentFilter]);
+  }, [searchTerm, users]);
 
   return (
     <div className="container mx-auto p-6 space-y-8">
       <h1 className="text-2xl font-bold text-center">Diet Plan Assignment</h1>
 
+      {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {statusCards.map((card) => (
-          <StatusCard 
-            key={card.title}
-            {...card}
-          />
+          <StatusCard key={card.title} {...card} />
         ))}
       </div>
-
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      
+      {/* Search */}
+      <div className="flex items-center space-x-2 mb-6">
+        <Search className="w-5 h-5 text-gray-400" />
         <Input
           placeholder="Search users..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="max-w-sm"
         />
-        <Select
-          value={genderFilter}
-          onValueChange={(value: "Male" | "Female" | "All") => setGenderFilter(value)}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select gender" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All">All</SelectItem>
-            <SelectItem value="Male">Male</SelectItem>
-            <SelectItem value="Female">Female</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select
-          value={assignmentFilter}
-          onValueChange={(value: "all" | "assigned" | "unassigned") => 
-            setAssignmentFilter(value)
-          }
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by assignment" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Users</SelectItem>
-            <SelectItem value="assigned">Assigned</SelectItem>
-            <SelectItem value="unassigned">Unassigned</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Desktop View */}
@@ -195,30 +187,40 @@ export default function AssignDietToUsers() {
       <div className="md:hidden">
         <DataCard
           data={filteredUsers}
-          renderCard={(user) => (
-            <div className="p-4 space-y-2">
-              <h3 className="font-medium">{user.name}</h3>
-              <p className="text-sm text-gray-500">Gender: {user.gender}</p>
-              <p className="text-sm text-gray-500">Goal: {user.goal}</p>
-              <Select
-                value={user.assignedDiet}
-                onValueChange={(value) => {
-                  console.log(`Assigning diet ${value} to user ${user.id}`);
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select diet plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  {defaultDietPlans.map((diet) => (
-                    <SelectItem key={diet} value={diet}>
-                      {diet}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
+          renderCard={(user) => {
+            const hasDiet = !!user.dietPlanId;
+            const currentPlan = dietPlans.find(p => p.id === user.dietPlanId);
+            
+            return (
+              <div className="p-4 space-y-2">
+                <h3 className="font-medium">{user.name}</h3>
+                <p className="text-sm text-gray-500">{user.email}</p>
+                <Select
+                  onValueChange={(value) => handleDietAssignment(user.id, value)}
+                >
+                  <SelectTrigger className={`w-full mt-2 ${
+                    hasDiet ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+                  }`}>
+                    <SelectValue placeholder={
+                      hasDiet ? "Change Diet Plan" : "No diet plan assigned"
+                    } />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {dietPlans.map((plan) => (
+                      <SelectItem key={plan.id} value={plan.id.toString()}>
+                        {plan.name} ({plan.targetCalories} cal)
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {hasDiet && (
+                  <div className="mt-2 text-xs text-green-600">
+                    Current Plan: {currentPlan?.name}
+                  </div>
+                )}
+              </div>
+            );
+          }}
         />
       </div>
     </div>
