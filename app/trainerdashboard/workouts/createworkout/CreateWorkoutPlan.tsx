@@ -1,33 +1,10 @@
-"use client"
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import {
-  Plus,
-  Trash2,
-  ClipboardList,
-  Clock,
-  FileText,
-  Dumbbell,
-  Target,
-  ChevronDown,
-  Repeat,
-  Timer,
-  Activity,
-  Weight,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { 
+  Plus, X, Dumbbell, Calendar, Clock, 
+  ChevronRight, ChevronLeft, Save
+} from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -35,381 +12,408 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
+import { createWorkoutPlan } from './PostCreatedWorkoutplan';
+import { useRouter } from 'next/navigation';
 
 interface Exercise {
   name: string;
-  sets: string;
+  sets: number;
   reps: string;
-  rest: string;
-  notes: string;
-  category?: string;
-  equipmentNeeded?: string;
-  difficulty?: "beginner" | "intermediate" | "advanced";
+  description: string;
+  order: number;
 }
 
-interface WorkoutDay {
-  name: string;
+interface DaySchedule {
+  dayOfWeek: string;
+  muscleTarget: string;
+  duration: number;
+  calories: number;
   exercises: Exercise[];
 }
 
-const exerciseCategories = [
-  "Strength", "Cardio", "Flexibility", "Balance",
-  "Core", "Olympic", "Calisthenics", "Recovery"
-];
-
-const exerciseTemplates = {
-  "Strength": ["Bench Press", "Deadlift", "Squats", "Rows"],
-  "Cardio": ["Running", "Cycling", "Jump Rope", "HIIT"],
-  "Core": ["Planks", "Crunches", "Russian Twists", "Leg Raises"],
-  // Add more templates...
-};
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const muscleGroups = ['Chest', 'Back', 'Legs', 'Shoulders', 'Arms', 'Core', 'Full Body'];
 
 export default function CreateWorkoutPlan() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [workoutDays, setWorkoutDays] = useState<WorkoutDay[]>([
-    { name: "Day 1", exercises: [{ name: "", sets: "", reps: "", rest: "", notes: "" }] }
-  ]);
-  const [previewMode, setPreviewMode] = useState(false);
+  const [planName, setPlanName] = useState('');
+  const [planDescription, setPlanDescription] = useState('');
+  const [schedules, setSchedules] = useState<DaySchedule[]>([]);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const router = useRouter();
 
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const handleDragEnd = (result: any) => {
+    if (!result.destination) return;
+    
+    const day = selectedDay;
+    const items = Array.from(schedules.find(s => s.dayOfWeek === day)?.exercises || []);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
 
-  const steps = [
-    { number: 1, title: "Basic Info" },
-    { number: 2, title: "Schedule" },
-    { number: 3, title: "Exercises" },
-    { number: 4, title: "Review" }
-  ];
+    setSchedules(current => 
+      current.map(schedule => 
+        schedule.dayOfWeek === day 
+          ? { ...schedule, exercises: items.map((item, index) => ({ ...item, order: index })) }
+          : schedule
+      )
+    );
+  };
 
-  const addWorkoutDay = () => {
-    setWorkoutDays([
-      ...workoutDays,
-      { 
-        name: `Day ${workoutDays.length + 1}`, 
-        exercises: [{ name: "", sets: "", reps: "", rest: "", notes: "" }] 
+  const addExercise = (day: string) => {
+    const newExercise: Exercise = {
+      name: '',
+      sets: 3,
+      reps: '8-12',
+      description: '',
+      order: schedules.find(s => s.dayOfWeek === day)?.exercises?.length || 0
+    };
+
+    setSchedules(current => {
+      const existingSchedule = current.find(s => s.dayOfWeek === day);
+      if (existingSchedule) {
+        return current.map(schedule =>
+          schedule.dayOfWeek === day
+            ? { ...schedule, exercises: [...schedule.exercises, newExercise] }
+            : schedule
+        );
+      } else {
+        // Create new schedule for the day if it doesn't exist
+        return [...current, {
+          dayOfWeek: day,
+          muscleTarget: '',
+          duration: 60,
+          calories: 400,
+          exercises: [newExercise]
+        }];
       }
-    ]);
+    });
   };
 
-  const addExercise = (dayIndex: number) => {
-    const updatedDays = [...workoutDays];
-    updatedDays[dayIndex].exercises.push({ name: "", sets: "", reps: "", rest: "", notes: "" });
-    setWorkoutDays(updatedDays);
+  const updateExercise = (dayOfWeek: string, index: number, field: keyof Exercise, value: string | number) => {
+    setSchedules(current =>
+      current.map(schedule =>
+        schedule.dayOfWeek === dayOfWeek
+          ? {
+              ...schedule,
+              exercises: schedule.exercises.map((ex, i) =>
+                i === index ? { ...ex, [field]: value } : ex
+              )
+            }
+          : schedule
+      )
+    );
   };
 
-  const removeExercise = (dayIndex: number, exerciseIndex: number) => {
-    const updatedDays = [...workoutDays];
-    updatedDays[dayIndex].exercises.splice(exerciseIndex, 1);
-    setWorkoutDays(updatedDays);
-  };
-
-  const updateExercise = (dayIndex: number, exerciseIndex: number, field: keyof Exercise, value: string) => {
-    const updatedDays = [...workoutDays];
-    updatedDays[dayIndex].exercises[exerciseIndex][field] = value;
-    setWorkoutDays(updatedDays);
-  };
-
-  const handleSubmitForm = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Workout plan:", workoutDays);
-  };
-
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { 
-        type: "spring",
-        stiffness: 260,
-        damping: 20
+  const handleSubmit = async () => {
+    try {
+      // Validate schedules data
+      if (!schedules.length) {
+        toast.error('Please add at least one workout schedule');
+        return;
       }
+
+      // Prepare the workout plan data
+      const workoutPlanData = {
+        name: planName,
+        description: planDescription,
+        schedules: schedules.map(schedule => ({
+          dayOfWeek: schedule.dayOfWeek,
+          muscleTarget: schedule.muscleTarget,
+          duration: schedule.duration,
+          calories: schedule.calories,
+          exercises: schedule.exercises.map((exercise, index) => ({
+            ...exercise,
+            order: index
+          }))
+        }))
+      };
+
+      const result = await createWorkoutPlan(workoutPlanData);
+
+      if (result.success) {
+        toast.success(result.message);
+        // Optionally redirect to workout plans list
+        router.push('/trainerdashboard/workouts/assignworkout');
+      } else {
+        toast.error(result.message);
+      }
+    } catch (error) {
+      toast.error('Error submitting workout plan');
+      console.error(error);
     }
   };
 
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      className="max-w-5xl mx-auto p-6"
-    >
-      {/* Progress Indicator */}
-      <div className="mb-8">
-        <div className="flex justify-between items-center">
-          {steps.map((step) => (
-            <div key={step.number} className="flex flex-col items-center">
-              <div className={`
-                w-10 h-10 rounded-full flex items-center justify-center
-                ${currentStep >= step.number 
-                  ? 'bg-blue-600 text-white' 
-                  : 'bg-gray-200 text-gray-500'}
-              `}>
-                {step.number}
+    <div className="container mx-auto p-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl mx-auto"
+      >
+        {/* Progress Steps */}
+        <div className="flex justify-between mb-8">
+          {[1, 2].map((step) => (
+            <div
+              key={step}
+              className={`flex items-center ${
+                currentStep >= step ? 'text-blue-600' : 'text-gray-400'
+              }`}
+            >
+              <div
+                className={`w-8 h-8 rounded-full flex items-center justify-center border-2 
+                  ${currentStep >= step ? 'border-blue-600 bg-blue-50' : 'border-gray-300'}`}
+              >
+                {step}
               </div>
-              <span className="text-sm mt-2">{step.title}</span>
+              {step < 2 && (
+                <div
+                  className={`flex-1 h-1 mx-4 ${
+                    currentStep > step ? 'bg-blue-600' : 'bg-gray-300'
+                  }`}
+                />
+              )}
             </div>
           ))}
         </div>
-        <div className="relative mt-4">
-          <div className="h-2 bg-gray-200 rounded">
-            <div 
-              className="h-full bg-blue-600 rounded transition-all duration-300"
-              style={{ width: `${(currentStep - 1) * 33.33}%` }}
-            />
-          </div>
-        </div>
-      </div>
 
-      <Card className="w-full bg-white shadow-xl">
-        <CardHeader className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white">
-          <CardTitle className="text-2xl font-bold flex items-center gap-2">
-            <Dumbbell className="w-6 h-6" />
-            Create Workout Plan
-          </CardTitle>
-        </CardHeader>
+        {/* Step 1: Basic Information */}
+        <AnimatePresence mode="wait">
+          {currentStep === 1 && (
+            <motion.div
+              key="step1"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              className="space-y-6"
+            >
+              <h2 className="text-2xl font-bold">Create Workout Plan</h2>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Plan Name</label>
+                  <Input
+                    value={planName}
+                    onChange={(e) => setPlanName(e.target.value)}
+                    placeholder="e.g., Beginner Strength Training"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Description</label>
+                  <Textarea
+                    value={planDescription}
+                    onChange={(e) => setPlanDescription(e.target.value)}
+                    placeholder="Describe the workout plan..."
+                    rows={4}
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
 
-        <form onSubmit={handleSubmit(handleSubmitForm)}>
-          <CardContent className="space-y-6 mt-4">
-            <AnimatePresence mode="wait">
-              {currentStep === 1 && (
-                <motion.div
-                  key="step1"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  {/* Basic Information */}
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="planName" className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-blue-600" />
-                        Plan Name
-                      </Label>
-                      <Input
-                        id="planName"
-                        placeholder="Enter workout plan name"
-                        className="border-gray-300"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="duration" className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-blue-600" />
-                        Duration
-                      </Label>
-                      <Select>
-                        <SelectTrigger className="border-gray-300">
-                          <SelectValue placeholder="Select duration" />
+          {/* Step 2: Schedule Selection */}
+          {currentStep === 2 && (
+            <motion.div
+              key="step2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              className="space-y-6"
+            >
+              <h2 className="text-2xl font-bold">Workout Schedule</h2>
+              <div className="grid grid-cols-7 gap-4">
+                {daysOfWeek.map((day) => (
+                  <Card
+                    key={day}
+                    className={`p-4 cursor-pointer transition-all ${
+                      selectedDay === day ? 'ring-2 ring-blue-500' : ''
+                    }`}
+                    onClick={() => setSelectedDay(day)}
+                  >
+                    <p className="text-sm font-medium text-center">{day}</p>
+                  </Card>
+                ))}
+              </div>
+
+              {selectedDay && (
+                <DragDropContext onDragEnd={handleDragEnd}>
+                  <div className="mt-6 space-y-4">
+                    <div className="flex gap-4">
+                      <Select
+                        onValueChange={(value) =>
+                          setSchedules(current =>
+                            current.map(schedule =>
+                              schedule.dayOfWeek === selectedDay
+                                ? { ...schedule, muscleTarget: value }
+                                : schedule
+                            )
+                          )
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select muscle group" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="1week">1 Week</SelectItem>
-                          <SelectItem value="2weeks">2 Weeks</SelectItem>
-                          <SelectItem value="1month">1 Month</SelectItem>
-                          <SelectItem value="3months">3 Months</SelectItem>
+                          {muscleGroups.map(group => (
+                            <SelectItem key={group} value={group}>
+                              {group}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
+                      <Input
+                        type="number"
+                        placeholder="Duration (minutes)"
+                        className="w-32"
+                        onChange={(e) =>
+                          setSchedules(current =>
+                            current.map(schedule =>
+                              schedule.dayOfWeek === selectedDay
+                                ? { ...schedule, duration: parseInt(e.target.value) }
+                                : schedule
+                            )
+                          )
+                        }
+                      />
+                      <Input
+                        type="number"
+                        placeholder="Calories"
+                        className="w-32"
+                        onChange={(e) =>
+                          setSchedules(current =>
+                            current.map(schedule =>
+                              schedule.dayOfWeek === selectedDay
+                                ? { ...schedule, calories: parseInt(e.target.value) }
+                                : schedule
+                            )
+                          )
+                        }
+                      />
                     </div>
-                  </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="description" className="flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-blue-600" />
-                      Description
-                    </Label>
-                    <Textarea
-                      id="description"
-                      placeholder="Enter plan description"
-                      className="border-gray-300"
-                    />
-                  </div>
-                </motion.div>
-              )}
-
-              {currentStep === 2 && (
-                <motion.div
-                  key="step2"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  {/* Schedule Configuration */}
-                  <div className="grid grid-cols-2 gap-4">
-                    {/* ...schedule fields... */}
-                  </div>
-                </motion.div>
-              )}
-
-              {currentStep === 3 && (
-                <motion.div
-                  key="step3"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                >
-                  {/* Exercise Configuration */}
-                  <Accordion type="single" collapsible className="space-y-4">
-                    {workoutDays.map((day, dayIndex) => (
-                      <AccordionItem 
-                        key={dayIndex} 
-                        value={`day-${dayIndex}`}
-                        className="border rounded-lg shadow-sm hover:shadow-md transition-shadow"
-                      >
-                        <AccordionTrigger className="px-4 hover:no-underline">
-                          <span className="flex items-center gap-2">
-                            <Dumbbell className="w-4 h-4 text-blue-600" />
-                            {day.name}
-                          </span>
-                        </AccordionTrigger>
-                        <AccordionContent className="px-4 pb-4 space-y-4">
-                          {day.exercises.map((exercise, exerciseIndex) => (
-                            <Card key={exerciseIndex} className="bg-gray-50">
-                              <CardContent className="pt-4">
-                                <div className="grid md:grid-cols-2 gap-4">
-                                  <div>
-                                    <Label className="flex items-center gap-2 mb-2">
-                                      <Weight className="w-4 h-4 text-blue-600" />
-                                      Exercise Name
-                                    </Label>
-                                    <Input
-                                      value={exercise.name}
-                                      onChange={(e) => updateExercise(dayIndex, exerciseIndex, "name", e.target.value)}
-                                      placeholder="Exercise name"
-                                      className="border-gray-300"
-                                    />
-                                  </div>
-                                  <div className="grid grid-cols-3 gap-2">
-                                    <div>
-                                      <Label className="flex items-center gap-2 mb-2">
-                                        <Repeat className="w-4 h-4 text-blue-600" />
-                                        Sets
-                                      </Label>
-                                      <Input
-                                        value={exercise.sets}
-                                        onChange={(e) => updateExercise(dayIndex, exerciseIndex, "sets", e.target.value)}
-                                        placeholder="Sets"
-                                        className="border-gray-300"
-                                      />
-                                    </div>
-                                    <div>
-                                      <Label className="flex items-center gap-2 mb-2">
-                                        <Target className="w-4 h-4 text-blue-600" />
-                                        Reps
-                                      </Label>
-                                      <Input
-                                        value={exercise.reps}
-                                        onChange={(e) => updateExercise(dayIndex, exerciseIndex, "reps", e.target.value)}
-                                        placeholder="Reps"
-                                        className="border-gray-300"
-                                      />
-                                    </div>
-                                    <div>
-                                      <Label className="flex items-center gap-2 mb-2">
-                                        <Timer className="w-4 h-4 text-blue-600" />
-                                        Rest
-                                      </Label>
-                                      <Input
-                                        value={exercise.rest}
-                                        onChange={(e) => updateExercise(dayIndex, exerciseIndex, "rest", e.target.value)}
-                                        placeholder="Rest"
-                                        className="border-gray-300"
-                                      />
+                    <Droppable droppableId="exercises">
+                      {(provided) => (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          className="space-y-4"
+                        >
+                          {schedules
+                            .find(s => s.dayOfWeek === selectedDay)
+                            ?.exercises.map((exercise, index) => (
+                              <Draggable
+                                key={index}
+                                draggableId={`exercise-${index}`}
+                                index={index}
+                              >
+                                {(provided) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    className="bg-white p-4 rounded-lg shadow space-y-3"
+                                  >
+                                    <div className="flex justify-between items-start">
+                                      <div className="flex-1 space-y-3">
+                                        <Input
+                                          placeholder="Exercise name"
+                                          value={exercise.name}
+                                          onChange={(e) => updateExercise(selectedDay, index, 'name', e.target.value)}
+                                        />
+                                        <div className="flex gap-4">
+                                          <div className="w-24">
+                                            <Input
+                                              type="number"
+                                              placeholder="Sets"
+                                              value={exercise.sets}
+                                              onChange={(e) => updateExercise(selectedDay, index, 'sets', parseInt(e.target.value))}
+                                            />
+                                          </div>
+                                          <div className="flex-1">
+                                            <Input
+                                              placeholder="Reps (e.g., 8-12)"
+                                              value={exercise.reps}
+                                              onChange={(e) => updateExercise(selectedDay, index, 'reps', e.target.value)}
+                                            />
+                                          </div>
+                                        </div>
+                                        <Textarea
+                                          placeholder="Exercise description"
+                                          value={exercise.description}
+                                          onChange={(e) => updateExercise(selectedDay, index, 'description', e.target.value)}
+                                          rows={2}
+                                        />
+                                      </div>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="ml-2"
+                                        onClick={() => {
+                                          setSchedules(current =>
+                                            current.map(schedule =>
+                                              schedule.dayOfWeek === selectedDay
+                                                ? {
+                                                    ...schedule,
+                                                    exercises: schedule.exercises.filter((_, i) => i !== index)
+                                                  }
+                                                : schedule
+                                            )
+                                          );
+                                        }}
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </Button>
                                     </div>
                                   </div>
-                                </div>
-                                <div className="mt-4">
-                                  <Label className="flex items-center gap-2 mb-2">
-                                    <FileText className="w-4 h-4 text-blue-600" />
-                                    Notes
-                                  </Label>
-                                  <div className="flex gap-2">
-                                    <Textarea
-                                      value={exercise.notes}
-                                      onChange={(e) => updateExercise(dayIndex, exerciseIndex, "notes", e.target.value)}
-                                      placeholder="Exercise notes"
-                                      className="border-gray-300 flex-1"
-                                    />
-                                    <Button
-                                      type="button"
-                                      onClick={() => removeExercise(dayIndex, exerciseIndex)}
-                                      variant="ghost"
-                                      size="icon"
-                                      className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                                    >
-                                      <Trash2 className="w-4 h-4" />
-                                    </Button>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
-                          <Button
-                            type="button"
-                            onClick={() => addExercise(dayIndex)}
-                            variant="outline"
-                            size="sm"
-                            className="w-full mt-2"
-                          >
-                            <Plus className="w-4 h-4 mr-1" /> Add Exercise
-                          </Button>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                </motion.div>
-              )}
+                                )}
+                              </Draggable>
+                            ))}
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Droppable>
 
-              {currentStep === 4 && (
-                <motion.div
-                  key="step4"
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  className="space-y-6"
-                >
-                  {/* Preview Mode */}
-                  <div className="bg-gray-50 p-6 rounded-lg">
-                    {/* Workout plan preview content */}
+                    <Button
+                      onClick={() => selectedDay && addExercise(selectedDay)}
+                      className="mt-4"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Exercise
+                    </Button>
                   </div>
-                </motion.div>
+                </DragDropContext>
               )}
-            </AnimatePresence>
-          </CardContent>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-          <CardFooter className="flex justify-between">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setCurrentStep(Math.max(1, currentStep - 1))}
-              disabled={currentStep === 1}
-            >
-              Previous
+        {/* Navigation Buttons */}
+        <div className="flex justify-between mt-8">
+          <Button
+            onClick={() => setCurrentStep(current => Math.max(current - 1, 1))}
+            disabled={currentStep === 1}
+          >
+            <ChevronLeft className="w-4 h-4 mr-2" />
+            Previous
+          </Button>
+          {currentStep === 2 ? (
+            <Button onClick={handleSubmit} variant="default">
+              <Save className="w-4 h-4 mr-2" />
+              Save Workout Plan
             </Button>
-            {currentStep < 4 ? (
-              <Button
-                type="button"
-                onClick={() => setCurrentStep(Math.min(4, currentStep + 1))}
-              >
-                Next
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                className="bg-gradient-to-br from-blue-600 to-indigo-600"
-              >
-                Create Workout Plan
-              </Button>
-            )}
-          </CardFooter>
-        </form>
-      </Card>
-    </motion.div>
+          ) : (
+            <Button
+              onClick={() => setCurrentStep(current => Math.min(current + 1, 2))}
+            >
+              Next
+              <ChevronRight className="w-4 h-4 ml-2" />
+            </Button>
+          )}
+        </div>
+      </motion.div>
+    </div>
   );
 }

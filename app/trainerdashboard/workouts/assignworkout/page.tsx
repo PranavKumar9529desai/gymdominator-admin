@@ -1,82 +1,63 @@
-"use client";
-
-import UserWorkoutAssignment from "./UserWorkoutAssignment";
 import { Users, Target, Dumbbell } from "lucide-react";
+import UserWorkoutAssignment from "./UserWorkoutAssignment";
 import { StatusCardProps } from "@/components/common/StatusCard";
-import React from "react";
+import { getAllWorkoutPlans } from "./Getworkout";
+import { getUsersAssignedToTrainer } from "./GetuserassignedTotrainers";
 
-interface MockUser {
+interface UserWithWorkout {
   id: number;
   name: string;
-  age: number;
-  goal: string;
-  assignedWorkout: string | undefined;
   gender: "Male" | "Female";
+  goal: string;
+  assignedWorkout?: string;
+  email: string;
 }
 
-const mockUsers: MockUser[] = [
-  {
-    id: 1,
-    name: "John Doe",
-    age: 25,
-    goal: "Weight Loss",
-    assignedWorkout: undefined,
-    gender: "Male"
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    age: 30,
-    goal: "Muscle Gain",
-    assignedWorkout: "Strength Training",
-    gender: "Female"
-  },
-  {
-    id: 3,
-    name: "Mike Johnson",
-    age: 28,
-    goal: "General Fitness",
-    assignedWorkout: undefined,
-    gender: "Male"
-  },
-  {
-    id: 4,
-    name: "Sarah Williams",
-    age: 27,
-    goal: "Weight Loss",
-    assignedWorkout: "Weight Loss",
-    gender: "Female"
-  }
-];
+export default async function Page() {
+  // Fetch both users and workout plans in parallel
+  const [usersResponse, workoutPlansResponse] = await Promise.all([
+    getUsersAssignedToTrainer(),
+    getAllWorkoutPlans()
+  ]);
 
-const statusCards: StatusCardProps[] = [
-  {
-    title: "Total Users",
-    value: mockUsers.length,
-    icon: Users,
-    gradient: "blue"
-  },
-  {
-    title: "Assigned Workouts",
-    value: mockUsers.filter(u => u.assignedWorkout).length,
-    icon: Dumbbell,
-    gradient: "green"
-  },
-  {
-    title: "Pending Assignments",
-    value: mockUsers.filter(u => !u.assignedWorkout).length,
-    icon: Target,
-    gradient: "red"
-  }
-];
+  // Transform users data to match required format
+  const users: UserWithWorkout[] = usersResponse.map(user => ({
+    id: parseInt(user.id),
+    name: user.name,
+    email: user.email,
+    gender: "Male", // You might want to get this from user profile
+    goal: "Not set", // You might want to get this from user profile
+    assignedWorkout: undefined
+  }));
 
-export default function Page() {
+  // Calculate status cards data
+  const statusCards: StatusCardProps[] = [
+    {
+      title: "Total Users",
+      value: users.length,
+      iconName: "users",
+      gradient: "blue"
+    },
+    {
+      title: "Assigned Workouts",
+      value: users.filter(u => u.assignedWorkout).length,
+      iconName: "dumbbell",
+      gradient: "green"
+    },
+    {
+      title: "Pending Assignments",
+      value: users.filter(u => !u.assignedWorkout).length,
+      iconName: "target",
+      gradient: "red"
+    }
+  ];
+
   return (
-    <div className="container mx-auto ">
-      
+    <div className="container mx-auto">
       <UserWorkoutAssignment 
-        Users={mockUsers} 
+        Users={users}
         statusCards={statusCards}
+        workoutPlans={workoutPlansResponse.workoutPlans} 
       />
     </div>
   );

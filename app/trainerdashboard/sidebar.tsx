@@ -38,8 +38,8 @@ export const menuItems: MenuItem[] = [
     subItems: [
       {
         name: "Create Workouts",
-        label: "addworkout",
-        link: "/workouts/addworkout",
+        label: "createworkout",
+        link: "/workouts/createworkout",
       },
       {
         name: "Assign Workout",

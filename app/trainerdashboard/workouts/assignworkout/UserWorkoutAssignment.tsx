@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Users, Target, Dumbbell, ArrowUpDown, LucideIcon } from "lucide-react";
 import { DataTable } from "@/components/Table/UsersTable";
@@ -14,6 +14,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { WorkoutPlan } from './Getworkout';
+import * as LucideIcons from "lucide-react";
+
+// Update StatusCardProps interface
+interface StatusCardProps {
+  title: string;
+  value: number;
+  iconName: string;
+  gradient: string;
+}
 
 interface UserType {
   id: number;
@@ -33,10 +43,11 @@ const defaultWorkouts = [
 interface UserWorkoutAssignmentProps {
   Users: UserType[];
   statusCards: StatusCardProps[];
+  workoutPlans: WorkoutPlan[]; // Add workoutPlans to props
 }
 
-// Update columns with centered alignment
-const columns: ColumnDef<UserType>[] = [
+// Update the Select component in the columns definition to use workoutPlans
+const createColumns = (workoutPlans: WorkoutPlan[]): ColumnDef<UserType>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -68,7 +79,6 @@ const columns: ColumnDef<UserType>[] = [
         <Select
           value={row.original.assignedWorkout}
           onValueChange={(value) => {
-            // Handle workout assignment here
             console.log(`Assigning ${value} to user ${row.original.id}`);
           }}
         >
@@ -78,9 +88,9 @@ const columns: ColumnDef<UserType>[] = [
             <SelectValue placeholder="Select workout" />
           </SelectTrigger>
           <SelectContent>
-            {defaultWorkouts.map((workout) => (
-              <SelectItem key={workout} value={workout}>
-                {workout}
+            {workoutPlans.map((plan) => (
+              <SelectItem key={plan.id} value={plan.id.toString()}>
+                {plan.name}
               </SelectItem>
             ))}
           </SelectContent>
@@ -92,12 +102,21 @@ const columns: ColumnDef<UserType>[] = [
 
 export default function UserWorkoutAssignment({ 
   Users, 
-  statusCards 
+  statusCards,
+  workoutPlans 
 }: UserWorkoutAssignmentProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [genderFilter, setGenderFilter] = useState<"Male" | "Female" | "All">("All");
   const [assignmentFilter, setAssignmentFilter] = useState<"all" | "assigned" | "unassigned">("all");
   const [filteredUsers, setFilteredUsers] = useState<UserType[]>(Users);
+
+  const columns = useMemo(() => createColumns(workoutPlans), [workoutPlans]);
+
+  // Helper function to get icon component
+  const getIcon = (iconName: string) => {
+    const Icon = LucideIcons[iconName as keyof typeof LucideIcons];
+    return Icon || LucideIcons.HelpCircle;
+  };
 
   // Calculate stats
 
@@ -118,15 +137,18 @@ export default function UserWorkoutAssignment({
       <h1 className="text-2xl font-bold text-center">Workout Assignment</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        {statusCards.map((card) => (
-          <StatusCard 
-            key={card.title}
-            title={card.title}
-            value={card.value}
-            icon={card.icon}
-            gradient={card.gradient}
-          />
-        ))}
+        {statusCards.map((card) => {
+          const IconComponent = getIcon(card.iconName);
+          return (
+            <StatusCard 
+              key={card.title}
+              title={card.title}
+              value={card.value}
+              icon={IconComponent}
+              gradient={card.gradient}
+            />
+          );
+        })}
       </div>
 
       <div className="flex flex-col md:flex-row gap-4 mb-6">
