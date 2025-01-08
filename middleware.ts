@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
  * Public routes that are accessible without authentication
  * @type {string[]}
  */
-const publicRoutes: string[] = ["/"];
+const publicRoutes: string[] = []; // Remove "/" from public routes
 
 /**
  * Prefix for all authentication-related API routes
@@ -54,6 +54,8 @@ export default auth(async function middleware(request) {
    * @type {boolean}
    */
   const isLoggedIn = !!request.auth;
+
+  
 
   /**
    * Route type checks
@@ -111,10 +113,14 @@ export default auth(async function middleware(request) {
      * Redirect to unauthorized page if role doesn't match the route
      */
     const path = request.nextUrl.pathname;
+    if (!token) {
+      return NextResponse.redirect(new URL("/signin", request.url));
+    }
+
     if (
-      (path.startsWith("/owner") && (!token || !IsOwner(token))) ||
-      (path.startsWith("/trainer") && (!token || !IsTrainer(token))) ||
-      (path.startsWith("/sales") && (!token || !IsSales(token)))
+      (path.startsWith("/owner") && !IsOwner(token)) ||
+      (path.startsWith("/trainer") && !IsTrainer(token)) ||
+      (path.startsWith("/sales") && !IsSales(token))
     ) {
       return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }

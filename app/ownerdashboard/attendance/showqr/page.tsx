@@ -1,11 +1,34 @@
 import GymQRCode from "./QrCode";
 import { GetAttendanceQrData } from "./GetAttendanceQrData";
+import FetchGymDetailsSA from "../../onboarding/onboardingqr/GetGymDetails";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function AttendanceComponent() {
+  // First check if gym exists
+  const gymDetails = await FetchGymDetailsSA();
+
+  if (!gymDetails) {
+    return (
+      <div className="h-screen flex flex-col justify-center items-center gap-6 p-4">
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-bold text-gray-900">No Gym Found</h2>
+          <p className="text-gray-600">Please create your gym profile first</p>
+        </div>
+        <Link href="/ownerdashboard/gymdetails/viewgymdetails">
+          <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white">
+            Create Gym Profile
+          </Button>
+        </Link>
+      </div>
+    );
+  }
+
+  // If gym exists, proceed with attendance QR
   const gymData = await GetAttendanceQrData();
   
   if (!gymData) {
-    return <div>Unable to load gym data</div>;
+    return <div>Unable to load attendance data</div>;
   }
 
   const qrValue = JSON.stringify({

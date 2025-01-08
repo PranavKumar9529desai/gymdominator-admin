@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import NoGymDetails from "./NoGymDetails";
 
 
 interface GymDetails {
@@ -31,15 +32,7 @@ export default function ViewGymDetails({
 
   if (!gymDetails) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <h2 className="text-2xl font-semibold mb-4">No Gym Details Found</h2>
-        <Button
-          onClick={() => router.push('/ownerdashboard/gymdetails/creategym')}
-          className="bg-indigo-600 text-white"
-        >
-          Create Gym Details
-        </Button>
-      </div>
+     <NoGymDetails /> 
     );
   }
 

@@ -7,16 +7,9 @@ import FeatureCard from "./FeatureCard";
 import CustomButton from "./CustomButton";
 import { BackgroundBeams } from "@/components/beams";
 import Footer from "./Footer";
-import { auth } from "@/auth";
-import { Rolestype } from "../types/next-auth";
+
 export default async function HeroSection() {
- 
-  const session = await auth();
-  const  role =  session?.role as Rolestype;
-  const signinRedirect : boolean = !role ? true : false;
-  console.log("signinRedirect from the hero section", signinRedirect);
-  console.log("session is this ", session);
-  console.log("role from the hero section", role); 
+  
   return (
     <main className="bg-gradient-to-b from-gray-950 via-gray-900 to-black text-white min-h-screen overflow-hidden">
       <section className="relative pb-16 lg:pb-28">
@@ -37,7 +30,7 @@ export default async function HeroSection() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-6 mt-8">
-                <CustomButton role={ role } redirect={signinRedirect} />
+                <CustomButton />
                 <Button
                   variant="outline"
                   className="hidden sm:flex items-center gap-2 bg-transparent border border-gray-700 text-gray-300 hover:bg-gray-800/50 hover:border-gray-600 font-medium px-6 py-3 rounded-lg transition-all duration-300"
@@ -46,7 +39,6 @@ export default async function HeroSection() {
                 </Button>
               </div>
             </div>
-
             <div className="flex justify-center lg:justify-end lg:order-2 order-1 relative">
               <div className="relative w-80 h-80 sm:w-[500px] sm:h-[500px]">
                 <div className="absolute inset-0 bg-blue-500/30 rounded-full blur-3xl "></div>

@@ -21,11 +21,11 @@ const roles = [
     description: "Manage your clients and training sessions",
     value: "trainer",
   },
-  {
-    title: "Sales",
-    description: "Access your sales plans and track progress",
-    value: "sales",
-  },
+  // {
+  //   title: "Sales",
+  //   description: "Access your sales plans and track progress",
+  //   value: "sales",
+  // },
 ];
 
 export default function SelectRole() {
