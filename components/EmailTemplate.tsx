@@ -71,8 +71,8 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               fontSize: "16px",
             }}
           >
-            Thank you for joining GymDominator. We're excited to have you on
-            board! Here's your verification code:
+            Thank you for joining GymDominator. We&apos;re excited to have you on
+            board! Here&apos;s your verification code:
           </p>
           <div
             style={{
@@ -131,7 +131,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               color: "#666666",
             }}
           >
-            If you didn't request this code, please ignore this email or contact
+            If you didn&apos;t request this code, please ignore this email or contact
             our support team if you have any concerns.
           </p>
         </td>
@@ -149,7 +149,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             © 2023 GymDominator. All rights reserved.
           </p>
           <p style={{ margin: "0" }}>
-            You're receiving this email because you signed up for GymDominator.
+            You&apos;re receiving this email because you signed up for GymDominator.
           </p>
         </td>
       </tr>

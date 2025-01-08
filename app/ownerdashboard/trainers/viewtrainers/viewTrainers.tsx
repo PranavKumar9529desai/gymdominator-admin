@@ -8,9 +8,6 @@ import { StatusCard } from "@/components/common/StatusCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useRouter } from "next/navigation";
-import { useRecoilState } from "recoil";
-import { TrainersAtom } from "@/app/state/Atoms/TrainersAtom";
 
 interface TrainerType {
   id: number;
@@ -50,8 +47,6 @@ const columns: ColumnDef<TrainerType>[] = [
 ]
 
 export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
-  const router = useRouter();
-  const [trainersAtoms] = useRecoilState(TrainersAtom);
   const [searchTerm, setSearchTerm] = useState("");
   const [shiftFilter, setShiftFilter] = useState<"Morning" | "Evening" | "All">("All");
   const [filteredTrainers, setFilteredTrainers] = useState<TrainerType[]>(Trainers);
@@ -83,7 +78,6 @@ export default function ViewTrainersList({ Trainers }: ViewTrainersListProps) {
   ] as const;
 
   useEffect(() => {
-    console.log("Trainers are ", trainersAtoms);
     const filtered = Trainers.filter(
       (trainer) =>
         trainer.name.toLowerCase().includes(searchTerm.toLowerCase()) &&

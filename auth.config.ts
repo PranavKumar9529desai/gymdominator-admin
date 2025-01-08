@@ -1,5 +1,4 @@
-import NextAuth, { NextAuthConfig } from "next-auth";
-import Resend from "next-auth/providers/resend";
+import { NextAuthConfig } from "next-auth";
 import SignupSA from "./app/actions/signup/SignUpWithCrendentails";
 import getUserByEmail, { userType } from "./app/actions/signup/getUserByEmail";
 import GitHub from "next-auth/providers/github";
@@ -21,12 +20,11 @@ export default {
         password: {},
         role: {},
       },
-      // @ts-ignore
+      // @ts-expect-error - NextAuth types mismatch with custom credentials
       async authorize(
         credentials: Partial<
           Record<"name" | "email" | "password" | "role", unknown>
-        >,
-        req: Request
+        >
       ): Promise<
         | {
             name: string;
@@ -54,7 +52,7 @@ export default {
         );
         // name is not checked as the it is not necssary for the signin
         if (email && password) {
-          let userFromDB: userType | false = await getUserByEmail(email);
+          const userFromDB: userType | false = await getUserByEmail(email);
           console.log("user from the db", userFromDB);
           // signin
           if (
@@ -64,7 +62,7 @@ export default {
             userFromDB.role
           ) {
             // check the password
-            let isPasswordMatch = await bcrypt.compare(
+            const isPasswordMatch = await bcrypt.compare(
               password,
               userFromDB.password
             );
@@ -178,7 +176,7 @@ export default {
     },
     async session({ token, session }) {
       console.log("token from the session callback ", token);
-      if (token && token.email && token.name && token.role ) {
+      if (token && token.email && token.name && token.role) {
         session.user.name = token.name;
         session.user.email = token.email;
         session.gym = token.gym as gym;

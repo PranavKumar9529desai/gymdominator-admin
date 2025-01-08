@@ -1,5 +1,4 @@
 // next-auth.d.ts
-import NextAuth from "next-auth";
 import { DefaultSession } from "next-auth";
 import { DefaultJWT } from "next-auth/jwt";
 import { NextRequest } from "next/server";

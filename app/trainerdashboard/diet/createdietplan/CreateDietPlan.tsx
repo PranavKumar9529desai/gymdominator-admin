@@ -258,18 +258,6 @@ export default function CreateDietPlan() {
   };
 
   // Add restore checkpoint function
-  const restoreCheckpoint = () => {
-    const checkpoints = JSON.parse(localStorage.getItem('dietPlanCheckpoints') || '[]');
-    if (checkpoints.length > 0) {
-      const lastCheckpoint = checkpoints[checkpoints.length - 1];
-      setCurrentStep(lastCheckpoint.step);
-      setDietPlan(prev => ({
-        ...prev,
-        meals: [...prev.meals, lastCheckpoint.meal]
-      }));
-      toast.success('Last checkpoint restored');
-    }
-  };
 
   return (
     <div className="container mx-auto p-6">

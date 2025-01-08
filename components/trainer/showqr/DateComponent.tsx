@@ -2,7 +2,7 @@
 import React from "react";
 import { useState } from "react";
 export default function DateComponent() {
-  const [currentDate, setCurrentDate] = useState(
+  const [currentDate] = useState(
     new Date().toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "short",

@@ -1,8 +1,7 @@
-import { getToken, JWT } from "next-auth/jwt";
-import { NextRequest } from "next/server";
+import { JWT } from "next-auth/jwt";
 
 export const IsOwner : (token: JWT) => boolean = (token: JWT) => {
-  let role = token.role;
+  const role = token.role;
   console.log("role of the token", token.Role);
   console.log("isgymowner returned this " , token.role , token.role == "owner");
   if ( role  === "owner") {

@@ -2,7 +2,7 @@ import UserAttendance from "./UserAttendance";
 import { TodayAttendance } from "./getTodayAttendance";
 import React from "react";
 
-export default async function AttendancePage() {
+export default async function Page() {
   const attendanceData = await TodayAttendance();
 
   if (!attendanceData.users) {

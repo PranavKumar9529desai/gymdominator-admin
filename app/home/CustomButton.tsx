@@ -17,7 +17,7 @@ export default function CustomButton({ role, redirect }: { role: string, redirec
         className="flex bg-blue-600 hover:bg-blue-700 text-white font-bold py-[7px] px-10 rounded-full sm:text-lg transition-all duration-200 ease-in-out transform hover:scale-105"
         onClick={() => {
           console.log("button is clicked");
-            redirect  ?  router.push("/signin") : router.push(`${route}dashboard`);
+          void (redirect ? router.push("/signin") : router.push(`/${route}dashboard`));
         }}
       >
         Get Started

@@ -112,9 +112,9 @@ export default auth(async function middleware(request) {
      */
     const path = request.nextUrl.pathname;
     if (
-      (path.startsWith("/owner") && !IsOwner(token)) ||
-      (path.startsWith("/trainer") && !IsTrainer(token)) ||
-      (path.startsWith("/sales") && !IsSales(token))
+      (path.startsWith("/owner") && (!token || !IsOwner(token))) ||
+      (path.startsWith("/trainer") && (!token || !IsTrainer(token))) ||
+      (path.startsWith("/sales") && (!token || !IsSales(token)))
     ) {
       return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }

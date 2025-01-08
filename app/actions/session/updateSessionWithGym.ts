@@ -2,7 +2,7 @@
 
 export async function updateSesionWithGym(
   gym: gym,
-  update: (data: any) => Promise<any>
+  update: (data: unknown) => Promise<unknown>
 
 ) {
   try {

@@ -1,7 +1,6 @@
 import GymQRCodeOnboarding from "@/components/gym-owner/QrCode";
 import React from "react";
 import { OnBoadingQrData } from "./GetOnBordingQrData";
-
 export default async function page() {
   const { hash, gymname, gymid } = await OnBoadingQrData();
   const QrData = {

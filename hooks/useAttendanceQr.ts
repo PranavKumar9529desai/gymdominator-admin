@@ -1,4 +1,3 @@
-import { GetAttendanceQrData } from "@/app/ownerdashboard/attendance/showqr/GetAttendanceQrData";
 
 export function createQrValue(gymData: { gymname: string; gymid: number }) {
   const now = new Date();

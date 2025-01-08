@@ -54,7 +54,7 @@ export interface UpdateTrainerTrainer {
 const handleApiRequest = async <T>(
   endpoint: string,
   method: string,
-  data: any
+  data: unknown
 ): Promise<T> => {
   try {
     const response = await fetch(

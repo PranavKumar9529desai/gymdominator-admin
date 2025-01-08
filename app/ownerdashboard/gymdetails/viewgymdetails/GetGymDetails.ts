@@ -33,10 +33,9 @@ export default async function FetchGymDetailsSA() {
 
     console.log("Gym details fetched successfully:", response.data.gym);
     return response.data.gym;
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error(
-      "Error fetching gym details:",
-      err.response?.data || err.message
+      "Error fetching gym details:",err
     );
     return null; // Return null or handle the error as needed
   }

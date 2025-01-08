@@ -36,24 +36,23 @@ export const createDietPlan = async (dietPlan: DietPlanInput) => {
   const trainerAxios = await TrainerReqConfig();
 
   try {
-    const response = await trainerAxios.post('/createdietplans', dietPlan);
+    const response = await trainerAxios.post("/createdietplans", dietPlan);
     const data = response.data;
 
     if (response.status === 201) {
       return {
         success: true,
         message: "Diet plan created successfully",
-        data: data.dietPlan
+        data: data.dietPlan,
       };
     } else {
       throw new Error(data.msg || "Failed to create diet plan");
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error creating diet plan:", error);
     return {
       success: false,
-      message: error.response?.data?.msg || "Failed to create diet plan",
-      error: error.response?.data?.error || error.message
+      message: "Failed to create diet plan",
     };
   }
 };

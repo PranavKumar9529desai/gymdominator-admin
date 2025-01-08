@@ -13,7 +13,7 @@ export default async function HeroSection() {
  
   const session = await auth();
   const  role =  session?.role as Rolestype;
-  let signinRedirect : boolean = !role ? true : false;
+  const signinRedirect : boolean = !role ? true : false;
   console.log("signinRedirect from the hero section", signinRedirect);
   console.log("session is this ", session);
   console.log("role from the hero section", role); 
@@ -74,7 +74,6 @@ export default async function HeroSection() {
                 Icon={BarChart2}
                 title="Performance Tracking"
                 description="Monitor gym metrics and member progress"
-                className="transform hover:scale-105 transition-all duration-300 hover:bg-gray-800/50 border border-gray-800"
               />
             </div>
             <div className="group">
@@ -82,7 +81,6 @@ export default async function HeroSection() {
                 Icon={BarChart2}
                 title="Performance Tracking"
                 description="Monitor gym metrics and member progress"
-                className="transform hover:scale-105 transition-all duration-300 hover:bg-gray-800/50 border border-gray-800"
               />
             </div>
             <div className="group">
@@ -90,7 +88,6 @@ export default async function HeroSection() {
                 Icon={BarChart2}
                 title="Performance Tracking"
                 description="Monitor gym metrics and member progress"
-                className="transform hover:scale-105 transition-all duration-300 hover:bg-gray-800/50 border border-gray-800"
               />
             </div>
           </div>
@@ -107,19 +104,16 @@ export default async function HeroSection() {
               quote="GymDominator revolutionized our operations. We've seen a 30% increase in member retention."
               author="Sarah Johnson"
               role="Fitness Center Owner"
-              className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 hover:border-gray-700 transition-colors duration-300"
             />
             <TestimonialCard
               quote="GymDominator revolutionized our operations. We've seen a 30% increase in member retention."
               author="Sarah Johnson"
               role="Fitness Center Owner"
-              className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 hover:border-gray-700 transition-colors duration-300"
             />
-<TestimonialCard
+            <TestimonialCard
               quote="GymDominator revolutionized our operations. We've seen a 30% increase in member retention."
               author="Sarah Johnson"
               role="Fitness Center Owner"
-              className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 hover:border-gray-700 transition-colors duration-300"
             />
           </div>
         </div>

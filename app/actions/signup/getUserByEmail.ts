@@ -18,7 +18,7 @@ export default async function getUserByEmail(
   email: string
 ): Promise<userType | false> {
   try {
-    let response: AxiosResponse<LoginResponse> = await axios.post(
+    const response: AxiosResponse<LoginResponse> = await axios.post(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/signup/login`,
       {
         email,
@@ -30,7 +30,7 @@ export default async function getUserByEmail(
       }
     );
     
-    let user = response.data.user;
+    const user = response.data.user;
     if (user && response.data.role) {
       user.role = response.data.role;
     }

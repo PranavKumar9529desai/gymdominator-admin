@@ -1,6 +1,4 @@
 import React from "react";
-import Image from "next/image";
-import LogoImage from "@/app/assests/gym-manager.webp";
 export default function page() {
   return (
     <>

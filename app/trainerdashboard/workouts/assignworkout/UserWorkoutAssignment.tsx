@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Users, Target, Dumbbell, ArrowUpDown, LucideIcon } from "lucide-react";
+import { ArrowUpDown, LucideIcon } from "lucide-react";
 import { DataTable } from "@/components/Table/UsersTable";
 import { DataCard } from "@/components/Table/UserCard";
-import { StatusCard, StatusCardProps } from "@/components/common/StatusCard";
+import { StatusCard } from "@/components/common/StatusCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,9 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { WorkoutPlan } from './Getworkout';
+import { WorkoutPlan } from "./Getworkout";
 import * as LucideIcons from "lucide-react";
-import { attachWorkoutPlanToUser } from './AttachWorkoutplantoUser';
+import { attachWorkoutPlanToUser } from "./AttachWorkoutplantoUser";
 import { toast } from "sonner";
 
 // Update StatusCardProps interface
@@ -32,16 +32,9 @@ interface UserType {
   name: string;
   gender: "Male" | "Female";
   goal: string;
-  workoutPlanId?: number;  // Add this field
-  workoutPlanName?: string;  // Add this field
+  workoutPlanId?: number; // Add this field
+  workoutPlanName?: string; // Add this field
 }
-
-const defaultWorkouts = [
-  "Strength Training",
-  "Weight Loss",
-  "Muscle Gain",
-  "General Fitness"
-];
 
 interface UserWorkoutAssignmentProps {
   Users: UserType[];
@@ -50,7 +43,13 @@ interface UserWorkoutAssignmentProps {
 }
 
 // Update the Select component in the columns definition to use workoutPlans
-const createColumns = (workoutPlans: WorkoutPlan[], handleWorkoutAssignment: (userId: number, workoutPlanId: string) => Promise<void>): ColumnDef<UserType>[] => [
+const createColumns = (
+  workoutPlans: WorkoutPlan[],
+  handleWorkoutAssignment: (
+    userId: number,
+    workoutPlanId: string
+  ) => Promise<void>
+): ColumnDef<UserType>[] => [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -62,7 +61,7 @@ const createColumns = (workoutPlans: WorkoutPlan[], handleWorkoutAssignment: (us
           User Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
   },
   {
@@ -78,40 +77,46 @@ const createColumns = (workoutPlans: WorkoutPlan[], handleWorkoutAssignment: (us
     header: "Assign Workout",
     cell: ({ row }) => {
       const hasWorkout = !!row.original.workoutPlanId;
-      const currentPlan = workoutPlans.find(plan => plan.id === row.original.workoutPlanId);
-      
+      const currentPlan = workoutPlans.find(
+        (plan) => plan.id === row.original.workoutPlanId
+      );
+
       return (
         <div className="flex flex-col gap-1">
           <Select
             value={row.original.workoutPlanId?.toString()}
-            onValueChange={(value) => handleWorkoutAssignment(row.original.id, value)}
+            onValueChange={(value) =>
+              handleWorkoutAssignment(row.original.id, value)
+            }
           >
-            <SelectTrigger 
+            <SelectTrigger
               className={`w-[200px] ${
-                hasWorkout 
-                  ? 'bg-green-50 border-green-200 text-green-700' 
-                  : 'bg-red-50 border-red-200 text-red-700'
+                hasWorkout
+                  ? "bg-green-50 border-green-200 text-green-700"
+                  : "bg-red-50 border-red-200 text-red-700"
               }`}
             >
-              <SelectValue 
+              <SelectValue
                 placeholder={
-                  hasWorkout 
-                    ? `Current: ${currentPlan?.name}` 
+                  hasWorkout
+                    ? `Current: ${currentPlan?.name}`
                     : "No workout assigned"
                 }
               />
             </SelectTrigger>
             <SelectContent>
               {workoutPlans.map((plan) => (
-                <SelectItem 
-                  key={plan.id} 
+                <SelectItem
+                  key={plan.id}
                   value={plan.id.toString()}
-                  className={plan.id === row.original.workoutPlanId ? 'bg-green-50' : ''}
+                  className={
+                    plan.id === row.original.workoutPlanId ? "bg-green-50" : ""
+                  }
                 >
                   {plan.name}
-                  {plan.id === row.original.workoutPlanId && 
+                  {plan.id === row.original.workoutPlanId && (
                     <span className="ml-2 text-green-600">•</span>
-                  }
+                  )}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -127,28 +132,41 @@ const createColumns = (workoutPlans: WorkoutPlan[], handleWorkoutAssignment: (us
   },
 ];
 
-export default function UserWorkoutAssignment({ 
-  Users, 
+export default function UserWorkoutAssignment({
+  Users,
   statusCards,
-  workoutPlans 
+  workoutPlans,
 }: UserWorkoutAssignmentProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [genderFilter, setGenderFilter] = useState<"Male" | "Female" | "All">("All");
-  const [assignmentFilter, setAssignmentFilter] = useState<"all" | "assigned" | "unassigned">("all");
+  const [genderFilter, setGenderFilter] = useState<"Male" | "Female" | "All">(
+    "All"
+  );
+  const [assignmentFilter, setAssignmentFilter] = useState<
+    "all" | "assigned" | "unassigned"
+  >("all");
   const [filteredUsers, setFilteredUsers] = useState<UserType[]>(Users);
 
-  const handleWorkoutAssignment = async (userId: number, workoutPlanId: string) => {
+  const handleWorkoutAssignment = async (
+    userId: number,
+    workoutPlanId: string
+  ) => {
     try {
-      const previousPlan = Users.find(u => u.id === userId)?.workoutPlanId;
-      const newPlan = workoutPlans.find(p => p.id === parseInt(workoutPlanId));
+      const previousPlan = Users.find((u) => u.id === userId)?.workoutPlanId;
+      const newPlan = workoutPlans.find(
+        (p) => p.id === parseInt(workoutPlanId)
+      );
 
       await attachWorkoutPlanToUser(userId.toString(), workoutPlanId);
-      
+
       // Update local state
-      setFilteredUsers(current =>
-        current.map(user =>
+      setFilteredUsers((current) =>
+        current.map((user) =>
           user.id === userId
-            ? { ...user, workoutPlanId: parseInt(workoutPlanId), workoutPlanName: newPlan?.name }
+            ? {
+                ...user,
+                workoutPlanId: parseInt(workoutPlanId),
+                workoutPlanName: newPlan?.name,
+              }
             : user
         )
       );
@@ -160,26 +178,28 @@ export default function UserWorkoutAssignment({
           : `Workout plan "${newPlan?.name}" assigned successfully`,
         {
           description: "The user's workout plan has been updated.",
-          duration: 3000,
         }
       );
     } catch (error) {
       console.error("Error assigning workout plan:", error);
       toast.error("Failed to assign workout plan", {
-        description: "Please try again or contact support if the issue persists.",
+        description:
+          "Please try again or contact support if the issue persists.",
       });
     }
   };
 
   const columns = useMemo(
     () => createColumns(workoutPlans, handleWorkoutAssignment),
-    [workoutPlans]
+    [handleWorkoutAssignment, workoutPlans]
   );
 
   // Helper function to get icon component
-  const getIcon = (iconName: string) => {
-    const Icon = LucideIcons[iconName as keyof typeof LucideIcons];
-    return Icon || LucideIcons.HelpCircle;
+  const getIcon = (iconName: string): LucideIcon => {
+    const Icon = LucideIcons[
+      iconName as keyof typeof LucideIcons
+    ] as LucideIcon;
+    return Icon || (LucideIcons.HelpCircle as LucideIcon);
   };
 
   // Calculate stats
@@ -190,8 +210,8 @@ export default function UserWorkoutAssignment({
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
         (genderFilter === "All" || user.gender === genderFilter) &&
         (assignmentFilter === "all" ||
-          (assignmentFilter === "assigned" && user.assignedWorkout) ||
-          (assignmentFilter === "unassigned" && !user.assignedWorkout))
+          (assignmentFilter === "assigned" && user.workoutPlanId) ||
+          (assignmentFilter === "unassigned" && !user.workoutPlanId))
     );
     setFilteredUsers(filtered);
   }, [searchTerm, genderFilter, assignmentFilter, Users]);
@@ -204,12 +224,12 @@ export default function UserWorkoutAssignment({
         {statusCards.map((card) => {
           const IconComponent = getIcon(card.iconName);
           return (
-            <StatusCard 
+            <StatusCard
               key={card.title}
               title={card.title}
               value={card.value}
               icon={IconComponent}
-              gradient={card.gradient}
+              gradient={card.gradient as "blue" | "green" | "red"}
             />
           );
         })}
@@ -224,7 +244,9 @@ export default function UserWorkoutAssignment({
         />
         <Select
           value={genderFilter}
-          onValueChange={(value: "Male" | "Female" | "All") => setGenderFilter(value)}
+          onValueChange={(value: "Male" | "Female" | "All") =>
+            setGenderFilter(value)
+          }
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select gender" />
@@ -237,7 +259,7 @@ export default function UserWorkoutAssignment({
         </Select>
         <Select
           value={assignmentFilter}
-          onValueChange={(value: "all" | "assigned" | "unassigned") => 
+          onValueChange={(value: "all" | "assigned" | "unassigned") =>
             setAssignmentFilter(value)
           }
         >
@@ -254,11 +276,7 @@ export default function UserWorkoutAssignment({
 
       {/* Desktop View */}
       <div className="hidden md:block">
-        <DataTable
-          data={filteredUsers}
-          columns={columns}
-          filterColumn="name"
-        />
+        <DataTable data={filteredUsers} columns={columns} filterColumn="name" />
       </div>
 
       {/* Mobile View */}
@@ -267,8 +285,10 @@ export default function UserWorkoutAssignment({
           data={filteredUsers}
           renderCard={(user) => {
             const hasWorkout = !!user.workoutPlanId;
-            const currentPlan = workoutPlans.find(plan => plan.id === user.workoutPlanId);
-            
+            const currentPlan = workoutPlans.find(
+              (plan) => plan.id === user.workoutPlanId
+            );
+
             return (
               <div className="p-4 space-y-2">
                 <h3 className="font-medium">{user.name}</h3>
@@ -276,34 +296,38 @@ export default function UserWorkoutAssignment({
                 <p className="text-sm text-gray-500">Goal: {user.goal}</p>
                 <Select
                   value={user.workoutPlanId?.toString()}
-                  onValueChange={(value) => handleWorkoutAssignment(user.id, value)}
+                  onValueChange={(value) =>
+                    handleWorkoutAssignment(user.id, value)
+                  }
                 >
-                  <SelectTrigger 
+                  <SelectTrigger
                     className={`w-full ${
-                      hasWorkout 
-                        ? 'bg-green-50 border-green-200 text-green-700' 
-                        : 'bg-red-50 border-red-200 text-red-700'
+                      hasWorkout
+                        ? "bg-green-50 border-green-200 text-green-700"
+                        : "bg-red-50 border-red-200 text-red-700"
                     }`}
                   >
-                    <SelectValue 
+                    <SelectValue
                       placeholder={
-                        hasWorkout 
-                          ? `Current: ${currentPlan?.name}` 
+                        hasWorkout
+                          ? `Current: ${currentPlan?.name}`
                           : "No workout assigned"
                       }
                     />
                   </SelectTrigger>
                   <SelectContent>
                     {workoutPlans.map((plan) => (
-                      <SelectItem 
-                        key={plan.id} 
+                      <SelectItem
+                        key={plan.id}
                         value={plan.id.toString()}
-                        className={plan.id === user.workoutPlanId ? 'bg-green-50' : ''}
+                        className={
+                          plan.id === user.workoutPlanId ? "bg-green-50" : ""
+                        }
                       >
                         {plan.name}
-                        {plan.id === user.workoutPlanId && 
+                        {plan.id === user.workoutPlanId && (
                           <span className="ml-2 text-green-600">•</span>
-                        }
+                        )}
                       </SelectItem>
                     ))}
                   </SelectContent>

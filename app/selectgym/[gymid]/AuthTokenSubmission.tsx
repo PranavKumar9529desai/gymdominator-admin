@@ -30,10 +30,6 @@ export default function AuthTokenSubmission() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [showWrongToken, setShowWrongToken] = useState(false);
 
-  const onClose = () => {
-    console.log("Close button clicked");
-    // Backend call and redirect
-  };
 
   const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toUpperCase(); // Convert to uppercase
@@ -75,6 +71,7 @@ export default function AuthTokenSubmission() {
         setShowWrongToken(true); // Show wrong token component instead of error message
       }
     } catch (error) {
+      console.error("Failed to verify token:", error);
       setShowWrongToken(true); // Show wrong token component on error
     } finally {
       setLoading(false);
@@ -182,7 +179,7 @@ export default function AuthTokenSubmission() {
                 </Button>
 
                 <p className="text-xs text-gray-500 text-center">
-                  Contact the gym owner if you haven't received the token
+                  Contact the gym owner if you haven&apos;t received the token
                 </p>
               </div>
             </motion.div>

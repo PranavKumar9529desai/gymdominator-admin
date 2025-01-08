@@ -98,9 +98,9 @@ export default function UserProfileCard() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <CalendarComponent
                     mode="single"
-                    // @ts-ignore
+                    // @ts-expect-error - Calendar component has type mismatches with Date object
                     selected={userData.joinedDate}
-                    // @ts-ignore
+                    // @ts-expect-error - Calendar component has type mismatches with Date object
                     onSelect={(date) => handleDateChange(date, "joinedDate")}
                     initialFocus
                   />
@@ -129,10 +129,10 @@ export default function UserProfileCard() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <CalendarComponent
                     mode="single"
-                    // @ts-ignore
+                    // @ts-expect-error - Calendar component has type mismatches with Date object
                     selected={userData.completionDate}
                     onSelect={(date) =>
-                      // @ts-ignore
+                      // @ts-expect-error - Calendar component has type mismatches with Date object
                       handleDateChange(date, "completionDate")
                     }
                     initialFocus

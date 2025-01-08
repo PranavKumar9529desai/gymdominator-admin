@@ -5,10 +5,9 @@ import {
   Users,
   ClipboardList,
   CalendarCheck,
-  QrCode,
   UserCheck,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import IconImage from "@/app/assests/gym-manager.webp";
@@ -25,7 +24,7 @@ export default function SideBar() {
 
   interface menuItem {
     name: string;
-    icon: any;
+    icon: unknown;
     label: string;
     subItems?: SubItmestype[];
     link?: string;
@@ -114,7 +113,7 @@ export default function SideBar() {
           {menuItems.map((item) => (
             <li key={item.name} className="whitespace-nowrap group">
               <button
-                // @ts-ignore
+                // @ts-expect-error - item type needs to be explicitly set as menuItem
                 onClick={() => handleItemClick(item)}
                 className={`flex items-center w-full px-4 py-2 rounded-lg transition-colors duration-200  
                   group-hover:bg-gray-800

@@ -1,7 +1,7 @@
 "use client"
 import Swal from "sweetalert2";
 import React, { useState } from "react";
-import { Plus, Minus, Dumbbell, Clock, Calendar } from "lucide-react";
+import { Plus, Minus, Dumbbell, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

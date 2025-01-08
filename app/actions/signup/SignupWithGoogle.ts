@@ -13,9 +13,9 @@ export default async function SignupWithGoogle(
   name: string,
   email: string,
   role : "owner" | "trainer" | "sales"
-) : SignupWithGoogleReturnType {
+) : Promise<SignupWithGoogleReturnType> {
 try {
-    let response : AxiosResponse<{
+    const response : AxiosResponse<{
         msg : string,
         user : {
             name : string,

@@ -1,13 +1,10 @@
 import axios from "axios";
-import React from "react";
-// TODO : add extra layer of protection to the this allusers endpoint and put the jwt in the end
-// TODO remove this temp token 
 export default async function FetchUser() {
   console.log(
     "the fetchUser is called " +
       `${process.env.BACKEND_URL}/api/v1/user/allusers`
   );
-  let resposne = await axios.get(
+  const resposne = await axios.get(
     `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/user/allusers`,
     {
       headers: {
@@ -18,6 +15,6 @@ export default async function FetchUser() {
     }
   );
   // console.log("this the response", resposne.data);
-  let data: FetchUserType = await resposne.data;
+  const data: FetchUserType = await resposne.data;
   return data.data;
 }

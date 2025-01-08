@@ -6,7 +6,7 @@ const resend = new Resend(process.env.AUTH_RESEND_KEY);
 
 export async function sendVerificationEmail(to: string, firstName: string) {
   try {
-    const { data, error } = await resend.emails.send({
+    const { data,  } = await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
       to: "fullstackwebdeveloper123@gmail.com",
       subject: "Verify your email",

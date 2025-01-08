@@ -135,6 +135,7 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
         toast.error("Failed to assign diet plan");
       }
     } catch (error) {
+      console.error("Error assigning diet plan:", error);
       toast.error("Error assigning diet plan");
     }
   };

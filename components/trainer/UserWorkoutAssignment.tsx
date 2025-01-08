@@ -15,7 +15,7 @@ interface WorkoutPlan {
   name: string;
 }
 
-export default function UserWorkoutAssignment({}: {}) {
+export default function UserWorkoutAssignment() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [users, setUsers] = useState<User[]>([
     {

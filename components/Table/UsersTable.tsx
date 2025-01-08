@@ -38,6 +38,7 @@ export function DataTable<TData>({
       if (column.id === dropdownConfig.columnId) {
         return {
           ...column,
+          //@ts-expect-error - this is a hack to add a dropdown to the column
           cell: ({ row }) => (
             <Select
               value={row.getValue(dropdownConfig.columnId)}

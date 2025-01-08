@@ -4,7 +4,7 @@ import { Rolestype } from "../../types/next-auth";
 
 export async function updateSessionWithRole(
   role: Rolestype,
-  update: (data: any) => Promise<any>
+  update: (data: unknown) => Promise<unknown>
 ) {
   try {
     const newRole = role;

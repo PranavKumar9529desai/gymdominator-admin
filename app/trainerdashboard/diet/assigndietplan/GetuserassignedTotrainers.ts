@@ -7,6 +7,20 @@ export interface AssignedUser {
   email: string;
   phone?: string;
   membershipStatus: string;
+  HealthProfile?: {
+    gender: string;
+    goal: string;
+  };
+  WorkoutPlan?: {
+    id: number;
+    name: string;
+  };
+  workoutPlanId?: number;
+  DietPlan?: {
+    id: number;
+    name: string;
+  };
+  dietPlanId?: number;
 }
 
 export const getUsersAssignedToTrainer = async () => {

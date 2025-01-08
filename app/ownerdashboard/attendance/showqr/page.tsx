@@ -1,4 +1,4 @@
-import AttendanceQr from "@/components/trainer/showqr/AttendanceQr";
+import GymQRCode from "./QrCode";
 import { GetAttendanceQrData } from "./GetAttendanceQrData";
 
 export default async function AttendanceComponent() {
@@ -17,8 +17,12 @@ export default async function AttendanceComponent() {
   });
 
   return (
-    <div>
-      <AttendanceQr qrValue={qrValue} gymName={gymData.gymname} />
+    <div className="container mx-auto py-6">
+      <GymQRCode 
+        qrdata={qrValue}
+        title={gymData.gymname}
+        subtitle="Scan this QR code to mark your attendance"
+      />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = 'force-dynamic'
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Building2, MapPin, Phone, Mail, Key, MoreVertical } from "lucide-react";
@@ -10,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+
 
 interface GymDetails {
   gym_name: string;

@@ -1,10 +1,6 @@
-import { auth } from "@/auth";
-import { sessionType } from "@/app/ownerdashboard/gymdetails/viewgymdetails/GetGymDetails";
 import CreateTokenButton from "./createTokenButton";
-import { useSession } from "next-auth/react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CheckCircle2 } from "lucide-react";
-import axios from "axios";
 import { OwnerReqConfig } from "@/lib/AxiosInstance/ownerAxios";
 
 async function getExistingToken() {
