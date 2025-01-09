@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ msg: 'success', url });
   } catch (error) {
     console.error('Error in upload route:', error);
-    return NextResponse.json({ msg: 'failed', error: 'Failed to upload image' }, { status: 500 });
+    return NextResponse.json({ msg: 'failed', error: error }, { status: 500 });
   }
 }
 
