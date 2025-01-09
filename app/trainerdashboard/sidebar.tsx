@@ -41,12 +41,12 @@ export const menuItems: MenuItem[] = [
       {
         name: "Create Workouts",
         label: "createworkout",
-        link: "/workouts/createworkout",
+        link: "/trainerdashboard/workouts/createworkout",
       },
       {
         name: "Assign Workout",
         label: "assignworkout",
-        link: "/workouts/assignworkout",
+        link: "/trainerdashboard/workouts/assignworkout",
       },
     ],
   },
@@ -94,27 +94,31 @@ export default function SideBar() {
   const router = useRouter();
 
   const handleItemClick = (item: MenuItem) => {
-    setActivePage(item.label);
     if (item.subItems) {
+      // Only toggle the menu if it has subitems
       setOpenMenus((prev) => ({ ...prev, [item.label]: !prev[item.label] }));
     } else {
-      router.push(item.link); // Changed to use full link directly
+      // If no subitems, navigate directly
+      setActivePage(item.label);
+      router.push(item.link);
     }
   };
 
   const handleSubItemClick = (
+    event: React.MouseEvent,
     item: MenuItem,
-    subItem: { name: string; label: string }
+    subItem: { name: string; label: string; link: string }
   ) => {
+    event.stopPropagation(); // Prevent event bubbling
     setActivePage(subItem.label);
-    router.push(`/trainerdashboard/${item.label}/${subItem.label}`);
+    router.push(subItem.link); // Use the full link from subItem
   };
 
   const isActiveParent = (item: MenuItem) => {
-    return item.subItems
-      ? item.subItems.some((subItem) => subItem.label === activePage) ||
-          (!openMenus[item.label] && activePage === item.label)
-      : activePage === item.label;
+    if (item.subItems) {
+      return item.subItems.some((subItem) => subItem.label === activePage) || activePage === item.label;
+    }
+    return activePage === item.label;
   };
 
   const handleLogout = async () => {
@@ -199,12 +203,13 @@ export default function SideBar() {
                 >
                   <item.icon className="w-5 h-5 mr-3" />
                   <span>{item.name}</span>
-                  {item.subItems &&
-                    (openMenus[item.label] ? (
+                  {item.subItems && (
+                    openMenus[item.label] ? (
                       <ChevronDown className="w-5 h-5 ml-auto" />
                     ) : (
                       <ChevronRight className="w-5 h-5 ml-auto" />
-                    ))}
+                    )
+                  )}
                 </Button>
                 {item.subItems && openMenus[item.label] && (
                   <ul className="ml-6 mt-2 space-y-2">
@@ -212,12 +217,12 @@ export default function SideBar() {
                       <li key={subItem.name}>
                         <Button
                           variant="ghost"
-                          className={`w-full justify-start  transition-colors duration-200 ${
+                          className={`w-full justify-start transition-colors duration-200 ${
                             activePage === subItem.label
-                              ? "!bg-blue-700 text-white hover:text-white hover:bg-blue-700 "
+                              ? "!bg-blue-700 text-white hover:text-white hover:bg-blue-700"
                               : "hover:bg-gray-800 hover:text-white"
                           }`}
-                          onClick={() => handleSubItemClick(item, subItem)}
+                          onClick={(e) => handleSubItemClick(e, item, subItem)}
                         >
                           {subItem.name}
                         </Button>
