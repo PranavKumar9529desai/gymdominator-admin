@@ -112,9 +112,14 @@ export default {
 
   callbacks: {
     async redirect({ url, baseUrl }) {
-      console.log('Redirect attempt:', { url, baseUrl });
-      // Force production URL when deployed
-      if (process.env.NODE_ENV === "production") {
+      console.log('Environment:', {
+        NODE_ENV: process.env.NODE_ENV,
+        VERCEL_ENV: process.env.VERCEL_ENV,
+        currentUrl: url,
+        baseUrl: baseUrl
+      });
+      
+      if (process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "preview") {
         baseUrl = "https://gymdominatoradmin.vercel.app";
       }
       // Handle relative URLs
