@@ -249,10 +249,19 @@ export default function RegisterForm() {
                           <SelectValue placeholder="Select your Role" />
                         </SelectTrigger>
                       </FormControl>
-                      <SelectContent>
-                        <SelectItem value="owner">Gym Owner</SelectItem>
-                        <SelectItem value="trainer">Trainer</SelectItem>
-                        {/* <SelectItem value="sales">Sales</SelectItem> */}
+                      <SelectContent className="z-50 bg-white">
+                        <SelectItem
+                          value="owner"
+                          className="bg-gray-50 hover:bg-gray-100"
+                        >
+                          Gym Owner
+                        </SelectItem>
+                        <SelectItem
+                          value="trainer"
+                          className="bg-gray-50 hover:bg-gray-100"
+                        >
+                          Trainer
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage className="text-xs" />
@@ -260,7 +269,7 @@ export default function RegisterForm() {
                 )}
               />
               <Button
-                className="w-full font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-lg"
+                className="w-full font-semibold bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-lg relative z-10"
                 type="submit"
                 disabled={ispending}
                 size="lg"
