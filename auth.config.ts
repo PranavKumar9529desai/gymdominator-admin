@@ -23,7 +23,8 @@ export default {
       // @ts-expect-error - NextAuth types mismatch with custom credentials
       async authorize(
         credentials: Partial<
-          Record<"name" | "email" | "password" | "role", unknown>
+          // @ts-expect-error - NextAuth types mismatch with custom credentials
+          Record<"name" | "email" | "password" | "role">
         >
       ): Promise<
         | {
@@ -67,6 +68,8 @@ export default {
               userFromDB.password
             );
             if (isPasswordMatch) {
+
+              console.log("password is matched",isPasswordMatch);
               user = {
                 name: userFromDB.name,
                 email: userFromDB.email,
@@ -79,6 +82,7 @@ export default {
             }
           } else {
             // as record doesn't exist signing up
+            console.log("signup the user role is this",role);
             const response: {
               msg: string;
               user: {
@@ -115,29 +119,35 @@ export default {
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
-  
+
   cookies: {
     sessionToken: {
-      name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.session-token" : "next-auth.session-token",
+      name:
+        process.env.NODE_ENV === "production"
+          ? "__Secure-next-auth.session-token"
+          : "next-auth.session-token",
       options: {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: process.env.NODE_ENV === "production"
-      }
-    }
+        secure: process.env.NODE_ENV === "production",
+      },
+    },
   },
 
   callbacks: {
     async redirect({ url, baseUrl }) {
-      console.log('Environment:', {
+      console.log("Environment:", {
         NODE_ENV: process.env.NODE_ENV,
         VERCEL_ENV: process.env.VERCEL_ENV,
         currentUrl: url,
-        baseUrl: baseUrl
+        baseUrl: baseUrl,
       });
-      
-      if (process.env.NODE_ENV === "production" || process.env.VERCEL_ENV === "preview") {
+
+      if (
+        process.env.NODE_ENV === "production" ||
+        process.env.VERCEL_ENV === "preview"
+      ) {
         baseUrl = "https://gymdominatoradmin.vercel.app";
       }
       // Handle relative URLs
@@ -189,17 +199,17 @@ export default {
       trigger?: "signIn" | "signUp" | "update";
       session?: Session;
     }) {
-      console.log("JWT Callback - Input:", { 
-        tokenEmail: token.email, 
+      console.log("JWT Callback - Input:", {
+        tokenEmail: token.email,
         userName: user?.name,
         trigger,
-        sessionData: session
+        sessionData: session,
       });
-      
+
       if (account && user) {
         token.accessToken = account.access_token;
       }
-      
+
       if (trigger === "update") {
         token.gym = session?.gym;
         if (!token.role) {
@@ -215,11 +225,11 @@ export default {
       return token;
     },
     async session({ token, session }) {
-      console.log("Session Callback - Input:", { 
+      console.log("Session Callback - Input:", {
         tokenData: token,
-        sessionData: session 
+        sessionData: session,
       });
-      
+
       console.log("token from the session callback ", token);
       if (token && token.email && token.name && token.role) {
         session.user.name = token.name;
@@ -236,8 +246,8 @@ export default {
   },
   trustHost: true,
   pages: {
-    signIn: '/signin',
-    error: '/auth/error',
+    signIn: "/signin",
+    error: "/auth/error",
   },
   debug: process.env.NODE_ENV === "development",
 } satisfies NextAuthConfig;

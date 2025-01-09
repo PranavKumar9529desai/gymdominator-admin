@@ -1,11 +1,5 @@
-import { JWT } from "next-auth/jwt";
+import { Session } from "next-auth";
 
-export const IsTrainer: (token: JWT) => boolean = (token: JWT) => {
-  const role = token.role;
-  console.log("token is ", token);
-  if (role === "trainer") {
-    return true;
-  } else {
-    return false;
-  }
+export const IsTrainer = (session: Session | null) => {
+  return session?.role === "trainer";
 };
