@@ -36,7 +36,7 @@ export default function NoGymDetails() {
             Create your gym profile to manage members, track progress, and grow your business
           </p>
           <Button
-            onClick={() => router.push('/ownerdashboard/gymdetails/editgymdetails')}
+            onClick={() => router.push('/ownerdashboard/gymdetails/creategym')}
             className="bg-white text-indigo-700 hover:bg-gray-100 font-semibold px-6 py-3 rounded-lg flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
