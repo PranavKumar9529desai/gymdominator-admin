@@ -110,6 +110,24 @@ export default {
   ],
   // TODO once the gym is created then add the gym details to the sesstion
 
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
+  },
+  
+  cookies: {
+    sessionToken: {
+      name: process.env.NODE_ENV === "production" ? "__Secure-next-auth.session-token" : "next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: process.env.NODE_ENV === "production"
+      }
+    }
+  },
+
   callbacks: {
     async redirect({ url, baseUrl }) {
       console.log('Environment:', {
@@ -171,6 +189,13 @@ export default {
       trigger?: "signIn" | "signUp" | "update";
       session?: Session;
     }) {
+      console.log("JWT Callback - Input:", { 
+        tokenEmail: token.email, 
+        userName: user?.name,
+        trigger,
+        sessionData: session
+      });
+      
       if (account && user) {
         token.accessToken = account.access_token;
       }
@@ -186,9 +211,15 @@ export default {
         token.role = user.role;
       }
 
+      console.log("JWT Callback - Output:", token);
       return token;
     },
     async session({ token, session }) {
+      console.log("Session Callback - Input:", { 
+        tokenData: token,
+        sessionData: session 
+      });
+      
       console.log("token from the session callback ", token);
       if (token && token.email && token.name && token.role) {
         session.user.name = token.name;
@@ -196,8 +227,10 @@ export default {
         session.gym = token.gym as gym;
         session.role = token.role as Rolestype;
         console.log("updated sesion from the session callback ", session);
+        console.log("Session Callback - Output:", session);
         return session;
       }
+      console.log("Session Callback - Output:", session);
       return session;
     },
   },
@@ -205,5 +238,6 @@ export default {
   pages: {
     signIn: '/signin',
     error: '/auth/error',
-  }
+  },
+  debug: process.env.NODE_ENV === "development",
 } satisfies NextAuthConfig;
