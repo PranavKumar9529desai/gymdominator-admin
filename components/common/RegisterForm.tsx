@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -60,7 +59,6 @@ const formSchema = z.object({
 });
 
 export default function RegisterForm() {
-  const router = useRouter();
   const [error, seterror] = useState<string>("");
   const [type, settype] = useState<"success" | "fail" | null>();
   const [ispending, startTransition] = useTransition();
@@ -101,7 +99,7 @@ export default function RegisterForm() {
           role,
         });
         console.log("user is created and signed in", response);
-        router.push("/selectgym");
+        // router.push("/selectgym");
       }
     });
   }

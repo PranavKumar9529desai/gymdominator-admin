@@ -1,10 +1,10 @@
-import { getToken } from "next-auth/jwt";
 import { IsOwner } from "./lib/isGymOwner";
 import { IsTrainer } from "./lib/isTrainer";
 import { IsSales } from "./lib/isSales";
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 import { NextResponse } from "next/server";
+import { Session } from "next-auth";
 /**
  * Public routes that are accessible without authentication
  * @type {string[]}
@@ -39,23 +39,13 @@ const { auth } = NextAuth(authConfig);
 
 export default auth(async function middleware(request) {
   const { nextUrl } = request;
-
-  /**
-   * Get the authentication token from the request
-   * @type {JWT | null}
-   */
-  const token = await getToken({
-    req: request,
-    secret: process.env.AUTH_SECRET,
-  });
+  const session = request.auth as Session | null; // Use auth session instead of getToken
 
   /**
    * Check if the user is currently logged in
    * @type {boolean}
    */
-  const isLoggedIn = !!request.auth;
-
-  
+  const isLoggedIn = !!session;
 
   /**
    * Route type checks
@@ -76,13 +66,13 @@ export default auth(async function middleware(request) {
    * Redirect to role-specific dashboard if already authenticated
    */
   if (isAuthRoute) {
-    if (isLoggedIn) {
-      // if the user is already logged in then redirect to the role-specific dashboard
+    if (isLoggedIn && session?.role) {
+      console.log("Session in auth route:", session);
       return NextResponse.redirect(
-        new URL(`/${token?.role}dashboard`, nextUrl)
+        new URL(`/${session.role}dashboard`, nextUrl)
       );
     }
-    console.log("auth route is called for the signin or signin", token?.role);
+    console.log("auth route is called for the signin or signin", session?.role);
     return NextResponse.next();
   }
 
@@ -94,18 +84,19 @@ export default auth(async function middleware(request) {
    */
   if (isProtectedRoute) {
     // Redirect to signin if not authenticated
-    if (!isLoggedIn) {
+    if (!isLoggedIn || !session) {
       return NextResponse.redirect(new URL("/signin", request.url));
     }
 
     // Redirect to role selection only if the role in the token is empty if no role is assigned
-    if (token && !token?.role) {
-      console.log("role is empty", token?.role);
+    if (!session?.role) {
+      console.log("No role assigned", session);
       return NextResponse.redirect(new URL("/selectrole", request.url));
     }
 
     // allow trainer to access the selectgym component 
-    if( token && token?.role == "trainer" && token.gym == null){
+    if( session?.role == "trainer" && !session?.gym){
+      console.log("Trainer needs to select gym", session);
       return NextResponse.redirect(new URL("/selectgym", request.url));
     }
     /**
@@ -113,14 +104,10 @@ export default auth(async function middleware(request) {
      * Redirect to unauthorized page if role doesn't match the route
      */
     const path = request.nextUrl.pathname;
-    if (!token) {
-      return NextResponse.redirect(new URL("/signin", request.url));
-    }
-
     if (
-      (path.startsWith("/owner") && !IsOwner(token)) ||
-      (path.startsWith("/trainer") && !IsTrainer(token)) ||
-      (path.startsWith("/sales") && !IsSales(token))
+      (path.startsWith("/owner") && !IsOwner(session)) ||
+      (path.startsWith("/trainer") && !IsTrainer(session)) ||
+      (path.startsWith("/sales") && !IsSales(session))
     ) {
       return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }
