@@ -11,7 +11,7 @@ export const VerifyAuthToken = async (gym: GymAtomType, authToken: string) => {
   try {
     const trainerAxios = await TrainerReqConfig();
     const response: AxiosResponse<responseType> = await trainerAxios.post(
-      `/api/v1/trainer/authtokenverify`,
+      `/authtokenverify`,
       { gymname: gym.name, gymid: gym.id, authToken: authToken }
     );
     const data = {
