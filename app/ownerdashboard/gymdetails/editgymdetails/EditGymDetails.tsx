@@ -169,7 +169,7 @@ export default function EditGymDetails() {
       <Card className="w-full max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle className="text-4xl font-bold text-center">
-            Enter Gym Details
+            Edit Gym Details
           </CardTitle>
         </CardHeader>
         <CardContent>

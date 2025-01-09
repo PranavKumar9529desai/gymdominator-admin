@@ -1,8 +1,9 @@
+import CreateGymDetails from "./CreateGymDetails";
 
-export default function page() {
+export default function CreateGymPage() {
   return (
-    <div>
-      
+    <div className="w-full h-screen overflow-auto flex justify-center items-center">
+      <CreateGymDetails />
     </div>
-  )
+  );
 }
