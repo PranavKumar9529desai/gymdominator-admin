@@ -196,7 +196,7 @@ export default {
       return session;
     },
   },
-  trustHosts: true,
+  trustHost: true,
   pages: {
     signIn: '/signin',
     error: '/auth/error',
