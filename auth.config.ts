@@ -111,6 +111,18 @@ export default {
   // TODO once the gym is created then add the gym details to the sesstion
 
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      console.log('Redirect attempt:', { url, baseUrl });
+      // Force production URL when deployed
+      if (process.env.NODE_ENV === "production") {
+        baseUrl = "https://gymdominatoradmin.vercel.app";
+      }
+      // Handle relative URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Handle absolute URLs
+      if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     async signIn({ user, account }) {
       if (account && account.provider === "google") {
         console.log("user in the google signin", user);
@@ -143,6 +155,7 @@ export default {
     async jwt({
       token,
       user,
+      account,
       trigger,
       session,
     }: {
@@ -153,24 +166,20 @@ export default {
       trigger?: "signIn" | "signUp" | "update";
       session?: Session;
     }) {
+      if (account && user) {
+        token.accessToken = account.access_token;
+      }
+      
       if (trigger === "update") {
-        console.log("session updates is triggered", session);
-        console.log("token is updating...", token);
-        console.log("updated token is ", token);
         token.gym = session?.gym;
         if (!token.role) {
           token.role = session?.user?.role || session?.role;
         }
-        return token;
       }
+
       if (user && user.email && user.name) {
         token.role = user.role;
-        console.log("token when credentails are correct", token);
-        return token;
       }
-      console.log(" token before passing to sesion callback", token);
-      //  as we can't update the token directly so we are updating the session then using the session callback we are updating the token
-      // console.log("token is this ", token);
 
       return token;
     },
@@ -187,4 +196,9 @@ export default {
       return session;
     },
   },
+  trustHosts: true,
+  pages: {
+    signIn: '/signin',
+    error: '/auth/error',
+  }
 } satisfies NextAuthConfig;
