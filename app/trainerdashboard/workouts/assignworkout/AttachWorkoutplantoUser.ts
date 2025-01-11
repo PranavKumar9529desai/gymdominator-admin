@@ -3,10 +3,16 @@ import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
 
 interface AssignWorkoutPlanResponse {
   msg: string;
-  workoutPlan?: {
-    name: string;
+  previousPlan?: {
     id: number;
-  };
+    name: string;
+    description?: string;
+  } | null;
+  newPlan?: {
+    id: number;
+    name: string;
+    description?: string;
+  } | null;
 }
 
 export async function attachWorkoutPlanToUser(
@@ -20,9 +26,13 @@ export async function attachWorkoutPlanToUser(
       workoutPlanId: parseInt(workoutPlanId),
     });
     
+    if (response.data.error) {
+      throw new Error(response.data.error);
+    }
+    
     return response.data;
   } catch (error) {
     console.error("Error assigning workout plan:", error);
-    throw new Error("Failed to assign workout plan");
+    throw new Error(error instanceof Error ? error.message : "Failed to assign workout plan");
   }
 }

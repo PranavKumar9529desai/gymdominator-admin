@@ -1,30 +1,32 @@
 "use server";
 import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
+import { AxiosError } from 'axios';
 
-interface MealIngredientInput {
+export interface MealIngredientInput {
   name: string;
   quantity: number;
   unit: string;
   calories: number;
-  protein?: number;
-  carbs?: number;
-  fats?: number;
+  protein?: number | null;
+  carbs?: number | null;
+  fats?: number | null;
 }
 
-interface MealInput {
+export interface MealInput {
   name: string;
   timeOfDay: string;
   calories: number;
   protein: number;
   carbs: number;
   fats: number;
-  instructions?: string;
+  instructions?: string | null;
+  order: number;
   ingredients: MealIngredientInput[];
 }
 
-interface DietPlanInput {
+export interface DietPlanInput {
   name: string;
-  description?: string;
+  description?: string | null;
   targetCalories: number;
   proteinRatio: number;
   carbsRatio: number;
@@ -36,23 +38,32 @@ export const createDietPlan = async (dietPlan: DietPlanInput) => {
   const trainerAxios = await TrainerReqConfig();
 
   try {
-    const response = await trainerAxios.post("/createdietplans", dietPlan);
-    const data = response.data;
+    // Add order to meals if not present
+    const mealsWithOrder = dietPlan.meals.map((meal, index) => ({
+      ...meal,
+      order: meal.order || index + 1
+    }));
+
+    const response = await trainerAxios.post("/createdietplans", {
+      ...dietPlan,
+      meals: mealsWithOrder
+    });
 
     if (response.status === 201) {
       return {
         success: true,
         message: "Diet plan created successfully",
-        data: data.dietPlan,
+        data: response.data.dietPlan,
       };
     } else {
-      throw new Error(data.msg || "Failed to create diet plan");
+      throw new Error(response.data.msg || "Failed to create diet plan");
     }
   } catch (error: unknown) {
-    console.error("Error creating diet plan:", error);
+    const axiosError = error as AxiosError<{ msg: string }>;
+    console.error("Error creating diet plan:", axiosError);
     return {
       success: false,
-      message: "Failed to create diet plan",
+      message: axiosError.response?.data?.msg || "Failed to create diet plan",
     };
   }
 };

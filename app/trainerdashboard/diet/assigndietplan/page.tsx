@@ -1,5 +1,5 @@
 import AssignDietToUsers from "./AssignDietToUsers";
-import { getUsersAssignedToTrainer } from "./GetuserassignedTotrainers";
+import { getUsersAssignedToTrainer } from "./GetassignedUserDietInfo"; // Updated import
 import { getAllDietPlans } from "./GetallDiets";
 import React from "react";
 

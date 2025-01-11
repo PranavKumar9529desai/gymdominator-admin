@@ -6,14 +6,23 @@ export interface AssignedUser {
   name: string;
   email: string;
   HealthProfile?: {
+    weight: number;
+    height: number;
+    goal: string | null;
     gender: string;
-    goal: string;
   } | null;
   WorkoutPlan?: {
     id: number;
     name: string;
   } | null;
-  workoutPlanId?: number;
+  workoutPlanId?: number | null;
+  workoutPlans?: {  // Updated to match new schema
+    workoutPlan: {
+      id: number;
+      name: string;
+    };
+    isActive: boolean;
+  }[];
   phone?: string;
   membershipStatus: string;
 }

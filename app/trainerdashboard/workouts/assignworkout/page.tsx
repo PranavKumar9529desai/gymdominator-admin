@@ -16,8 +16,8 @@ export default async function Page() {
     email: user.email,
     gender: (user.HealthProfile?.gender as "Male" | "Female") || "Male",
     goal: user.HealthProfile?.goal || "Not Set",
-    workoutPlanId: user.WorkoutPlan?.id || user.workoutPlanId,  // Check both locations
-    workoutPlanName: user.WorkoutPlan?.name
+    workoutPlanId: user.WorkoutPlan?.id ?? user.workoutPlanId ?? null,
+    workoutPlanName: user.WorkoutPlan?.name ?? null
   }));
 
   // Calculate status cards data with workout assignment info
@@ -45,6 +45,7 @@ export default async function Page() {
   return (
     <div className="container mx-auto">
       <UserWorkoutAssignment 
+      // @ts-expect-error - Property 'users' does not exist on type 'never[]'.
         Users={users}
         statusCards={statusCards}
         workoutPlans={workoutPlansResponse.workoutPlans} 

@@ -20,90 +20,64 @@ export default {
         password: {},
         role: {},
       },
-      // @ts-expect-error - NextAuth types mismatch with custom credentials
       async authorize(
         credentials: Partial<
-          // @ts-expect-error - NextAuth types mismatch with custom credentials
-          Record<"name" | "email" | "password" | "role">
+          Record<"name" | "email" | "password" | "role", unknown>
         >
-      ): Promise<
-        | {
-            name: string;
-            email: string;
-            role: string;
-          }
-        | null
-        | undefined
-      > {
-        let user = null;
-        // verify the login schema
-        // const { email, password } = await LoginSchema.parseAsync(credentials);
+      ): Promise<User | null> {
+        if (!credentials?.email || !credentials?.password) return null;
+
         const { email, password, name, role } = credentials as {
           email: string;
           password: string;
-          name: string;
-          role: string;
+          name?: string;
+          role?: string;
         };
+
         console.log(
-          "credentails received from the sigin are ",
+          "credentials received from the signin are ",
           email,
           password,
           name,
           role
         );
-        // name is not checked as the it is not necssary for the signin
+
         if (email && password) {
           const userFromDB: userType | false = await getUserByEmail(email);
           console.log("user from the db", userFromDB);
-          // signin
+
           if (
             userFromDB &&
             userFromDB.name &&
             userFromDB.email &&
             userFromDB.role
           ) {
-            // check the password
             const isPasswordMatch = await bcrypt.compare(
               password,
               userFromDB.password
             );
-            if (isPasswordMatch) {
 
-              console.log("password is matched",isPasswordMatch);
-              user = {
+            if (isPasswordMatch) {
+              return {
+                id: email,
                 name: userFromDB.name,
                 email: userFromDB.email,
-                role: userFromDB.role,
+                role: userFromDB.role as Rolestype,
               };
-              return user;
-            } else {
-              // how to throw the error as the invald password asnd show this is error in the frontend as well
-              return null;
             }
-          } else {
-            // as record doesn't exist signing up
-            console.log("signup the user role is this",role);
-            const response: {
-              msg: string;
-              user: {
-                name: string;
-                email: string;
-              } | null;
-            } = await SignupSA(role, name, email, password);
-            // check if the user is created
+          } else if (role && name) {
+            const response = await SignupSA(role, name, email, password);
             if (response.user && response.user.name && response.user.email) {
-              user = {
+              return {
+                id: email,
                 name: response.user.name,
                 email: response.user.email,
-                role: role,
+                role: role as Rolestype,
               };
-              return user;
             }
           }
-        } else {
-          console.log("user", user);
-          return null;
         }
+        return null;
       },
     }),
     Google({

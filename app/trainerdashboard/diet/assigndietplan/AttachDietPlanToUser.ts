@@ -1,22 +1,39 @@
+"use server"
 import { TrainerReqConfig } from "@/lib/AxiosInstance/trainerAxios";
 
-export const attachDietPlanToUser = async (userId: string, dietPlanId: string) => {
+interface DietPlanResponse {
+  id: number;
+  name: string;
+  // Add other diet plan fields as needed
+}
+
+interface AttachDietPlanResponse {
+  success: boolean;
+  message: string;
+  dietPlan?: DietPlanResponse;
+}
+
+export const attachDietPlanToUser = async (
+  userId: string,
+  dietPlanId: string
+): Promise<AttachDietPlanResponse> => {
   const trainerAxios = await TrainerReqConfig();
   try {
-    const response = await trainerAxios.post('/assigndietplan', {
+    const response = await trainerAxios.post("/assigndietplantouser", {
       userId: parseInt(userId),
-      dietPlanId: parseInt(dietPlanId)
+      dietPlanId: parseInt(dietPlanId),
     });
-    
+
     return {
-      success: response.data.msg === "Diet plan assigned successfully" || 
-               response.data.msg === "Diet plan updated successfully",
+      success: response.data.msg === "Diet plan assigned successfully",
       message: response.data.msg,
-      previousPlan: response.data.previousPlan,
-      newPlan: response.data.newPlan
+      dietPlan: response.data.dietPlan?.dietPlan
     };
   } catch (error) {
     console.error("Error assigning diet plan:", error);
-    throw error;
+    return {
+      success: false,
+      message: "Failed to assign diet plan"
+    };
   }
 };

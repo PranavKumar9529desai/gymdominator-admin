@@ -23,30 +23,57 @@ interface WorkoutPlanInput {
   schedules: ScheduleInput[];
 }
 
-export const createWorkoutPlan = async (workoutPlan: WorkoutPlanInput) => {
+interface WorkoutPlanResponse {
+  success: boolean;
+  message: string;
+  workoutPlan?: {
+    id: number;
+    name: string;
+    description?: string;
+    createdByTrainerId: number;
+    schedules: Array<{
+      id: number;
+      dayOfWeek: string;
+      muscleTarget: string;
+      duration: number;
+      calories: number;
+      exercises: Array<{
+        id: number;
+        name: string;
+        sets: number;
+        reps: string;
+        description: string;
+        order: number;
+      }>;
+    }>;
+  };
+}
+
+export const createWorkoutPlan = async (
+  workoutPlan: WorkoutPlanInput
+): Promise<WorkoutPlanResponse> => {
   const trainerAxios = await TrainerReqConfig();
 
   try {
-    const response = await trainerAxios.post(
-      "/createworkoutplans",
-      workoutPlan
-    );
-    const data = response.data;
-
+    const response = await trainerAxios.post("/createworkoutplans", workoutPlan);
+    
     if (response.status === 201) {
       return {
         success: true,
         message: "Workout plan created successfully",
-        data: data.workoutPlan,
+        workoutPlan: response.data.workoutPlan,
       };
-    } else {
-      throw new Error(data.msg || "Failed to create workout plan");
     }
+    
+    return {
+      success: false,
+      message: response.data.msg || "Failed to create workout plan",
+    };
   } catch (error: unknown) {
     console.error("Error creating workout plan:", error);
     return {
       success: false,
-      message: "Failed to create workout plan",
+      message: error instanceof Error ? error.message : "Failed to create workout plan",
     };
   }
 };

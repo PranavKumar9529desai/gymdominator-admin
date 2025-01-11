@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { Plus, X, ChevronRight, ChevronLeft, Save } from "lucide-react";
 import {
   Select,
@@ -37,6 +37,24 @@ interface DaySchedule {
 interface WorkoutPlanResponse {
   success: boolean;
   message: string;
+}
+
+interface WorkoutPlanData {
+  name: string;
+  description: string;
+  schedules: DaySchedule[];
+}
+
+// Type guard function to verify response shape
+function isWorkoutPlanResponse(response: unknown): response is WorkoutPlanResponse {
+  return (
+    typeof response === 'object' &&
+    response !== null &&
+    'success' in response &&
+    'message' in response &&
+    typeof (response as WorkoutPlanResponse).success === 'boolean' &&
+    typeof (response as WorkoutPlanResponse).message === 'string'
+  );
 }
 
 const daysOfWeek = [
@@ -98,8 +116,7 @@ export default function CreateWorkoutPlan() {
     localStorage.setItem("workoutSchedules", JSON.stringify(schedules));
   }, [currentStep, planName, planDescription, schedules]);
 
-  const handleDragEnd = (result: unknown) => {
-    // @ts-expect-error - Type definitions are incompletey
+  const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
 
     const day = selectedDay;
@@ -107,10 +124,8 @@ export default function CreateWorkoutPlan() {
       schedules.find((s) => s.dayOfWeek === day)?.exercises || []
     );
 
-    // @ts-expect-error - Type definitions are incompletey
     const [reorderedItem] = items.splice(result.source.index, 1);
     
-    // @ts-expect-error - Type definitions are incompletey
     items.splice(result.destination.index, 0, reorderedItem);
 
     setSchedules((current) =>
@@ -209,7 +224,7 @@ export default function CreateWorkoutPlan() {
       }
 
       // Prepare the workout plan data
-      const workoutPlanData = {
+      const workoutPlanData: WorkoutPlanData = {
         name: planName,
         description: planDescription,
         schedules: schedules.map((schedule) => ({
@@ -225,9 +240,12 @@ export default function CreateWorkoutPlan() {
       };
 
       const response = await createWorkoutPlan(workoutPlanData);
-      const result: WorkoutPlanResponse = response as WorkoutPlanResponse;
+      
+      if (!isWorkoutPlanResponse(response)) {
+        throw new Error('Invalid response format from server');
+      }
 
-      if (result.success) {
+      if (response.success) {
         // Clear all stored data
         localStorage.removeItem("workoutPlanCheckpoints");
         localStorage.removeItem("workoutPlanStep");
@@ -235,11 +253,11 @@ export default function CreateWorkoutPlan() {
         localStorage.removeItem("workoutPlanDescription");
         localStorage.removeItem("workoutSchedules");
 
-        toast.success(result.message);
+        toast.success(response.message);
         // Optionally redirect to workout plans list
         router.push("/trainerdashboard/workouts/assignworkout");
       } else {
-        toast.error(result.message);
+        toast.error(response.message);
       }
     } catch (error) {
       toast.error("Error submitting workout plan");

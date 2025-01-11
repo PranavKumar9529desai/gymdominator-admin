@@ -20,14 +20,15 @@ import {
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import UserprofileImage from "@/app/assests/gymd.webp"
+import UserprofileImage from "@/app/assests/gymd.webp";
+
 // TOOD send data to the backend
 export default function UserProfileCard() {
   const [userData, setUserData] = useState({
     name: "John Doe",
     challengeName: "30-Day Fitness Challenge",
-    joinedDate: null as Date | null,
-    completionDate: null as Date | null,
+    joinedDate: undefined as Date | undefined,
+    completionDate: undefined as Date | undefined,
     contact: "",
     address: "",
   });
@@ -38,7 +39,7 @@ export default function UserProfileCard() {
   };
 
   const handleDateChange = (
-    date: Date | null,
+    date: Date | undefined,
     field: "joinedDate" | "completionDate"
   ) => {
     setUserData((prevData) => ({ ...prevData, [field]: date }));
@@ -98,9 +99,7 @@ export default function UserProfileCard() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <CalendarComponent
                     mode="single"
-                    // @ts-expect-error - Calendar component has type mismatches with Date object
                     selected={userData.joinedDate}
-                    // @ts-expect-error - Calendar component has type mismatches with Date object
                     onSelect={(date) => handleDateChange(date, "joinedDate")}
                     initialFocus
                   />
@@ -129,12 +128,8 @@ export default function UserProfileCard() {
                 <PopoverContent className="w-auto p-0" align="start">
                   <CalendarComponent
                     mode="single"
-                    // @ts-expect-error - Calendar component has type mismatches with Date object
                     selected={userData.completionDate}
-                    onSelect={(date) =>
-                      // @ts-expect-error - Calendar component has type mismatches with Date object
-                      handleDateChange(date, "completionDate")
-                    }
+                    onSelect={(date) => handleDateChange(date, "completionDate")}
                     initialFocus
                   />
                 </PopoverContent>
