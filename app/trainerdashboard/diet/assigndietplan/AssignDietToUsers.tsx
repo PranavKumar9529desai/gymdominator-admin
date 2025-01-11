@@ -15,9 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { AssignedUser } from './GetuserassignedTotrainers';
+import { AssignedUser } from './GetassignedUserDietInfo';
 import { DietPlan } from './GetallDiets';
 import { attachDietPlanToUser } from './AttachDietPlanToUser';
+import { updateAssignedDietPlan } from './updateassigneddiet';
 
 interface Props {
   users: AssignedUser[];
@@ -26,7 +27,7 @@ interface Props {
 
 const createColumns = (
   dietPlans: DietPlan[], 
-  handleAssignment: (userId: string, dietPlanId: string) => Promise<void>
+  handleAssignment: (userId: string, dietPlanId: string, currentPlanId?: number) => Promise<void>,
 ): ColumnDef<AssignedUser>[] => [
   {
     accessorKey: "name",
@@ -46,46 +47,40 @@ const createColumns = (
   },
   {
     accessorKey: "diet",
-    header: "Assign Diet Plan",
+    header: "Diet Plan Management",
     cell: ({ row }) => {
       const hasDiet = !!row.original.dietPlanId;
       const currentPlan = dietPlans.find(plan => plan.id === row.original.dietPlanId);
       
       return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
           <Select
+            defaultValue={currentPlan ? currentPlan.id.toString() : undefined}
             onValueChange={(value) => {
-              if (hasDiet) {
-                if (confirm('This will replace the current diet plan. Continue?')) {
-                  handleAssignment(row.original.id, value);
-                }
-              } else {
-                handleAssignment(row.original.id, value);
-              }
+              handleAssignment(
+                row.original.id, 
+                value, 
+                row.original.dietPlanId || undefined
+              );
             }}
           >
             <SelectTrigger className={`w-[200px] ${
-              hasDiet ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+              hasDiet ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200'
             }`}>
-              <SelectValue placeholder={
-                hasDiet 
-                  ? `Current: ${currentPlan?.name || 'Unknown Plan'}` 
-                  : "No diet plan assigned"
-              } />
+              <SelectValue placeholder="Select a diet plan" />
             </SelectTrigger>
             <SelectContent>
               {dietPlans.map((plan) => (
-                <SelectItem key={plan.id} value={plan.id.toString()}>
+                <SelectItem 
+                  key={plan.id} 
+                  value={plan.id.toString()}
+                  className={currentPlan?.id === plan.id ? 'bg-green-50 text-green-700' : ''}
+                >
                   {plan.name} ({plan.targetCalories} cal)
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {hasDiet && (
-            <p className="text-xs text-green-600">
-              Active Plan: {currentPlan?.name}
-            </p>
-          )}
         </div>
       );
     },
@@ -122,21 +117,38 @@ export default function AssignDietToUsers({ users, dietPlans }: Props) {
     },
   ] as const;
 
-  const handleDietAssignment = async (userId: string, dietPlanId: string) => {
+  const handleDietAssignment = async (userId: string, dietPlanId: string, currentUserDietPlanId?: number) => {
     try {
-      const result = await attachDietPlanToUser(userId, dietPlanId);
+      let result;
+      if (currentUserDietPlanId) {
+        // Update existing assignment with userId
+        result = await updateAssignedDietPlan({
+          userDietPlanId: currentUserDietPlanId,
+          newDietPlanId: parseInt(dietPlanId),
+          userId: parseInt(userId) // Add userId to the update call
+        });
+      } else {
+        // New assignment
+        result = await attachDietPlanToUser(userId, dietPlanId);
+      }
+
       if (result.success) {
         toast.success(result.message);
-        // Update local state to reflect the change
+        // Update UI
         setFilteredUsers(prev => prev.map(user => 
-          user.id === userId ? { ...user, dietPlanId: parseInt(dietPlanId) } : user
+          user.id === userId ? {
+            ...user,
+            dietPlanId: parseInt(dietPlanId),
+            dietPlanName: dietPlans.find(p => p.id === parseInt(dietPlanId))?.name,
+            userDietPlanId: result.dietPlan?.id
+          } : user
         ));
       } else {
-        toast.error("Failed to assign diet plan");
+        toast.error(result.message || "Failed to update diet plan");
       }
     } catch (error) {
-      console.error("Error assigning diet plan:", error);
-      toast.error("Error assigning diet plan");
+      console.error("Error managing diet plan:", error);
+      toast.error("Error managing diet plan");
     }
   };
 

@@ -9,6 +9,7 @@ import {
   getFilteredRowModel,
   SortingState,
   ColumnFiltersState,
+  Row,
 } from "@tanstack/react-table";
 import { DataTableProps } from "./table.types";
 import { TableUI } from "./TableUi";
@@ -19,7 +20,13 @@ import {
   SelectContent,
   SelectItem,
 } from "../ui/select";
-export function DataTable<TData>({
+
+// Add interface for base data type
+interface BaseData {
+  id: string | number;
+}
+
+export function DataTable<TData extends BaseData>({
   data,
   columns,
   filterColumn,
@@ -38,8 +45,7 @@ export function DataTable<TData>({
       if (column.id === dropdownConfig.columnId) {
         return {
           ...column,
-          //@ts-expect-error - this is a hack to add a dropdown to the column
-          cell: ({ row }) => (
+          cell: ({ row }: { row: Row<TData> }) => (
             <Select
               value={row.getValue(dropdownConfig.columnId)}
               onValueChange={(value) =>
@@ -49,7 +55,7 @@ export function DataTable<TData>({
               <SelectTrigger>
                 <SelectValue placeholder="Select..." />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent style={{ backgroundColor: '#D3D3D3', color: '#000000' }}>
                 {dropdownConfig.options.map((option) => (
                   <SelectItem key={option.id} value={option.value}>
                     {option.label}

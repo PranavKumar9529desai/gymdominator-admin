@@ -5,6 +5,10 @@ import {
   Table
 } from "@tanstack/react-table";
 
+interface BaseData {
+  id: string | number;
+}
+
 export interface DropdownOption {
   id: number | string;
   label: string;
@@ -17,7 +21,7 @@ export interface ColumnDropdownConfig {
   onSelect: (rowId: number | string, value: string) => void;
 }
 
-export interface DataTableProps<TData> {
+export interface DataTableProps<TData extends BaseData> {
   data: TData[];
   columns: ColumnDef<TData>[];
   filterColumn?: string;

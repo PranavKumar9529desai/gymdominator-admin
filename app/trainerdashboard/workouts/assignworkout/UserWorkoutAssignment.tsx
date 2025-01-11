@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, LucideIcon } from "lucide-react";
 import { DataTable } from "@/components/Table/UsersTable";
@@ -146,48 +146,48 @@ export default function UserWorkoutAssignment({
   >("all");
   const [filteredUsers, setFilteredUsers] = useState<UserType[]>(Users);
 
-  const handleWorkoutAssignment = async (
-    userId: number,
-    workoutPlanId: string
-  ) => {
-    try {
-      const previousPlan = Users.find((u) => u.id === userId)?.workoutPlanId;
-      const newPlan = workoutPlans.find(
-        (p) => p.id === parseInt(workoutPlanId)
-      );
+  const handleWorkoutAssignment = useCallback(
+    async (userId: number, workoutPlanId: string) => {
+      try {
+        const previousPlan = Users.find((u) => u.id === userId)?.workoutPlanId;
+        const newPlan = workoutPlans.find(
+          (p) => p.id === parseInt(workoutPlanId)
+        );
 
-      await attachWorkoutPlanToUser(userId.toString(), workoutPlanId);
+        await attachWorkoutPlanToUser(userId.toString(), workoutPlanId);
 
-      // Update local state
-      setFilteredUsers((current) =>
-        current.map((user) =>
-          user.id === userId
-            ? {
-                ...user,
-                workoutPlanId: parseInt(workoutPlanId),
-                workoutPlanName: newPlan?.name,
-              }
-            : user
-        )
-      );
+        // Update local state
+        setFilteredUsers((current) =>
+          current.map((user) =>
+            user.id === userId
+              ? {
+                  ...user,
+                  workoutPlanId: parseInt(workoutPlanId),
+                  workoutPlanName: newPlan?.name,
+                }
+              : user
+          )
+        );
 
-      // Show success toast with plan details
-      toast.success(
-        previousPlan
-          ? `Workout plan updated to "${newPlan?.name}"`
-          : `Workout plan "${newPlan?.name}" assigned successfully`,
-        {
-          description: "The user's workout plan has been updated.",
-        }
-      );
-    } catch (error) {
-      console.error("Error assigning workout plan:", error);
-      toast.error("Failed to assign workout plan", {
-        description:
-          "Please try again or contact support if the issue persists.",
-      });
-    }
-  };
+        // Show success toast with plan details
+        toast.success(
+          previousPlan
+            ? `Workout plan updated to "${newPlan?.name}"`
+            : `Workout plan "${newPlan?.name}" assigned successfully`,
+          {
+            description: "The user's workout plan has been updated.",
+          }
+        );
+      } catch (error) {
+        console.error("Error assigning workout plan:", error);
+        toast.error("Failed to assign workout plan", {
+          description:
+            "Please try again or contact support if the issue persists.",
+        });
+      }
+    },
+    [Users, workoutPlans]
+  );
 
   const columns = useMemo(
     () => createColumns(workoutPlans, handleWorkoutAssignment),

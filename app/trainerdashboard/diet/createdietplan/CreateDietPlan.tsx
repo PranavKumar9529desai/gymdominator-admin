@@ -29,6 +29,7 @@ interface Meal {
   fats: number;
   ingredients: string[];
   instructions: string;
+  order: number;  // Add order field
 }
 
 interface DietPlan {
@@ -100,7 +101,8 @@ export default function CreateDietPlan() {
         carbs: 0,
         fats: 0,
         ingredients: [],
-        instructions: ''
+        instructions: '',
+        order: 0
       };
     }
     return {
@@ -111,7 +113,8 @@ export default function CreateDietPlan() {
       carbs: 0,
       fats: 0,
       ingredients: [],
-      instructions: ''
+      instructions: '',
+      order: 0
     };
   });
 
@@ -152,7 +155,8 @@ export default function CreateDietPlan() {
         carbs: 0,
         fats: 0,
         ingredients: [],
-        instructions: ''
+        instructions: '',
+        order: 0
       });
     }
   };
@@ -217,7 +221,7 @@ export default function CreateDietPlan() {
         proteinRatio: dietPlan.macroSplit.protein,
         carbsRatio: dietPlan.macroSplit.carbs,
         fatsRatio: dietPlan.macroSplit.fats,
-        meals: dietPlan.meals.map(meal => ({
+        meals: dietPlan.meals.map((meal, index) => ({
           name: meal.name,
           timeOfDay: meal.time,
           calories: meal.calories,
@@ -225,6 +229,7 @@ export default function CreateDietPlan() {
           carbs: meal.carbs,
           fats: meal.fats,
           instructions: meal.instructions,
+          order: index + 1, // Add order based on array index
           ingredients: meal.ingredients.map(ingredient => ({
             name: ingredient,
             quantity: 1, // Default quantity

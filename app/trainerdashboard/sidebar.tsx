@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import IconImage from "@/app/assests/gym-manager.webp";
 import { signOut } from "next-auth/react";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 
 interface MenuItem {
   name: string;
@@ -57,14 +57,14 @@ export const menuItems: MenuItem[] = [
     link: "/trainerdashboard/diet",
     subItems: [
       {
-        name: "Create diet-plan",
+        name: "Create Diet plan",
         label: "createdietplan",
-        link: "/diet/createdietplan",
+        link: "/trainerdashboard/diet/createdietplan",
       },
       {
         name: "Assign Diet plan",
         label: "assigndietplan",
-        link: "/diet/assigndietplan",
+        link: "/trainerdashboard/diet/assigndietplan",
       },
     ],
   },
@@ -77,12 +77,12 @@ export const menuItems: MenuItem[] = [
       {
         name: "Today's Attendance",
         label: "todaysattendance",
-        link: "/attendance/todaysattendance",
+        link: "/trainerdashboard/attendance/todaysattendance",
       },
       {
         name: "Show QR",
         label: "showqr",
-        link: "/attendance/showqr",
+        link: "/trainerdashboard/attendance/showqr",
       },
     ],
   },
@@ -116,14 +116,17 @@ export default function SideBar() {
 
   const isActiveParent = (item: MenuItem) => {
     if (item.subItems) {
-      return item.subItems.some((subItem) => subItem.label === activePage) || activePage === item.label;
+      return (
+        item.subItems.some((subItem) => subItem.label === activePage) ||
+        activePage === item.label
+      );
     }
     return activePage === item.label;
   };
 
   const handleLogout = async () => {
     const result = await Swal.fire({
-      title: 'Ready to leave?',
+      title: "Ready to leave?",
       html: `
         <div class="bg-white/90 p-6 rounded-xl border border-gray-700">
           <div class="text-center">
@@ -139,22 +142,23 @@ export default function SideBar() {
         </div>
       `,
       showCancelButton: true,
-      confirmButtonText: 'Yes, Logout',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
       customClass: {
-        confirmButton: 'bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium',
-        cancelButton: 'bg-gray-600 px-6 py-2 rounded-lg text-white font-medium',
-        title: 'text-white text-xl font-semibold'
-      }
+        confirmButton:
+          "bg-gradient-to-r from-red-500 to-red-600 px-6 py-2 rounded-lg text-white font-medium",
+        cancelButton: "bg-gray-600 px-6 py-2 rounded-lg text-white font-medium",
+        title: "text-white text-xl font-semibold",
+      },
     });
 
     if (result.isConfirmed) {
       try {
         await signOut({ redirect: false });
         await Swal.fire({
-          title: 'See you soon!',
-          text: 'You have been successfully logged out',
-          icon: 'success',
+          title: "See you soon!",
+          text: "You have been successfully logged out",
+          icon: "success",
           timer: 1500,
           showConfirmButton: false,
           backdrop: `
@@ -162,17 +166,17 @@ export default function SideBar() {
             url("/images/waving-hand.gif")
             right top
             no-repeat
-          `
+          `,
         });
-        router.push('/signin');
+        router.push("/signin");
       } catch (error) {
         Swal.fire({
-          title: 'Error!',
-          text: 'Logout failed',
-          icon: 'error',
-          color: '#fff'
+          title: "Error!",
+          text: "Logout failed",
+          icon: "error",
+          color: "#fff",
         });
-        console.error('Logout failed:', error);
+        console.error("Logout failed:", error);
       }
     }
   };
@@ -203,13 +207,12 @@ export default function SideBar() {
                 >
                   <item.icon className="w-5 h-5 mr-3" />
                   <span>{item.name}</span>
-                  {item.subItems && (
-                    openMenus[item.label] ? (
+                  {item.subItems &&
+                    (openMenus[item.label] ? (
                       <ChevronDown className="w-5 h-5 ml-auto" />
                     ) : (
                       <ChevronRight className="w-5 h-5 ml-auto" />
-                    )
-                  )}
+                    ))}
                 </Button>
                 {item.subItems && openMenus[item.label] && (
                   <ul className="ml-6 mt-2 space-y-2">
@@ -237,7 +240,7 @@ export default function SideBar() {
       </ScrollArea>
 
       <div className="p-4">
-        <button 
+        <button
           className="flex items-center w-full px-4 py-2 text-red-400 hover:bg-gray-800 rounded-lg transition-colors duration-200"
           onClick={handleLogout}
         >
