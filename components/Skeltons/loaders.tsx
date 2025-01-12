@@ -29,7 +29,7 @@ export default function Loader({
         <div className="absolute inset-0 rounded-full shadow-lg overflow-hidden z-10">
           <Image
             src={GymImage}
-            alt="Gymdominator Logo"
+            alt="GymNavigator Logo"
             width={size}
             height={size}
             className="object-contain"

@@ -43,7 +43,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               letterSpacing: "2px",
             }}
           >
-            GymDominator
+            GymNavigator
           </h1>
         </td>
       </tr>
@@ -71,7 +71,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
               fontSize: "16px",
             }}
           >
-            Thank you for joining GymDominator. We&apos;re excited to have you on
+            Thank you for joining GymNavigator. We&apos;re excited to have you on
             board! Here&apos;s your verification code:
           </p>
           <div
@@ -102,11 +102,11 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
             }}
           >
             Please use this code to verify your account and start your fitness
-            journey with GymDominator.
+            journey with GymNavigator.
           </p>
           <div style={{ textAlign: "center" as const, margin: "40px 0 20px" }}>
             <a
-              href="https://gymdominator.com/verify"
+              href="https://GymNavigator.com/verify"
               style={{
                 backgroundColor: "#27ae60",
                 color: "#ffffff",
@@ -146,10 +146,10 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
           }}
         >
           <p style={{ margin: "0 0 10px 0" }}>
-            © 2023 GymDominator. All rights reserved.
+            © 2023 GymNavigator. All rights reserved.
           </p>
           <p style={{ margin: "0" }}>
-            You&apos;re receiving this email because you signed up for GymDominator.
+            You&apos;re receiving this email because you signed up for GymNavigator.
           </p>
         </td>
       </tr>

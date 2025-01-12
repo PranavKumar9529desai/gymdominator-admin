@@ -1,12 +1,12 @@
-# GymDominator Admin  
+# GymNavigator Admin  
 
-[![GymDominator](https://img.shields.io/badge/version-1.0.0-brightgreen)]()  
+[![GymNavigator](https://img.shields.io/badge/version-1.0.0-brightgreen)]()  
 [![Next.js](https://img.shields.io/badge/Framework-Next.js-000?logo=nextdotjs)](https://nextjs.org/)  
 [![Hono](https://img.shields.io/badge/Backend-Hono-yellow)](https://hono.dev/)  
 [![Cloudflare Workers](https://img.shields.io/badge/Deployment-Cloudflare%20Workers-orange)](https://workers.cloudflare.com/)  
 [![Prisma](https://img.shields.io/badge/Database-Prisma-blue)](https://www.prisma.io/)  
 
-GymDominator Admin is a professional and robust web application designed to transform the way gym owners manage their business operations. This platform simplifies gym management by offering a feature-rich dashboard for administrators and trainers. It allows gym owners to oversee trainers, users, and sales operations while also providing trainers with tools to manage their assigned clients effectively.  
+GymNavigator Admin is a professional and robust web application designed to transform the way gym owners manage their business operations. This platform simplifies gym management by offering a feature-rich dashboard for administrators and trainers. It allows gym owners to oversee trainers, users, and sales operations while also providing trainers with tools to manage their assigned clients effectively.  
 
 ---
 
@@ -96,5 +96,5 @@ _Empower trainers with the tools they need to manage clients effectively._
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/your-username/gymdominator-admin.git
-   cd gymdominator-admin
+   git clone https://github.com/your-username/GymNavigator-admin.git
+   cd GymNavigator-admin

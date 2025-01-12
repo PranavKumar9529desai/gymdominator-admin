@@ -125,7 +125,7 @@ export default function Footer() {
                     </div>
                     <div className="mt-12 pt-8 border-t border-gray-700 flex flex-col sm:flex-row justify-between items-center">
                         <p className="text-gray-400">
-                            &copy; 2024 GymDominator. All rights reserved.
+                            &copy; 2024 GymNavigator. All rights reserved.
                         </p>
                         <div className="flex space-x-4 mt-4 sm:mt-0">
                             <a

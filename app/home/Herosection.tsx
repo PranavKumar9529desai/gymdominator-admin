@@ -58,7 +58,7 @@ export default function Herosection() {
               <div className="absolute inset-0 bg-indigo-200/50 rounded-full blur-[100px] opacity-90 sm:opacity-75"></div>
               <Image
                 src={LogoImage}
-                alt="GymDominator Logo"
+                alt="GymNavigator Logo"
                 className="relative z-10 w-full h-full object-contain drop-shadow-2xl transform hover:scale-105 transition-transform duration-500"
               />
             </div>

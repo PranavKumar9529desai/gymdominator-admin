@@ -31,7 +31,7 @@ const features = [
 const testimonials = [
   {
     image: "https://images.unsplash.com/photo-1522199755839-a2bacb67c546?q=80&w=2072&auto=format&fit=crop",
-    quote: "GymDominator transformed how we track attendance. Our members love the QR system, and we've seen a 40% improvement in workout consistency!",
+    quote: "GymNavigator transformed how we track attendance. Our members love the QR system, and we've seen a 40% improvement in workout consistency!",
     author: "Michael Chen",
     role: "Fitness Center Owner, FlexFit Gym"
   },
@@ -55,7 +55,7 @@ const testimonials = [
   },
   {
     image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=2070&auto=format&fit=crop",
-    quote: "GymDominator's member portal has revolutionized how our clients track their fitness journey. Engagement is at an all-time high.",
+    quote: "GymNavigator's member portal has revolutionized how our clients track their fitness journey. Engagement is at an all-time high.",
     author: "James Rodriguez",
     role: "Owner, CrossTrain Hub"
   }
@@ -93,7 +93,7 @@ export default function FeaturesSection() {
             Success Stories
           </h2>
           <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
-            Hear from gym owners and trainers who transformed their business with GymDominator
+            Hear from gym owners and trainers who transformed their business with GymNavigator
           </p>
         </div>
         
