@@ -122,7 +122,7 @@ export default {
         process.env.NODE_ENV === "production" ||
         process.env.VERCEL_ENV === "preview"
       ) {
-        baseUrl = "https://gymdominatoradmin.vercel.app";
+        baseUrl = "https://www.gymnavigator.in/";
       }
       // Handle relative URLs
       if (url.startsWith("/")) return `${baseUrl}${url}`;
