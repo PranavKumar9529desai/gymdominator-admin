@@ -9,8 +9,7 @@ const testimonials = [
     role: "Founder, Shakti Fitness Hub",
     location: "Mumbai",
     rating: 5,
-    growth: "200%",
-    date: "Dec 2023"
+    growth: "200%"
   },
   {
     image: "/testimonials/priya.jpg",
@@ -19,8 +18,7 @@ const testimonials = [
     role: "Director, FitIndia Studios",
     location: "Bangalore",
     rating: 5,
-    growth: "150%",
-    date: "Jan 2024"
+    growth: "150%"
   },
   {
     image: "/testimonials/kabir.jpg",
@@ -29,8 +27,7 @@ const testimonials = [
     role: "CEO, PowerFlex Gyms",
     location: "Delhi",
     rating: 5,
-    growth: "80%",
-    date: "Nov 2023"
+    growth: "80%"
   },
   {
     image: "/testimonials/meera.jpg",
@@ -39,8 +36,7 @@ const testimonials = [
     role: "Nutritionist & Owner",
     location: "Pune",
     rating: 5,
-    growth: "120%",
-    date: "Oct 2023"
+    growth: "120%"
   },
   {
     image: "/testimonials/rajesh.jpg",
@@ -49,30 +45,29 @@ const testimonials = [
     role: "Chain Owner, StrongLife",
     location: "Hyderabad",
     rating: 5,
-    growth: "175%",
-    date: "Sep 2023"
+    growth: "175%"
   }
 ];
 
 export default function TestimonialsSection() {
   return (
-    <section className="py-24 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
+    <section className="py-12 sm:py-24 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px]" />
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
-            <Sparkles className="w-4 h-4 text-blue-400" />
-            <span className="text-sm text-blue-400">Success Stories</span>
+        <div className="text-center mb-10 sm:mb-20">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-blue-400" />
+            <span className="text-xs sm:text-sm text-blue-400">Success Stories</span>
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 mb-4 sm:mb-6">
             Transforming Fitness Business Across India
           </h2>
-          <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-zinc-400 max-w-2xl mx-auto px-4">
             Join the community of successful gym owners who revolutionized their business with GymNavigator
           </p>
         </div>
         
-        <div className="relative h-[500px] w-full overflow-hidden rounded-xl">
+        <div className="relative h-[400px] sm:h-[500px] w-full overflow-hidden rounded-lg sm:rounded-xl">
           <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-20 pointer-events-none" />
           <InfiniteMovingCards
             items={testimonials}

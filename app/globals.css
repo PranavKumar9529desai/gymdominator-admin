@@ -109,6 +109,23 @@
   animation: float 6s ease-in-out infinite;
 }
 
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 8s ease infinite;
+}
+
 /* Add these CSS classes for the flip card */
 .flip-card {
   perspective: 1000px;

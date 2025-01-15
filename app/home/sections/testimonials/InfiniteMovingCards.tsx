@@ -11,7 +11,6 @@ interface TestimonialItem {
   location: string;
   rating: number;
   growth: string;
-  date: string; // Add this new property
 }
 
 export const InfiniteMovingCards = ({
@@ -61,33 +60,30 @@ export const InfiniteMovingCards = ({
         {[...items, ...items].map((item, idx) => (
           <div
             key={idx}
-            className="relative group w-[450px] h-[450px] bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-800 overflow-hidden"
+            className="relative group w-[280px] sm:w-[350px] md:w-[450px] h-[350px] sm:h-[400px] md:h-[450px] bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl sm:rounded-2xl border border-gray-800 overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="p-8 relative z-10 h-full flex flex-col">
+            <div className="p-4 sm:p-6 md:p-8 relative z-10 h-full flex flex-col">
               {/* Rating Stars and Growth */}
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex gap-1">
+              <div className="flex justify-between items-center mb-4 sm:mb-6">
+                <div className="flex gap-0.5 sm:gap-1">
                   {[...Array(item.rating)].map((_, i) => (
-                    <span key={i} className="text-yellow-500">★</span>
+                    <span key={i} className="text-yellow-500 text-sm sm:text-base">★</span>
                   ))}
                 </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm text-zinc-500">{item.date}</span>
-                  <div className="px-3 py-1 bg-green-500/20 rounded-full">
-                    <span className="text-green-400 text-sm font-medium">↑ {item.growth}</span>
-                  </div>
+                <div className="px-2 py-0.5 sm:px-3 sm:py-1 bg-green-500/20 rounded-full">
+                  <span className="text-green-400 text-xs sm:text-sm font-medium">↑ {item.growth}</span>
                 </div>
               </div>
 
               {/* Quote */}
-              <div className="mb-6">
-                <blockquote className="text-lg text-zinc-300">&ldquo;{item.quote}&rdquo;</blockquote>
+              <div className="mb-4 sm:mb-6">
+                <blockquote className="text-sm sm:text-base md:text-lg text-zinc-300">&ldquo;{item.quote}&rdquo;</blockquote>
               </div>
 
               {/* Profile */}
-              <div className="mt-auto flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-blue-500/20">
+              <div className="mt-auto flex items-center gap-3 sm:gap-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden ring-2 ring-blue-500/20">
                   <Image
                     src={item.image}
                     alt={item.author}
@@ -97,9 +93,9 @@ export const InfiniteMovingCards = ({
                   />
                 </div>
                 <div>
-                  <h4 className="text-lg font-semibold text-white">{item.author}</h4>
-                  <p className="text-sm text-zinc-400">{item.role}</p>
-                  <p className="text-sm text-blue-400">{item.location}</p>
+                  <h4 className="text-base sm:text-lg font-semibold text-white">{item.author}</h4>
+                  <p className="text-xs sm:text-sm text-zinc-400">{item.role}</p>
+                  <p className="text-xs sm:text-sm text-blue-400">{item.location}</p>
                 </div>
               </div>
             </div>

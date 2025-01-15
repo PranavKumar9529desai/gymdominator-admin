@@ -1,7 +1,7 @@
 import Navbar from "./sections/Navbar/Navbar";
 import Footer from "./sections/Footer";
 import FeaturesSection from "./sections/features/FeaturesSection";
-import Herosection from "./sections/Herosection";
+import Herosection from "./sections/Herosection/Herosection";
 import TestimonialsSection from "./sections/testimonials/TestimonialsSection";
 
 export default async function HeroSection() {

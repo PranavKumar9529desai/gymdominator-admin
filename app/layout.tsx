@@ -56,7 +56,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-        <RecoilContextProvider>layoutlayoutlayout
+        <RecoilContextProvider>
           <body>
             {children}
             <Toaster {...toasterProps} />
