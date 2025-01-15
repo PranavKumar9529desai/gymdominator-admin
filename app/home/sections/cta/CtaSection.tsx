@@ -2,8 +2,10 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Zap, Shield, Clock } from 'lucide-react';
+import CustomButton from '../../CustomButton';
 
 const CtaSection = () => {
+
   return (
     <section className="relative py-20 overflow-hidden">
       {/* Background gradient */}
@@ -68,15 +70,7 @@ const CtaSection = () => {
           transition={{ delay: 0.6 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <Link
-            href="/contact"
-            className="group bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-full 
-                     font-medium hover:shadow-lg hover:shadow-blue-500/30 transition-all duration-300
-                     transform hover:-translate-y-0.5 flex items-center"
-          >
-            Get Started
-            <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-          </Link>
+          <CustomButton className="w-full sm:w-auto" />
           <Link
             href="/contact"
             className="text-gray-300 hover:text-white px-8 py-3 rounded-full border border-gray-700 

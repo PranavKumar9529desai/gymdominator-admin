@@ -8,18 +8,20 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function Herosection() {
+  
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
+
   if (!isClient) {
     return <div className="min-h-[90vh]" />; // Loading state
   }
 
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900 via-black to-gray-950">
+    <section className="relative h-screen flex items-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900 via-black to-gray-950">
       {/* Animated background shapes */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute w-[500px] h-[500px] rounded-full bg-blue-500/20 blur-3xl animate-pulse top-[-250px] left-[-250px]"></div>
@@ -64,11 +66,7 @@ export default function Herosection() {
               transition={{ delay: 0.9, duration: 0.8 }}
               className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6 mt-8"
             >
-              <div className="w-full sm:w-auto group">
-                <div className="w-fit mx-auto sm:mx-0">
-                  <CustomButton />
-                </div>
-              </div>
+              <CustomButton className="w-full sm:w-auto" />
               <Button
                 variant="outline"
                 className="w-full sm:w-auto hidden sm:flex items-center gap-2 bg-transparent border border-gray-700 text-gray-300 hover:bg-gray-800/50 hover:border-blue-500 hover:scale-105 font-medium px-6 py-3 rounded-lg transition-all duration-300"
