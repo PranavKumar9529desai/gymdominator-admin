@@ -7,21 +7,22 @@ import { Metadata } from 'next'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { SpeedInsights } from "@vercel/speed-insights/next"
 export const metadata: Metadata = {
-  title: 'GymNavigator - Gym Management System',
-  description: 'Professional gym management solution for trainers and gym owners',
-  keywords: ['gym management', 'fitness tracking', 'trainer portal'],
+  title: 'GymNavigator Admin Dashboard',
+  description: 'Administrative control panel for gym owners and trainers - GymNavigator platform management',
+  keywords: ['gym management dashboard', 'trainer admin', 'gym owner portal', 'GymNavigator admin'],
   openGraph: {
-    title: 'GymNavigator',
-    description: 'Professional gym management solution',
+    title: 'GymNavigator Admin Dashboard',
+    description: 'Secure administrative portal for gym owners and trainers',
     images: [{
-      url: '/gymnavigator-og.jpg', // Make sure this image exists in your public folder
+      url: 'https://admin.gymnavigator.in/gymnavigator-og.jpg',
       width: 1200,
       height: 630,
-      alt: 'GymNavigator - Professional Gym Management System'
+      alt: 'GymNavigator Admin Control Panel'
     }],
-    siteName: 'GymNavigator',
+    siteName: 'GymNavigator Admin Portal',
     locale: 'en_US',
     type: 'website',
+    url: 'https://admin.gymnavigator.in'
   },
   icons: {
     icon: [
@@ -38,6 +39,7 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
+  metadataBase: new URL('https://admin.gymnavigator.in')
 }
 
 export default function RootLayout({

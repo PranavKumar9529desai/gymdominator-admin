@@ -15,51 +15,36 @@ const nextConfig = {
     ],
   },
 
-  async redirects() {
-    return [
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "gymdominatoradmin.vercel.app",
-          },
-        ],
-        destination: "https://gymdominatoradmin.vercel.app/:path*",
-        permanent: true,
-      },
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "www.gymnavigator.in",
-          },
-        ],
-        destination: "https://www.gymnavigator.in/:path*",
-        permanent: true,
-      },
-    ];
-  },
-
   async headers() {
     return [
       {
-        source: "/:path*",
+        source: "/:path*",  // Apply to all routes
         headers: [
           {
-            key: "Host",
-            value: "www.gymnavigator.in",
+            // Prevent iframe embedding
+            key: "X-Frame-Options",
+            value: "DENY",
           },
-        ],
-      },
-      {
-        source: "/:favicon*",
-        headers: [
           {
-            key: "Cache-Control",
-            value: "public, max-age=0, must-revalidate",
+            // Prevent MIME type sniffing
+            key: "X-Content-Type-Options",
+            value: "nosniff",
           },
+          {
+            // Force HTTPS
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
+          {
+            // Additional recommended security header
+            key: "Content-Security-Policy",
+            value: "default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';",
+          },
+          {
+            // Prevent XSS attacks
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          }
         ],
       },
     ];
