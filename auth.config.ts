@@ -63,6 +63,7 @@ export default {
                 name: userFromDB.name,
                 email: userFromDB.email,
                 role: userFromDB.role as Rolestype,
+                gym: userFromDB.gym  // Using consistent gym type from backend
               };
             }
           } else if (role && name) {
@@ -127,31 +128,23 @@ export default {
     },
     async signIn({ user, account }) {
       if (account && account.provider === "google") {
-        console.log("user in the google signin", user);
-        // google signin and signup
         if (user && user.email) {
-          // check if the user is already in the database
           const userFromDb: userType | false = await getUserByEmail(user.email);
-          if (
-            userFromDb &&
-            userFromDb.name &&
-            userFromDb.email &&
-            userFromDb.role
-          ) {
-            // login
-            user.role = userFromDb.role as Rolestype;
-            user.name = userFromDb.name;
-            user.email = userFromDb.email;
+          if (userFromDb && userFromDb.email) {
+            // Modify the user object to include role and gym from DB
+            Object.assign(user, {
+              role: userFromDb.role as Rolestype,
+              gym: userFromDb.gym,
+              name: userFromDb.name,
+              email: userFromDb.email,
+            });
+            return true;
           }
-          // signup
-          // as without role we dont know what to type of user ,
-          // here allow user to signup once the user selecs the role we do backend call to create the user in the database[
+          // Allow new Google users to sign up
           return true;
         }
-        console.log("false is the user is not in the database");
         return false;
       }
-      // if the user records not in the datbase then th token formed with the without role
       return true;
     },
     async jwt({
@@ -168,6 +161,7 @@ export default {
       trigger?: "signIn" | "signUp" | "update";
       session?: Session;
     }) {
+      console.log("user is this from jwt callback",user);
       console.log("JWT Callback - Input:", {
         tokenEmail: token.email,
         userName: user?.name,
@@ -188,6 +182,7 @@ export default {
 
       if (user && user.email && user.name) {
         token.role = user.role;
+        token.gym = user.gym;
       }
 
       console.log("JWT Callback - Output:", token);
@@ -203,7 +198,6 @@ export default {
       if (token && token.email && token.name && token.role) {
         session.user.name = token.name;
         session.user.email = token.email;
-        session.gym = token.gym as gym;
         session.role = token.role as Rolestype;
         console.log("updated sesion from the session callback ", session);
         console.log("Session Callback - Output:", session);

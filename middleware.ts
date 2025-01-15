@@ -67,12 +67,10 @@ export default auth(async function middleware(request) {
    */
   if (isAuthRoute) {
     if (isLoggedIn && session?.role) {
-      console.log("Session in auth route:", session);
       return NextResponse.redirect(
         new URL(`/${session.role}dashboard`, nextUrl)
       );
     }
-    console.log("auth route is called for the signin or signin", session?.role);
     return NextResponse.next();
   }
 
@@ -90,15 +88,14 @@ export default auth(async function middleware(request) {
 
     // Redirect to role selection only if the role in the token is empty if no role is assigned
     if (!session?.role) {
-      console.log("No role assigned", session);
       return NextResponse.redirect(new URL("/selectrole", request.url));
     }
 
-    // allow trainer to access the selectgym component 
-    if( session?.role == "trainer" && !session?.gym){
-      console.log("Trainer needs to select gym", session);
+    // Updated gym check to use the new GymInfo type
+    if (session.role === "trainer" && !session.gym?.gym_id) {
       return NextResponse.redirect(new URL("/selectgym", request.url));
     }
+
     /**
      * Check role-based access permissions
      * Redirect to unauthorized page if role doesn't match the route
