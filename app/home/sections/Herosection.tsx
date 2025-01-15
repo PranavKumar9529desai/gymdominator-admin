@@ -1,10 +1,9 @@
 import { ArrowRight } from "lucide-react";
-import CustomButton from "./CustomButton";
+import CustomButton from "../CustomButton";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import LogoImage from "@/app/assests/gymd.webp";
-import { BackgroundBeams } from "../../components/beams";
-
+import { BackgroundBeams } from "../../../components/beams";
 export default function Herosection() {
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
@@ -18,11 +17,10 @@ export default function Herosection() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="container mx-auto px-8 sm:px-12 lg:px-16 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Text Content - Centered on mobile, left-aligned on desktop */}
-          <div className="space-y-6 lg:space-y-8 text-center lg:text-left relative z-10 py-8 lg:py-0">
-            <div className="space-y-4 sm:space-y-6 max-w-2xl mx-auto lg:mx-0">
+          <div className="space-y-6 lg:space-y-8 text-left relative z-10 py-8 lg:py-0 lg:pl-0">
+            <div className="space-y-4 sm:space-y-6 max-w-2xl">
               <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
                 <span className="block mb-2 sm:mb-4">Elevate Your</span>
                 <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent inline-block">

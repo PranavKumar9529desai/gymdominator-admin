@@ -1,0 +1,86 @@
+import { InfiniteMovingCards } from "./InfiniteMovingCards";
+import { Sparkles } from "lucide-react";
+
+const testimonials = [
+  {
+    image: "/testimonials/arjun.jpg",
+    quote: "GymNavigator transformed our daily operations. From QR attendance to AI-powered diet plans, we've seen 200% membership growth in just 6 months!",
+    author: "Arjun Patel",
+    role: "Founder, Shakti Fitness Hub",
+    location: "Mumbai",
+    rating: 5,
+    growth: "200%",
+    date: "Dec 2023"
+  },
+  {
+    image: "/testimonials/priya.jpg",
+    quote: "Perfect example of digital transformation. Our trainers now focus on members instead of paperwork. Member satisfaction is at an all-time high!",
+    author: "Priya Reddy",
+    role: "Director, FitIndia Studios",
+    location: "Bangalore",
+    rating: 5,
+    growth: "150%",
+    date: "Jan 2024"
+  },
+  {
+    image: "/testimonials/kabir.jpg",
+    quote: "AI-driven analytics took our gym's performance to new heights. Revenue increased by 80% within the first quarter of implementation.",
+    author: "Kabir Singh",
+    role: "CEO, PowerFlex Gyms",
+    location: "Delhi",
+    rating: 5,
+    growth: "80%",
+    date: "Nov 2023"
+  },
+  {
+    image: "/testimonials/meera.jpg",
+    quote: "Personalized diet plans and workout tracking doubled our member success rate. The automated progress updates keep members motivated!",
+    author: "Meera Desai",
+    role: "Nutritionist & Owner",
+    location: "Pune",
+    rating: 5,
+    growth: "120%",
+    date: "Oct 2023"
+  },
+  {
+    image: "/testimonials/rajesh.jpg",
+    quote: "Cloud-based management system helped unite our multi-branch gyms seamlessly. Managing multiple locations has never been easier.",
+    author: "Rajesh Malhotra",
+    role: "Chain Owner, StrongLife",
+    location: "Hyderabad",
+    rating: 5,
+    growth: "175%",
+    date: "Sep 2023"
+  }
+];
+
+export default function TestimonialsSection() {
+  return (
+    <section className="py-24 bg-gradient-to-b from-black to-gray-950 relative overflow-hidden">
+      <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px]" />
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
+            <Sparkles className="w-4 h-4 text-blue-400" />
+            <span className="text-sm text-blue-400">Success Stories</span>
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 mb-6">
+            Transforming Fitness Business Across India
+          </h2>
+          <p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+            Join the community of successful gym owners who revolutionized their business with GymNavigator
+          </p>
+        </div>
+        
+        <div className="relative h-[500px] w-full overflow-hidden rounded-xl">
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-20 pointer-events-none" />
+          <InfiniteMovingCards
+            items={testimonials}
+            direction="right"
+            speed="slow"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}

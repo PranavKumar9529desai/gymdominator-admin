@@ -8,6 +8,10 @@ interface TestimonialItem {
   quote: string;
   author: string;
   role: string;
+  location: string;
+  rating: number;
+  growth: string;
+  date: string; // Add this new property
 }
 
 export const InfiniteMovingCards = ({
@@ -43,7 +47,7 @@ export const InfiniteMovingCards = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <motion.div
-        className="flex gap-4 w-max"
+        className="flex gap-6 w-max"
         animate={start ? {
           x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"],
         } : {}}
@@ -57,12 +61,33 @@ export const InfiniteMovingCards = ({
         {[...items, ...items].map((item, idx) => (
           <div
             key={idx}
-            className="relative group w-[450px] h-[400px] bg-zinc-900 rounded-xl border border-zinc-800 overflow-hidden"
+            className="relative group w-[450px] h-[450px] bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-800 overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-fuchsia-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <div className="p-8 relative z-10 h-full flex flex-col">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-12 h-12 rounded-full overflow-hidden">
+              {/* Rating Stars and Growth */}
+              <div className="flex justify-between items-center mb-6">
+                <div className="flex gap-1">
+                  {[...Array(item.rating)].map((_, i) => (
+                    <span key={i} className="text-yellow-500">★</span>
+                  ))}
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm text-zinc-500">{item.date}</span>
+                  <div className="px-3 py-1 bg-green-500/20 rounded-full">
+                    <span className="text-green-400 text-sm font-medium">↑ {item.growth}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quote */}
+              <div className="mb-6">
+                <blockquote className="text-lg text-zinc-300">&ldquo;{item.quote}&rdquo;</blockquote>
+              </div>
+
+              {/* Profile */}
+              <div className="mt-auto flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full overflow-hidden ring-2 ring-blue-500/20">
                   <Image
                     src={item.image}
                     alt={item.author}
@@ -74,9 +99,9 @@ export const InfiniteMovingCards = ({
                 <div>
                   <h4 className="text-lg font-semibold text-white">{item.author}</h4>
                   <p className="text-sm text-zinc-400">{item.role}</p>
+                  <p className="text-sm text-blue-400">{item.location}</p>
                 </div>
               </div>
-              <blockquote className="text-lg text-zinc-300 flex-grow">&ldquo;{item.quote}&rdquo;</blockquote>
             </div>
           </div>
         ))}
