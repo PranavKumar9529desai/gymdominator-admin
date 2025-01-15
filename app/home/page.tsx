@@ -3,6 +3,8 @@ import Footer from "./sections/Footer";
 import FeaturesSection from "./sections/features/FeaturesSection";
 import Herosection from "./sections/Herosection/Herosection";
 import TestimonialsSection from "./sections/testimonials/TestimonialsSection";
+import FaqSection from "./sections/faq/FaqSection";
+import CtaSection from "./sections/cta/CtaSection";
 
 export default async function HeroSection() {
   return (
@@ -11,6 +13,8 @@ export default async function HeroSection() {
       <Herosection />
       <FeaturesSection />
       <TestimonialsSection />
+      <FaqSection />
+      <CtaSection />
       <Footer />
     </main>
   );

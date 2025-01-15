@@ -5,6 +5,16 @@ import { useState, useEffect } from 'react'
 import { HiMenu, HiX } from 'react-icons/hi'
 import { BiChevronDown } from 'react-icons/bi'
 
+// Add type definition
+type MenuItem = {
+  label: string;
+  href: string;
+  dropdownItems?: Array<{
+    label: string;
+    href: string;
+  }>;
+}
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
@@ -19,31 +29,19 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { 
       label: 'Home', 
       href: '/' 
     },
     {
       label: 'About',
-      href: '/about',
-      dropdownItems: [
-        { label: 'Our Story', href: '/about/story' },
-        { label: 'Team', href: '/about/team' },
-        { label: 'Mission', href: '/about/mission' },
-      ]
+      href: '/about'
     },
-    {
-      label: 'Services',
-      href: '#services',
-      dropdownItems: [
-        { label: 'Personal Training', href: '/services/training' },
-        { label: 'Nutrition Plans', href: '/services/nutrition' },
-        { label: 'Group Classes', href: '/services/classes' },
-      ]
+    { 
+      label: 'Features', 
+      href: '/#features'
     },
-    { label: 'Features', href: '#features' },
-    { label: 'Pricing', href: '#pricing' },
   ]
 
   return (
@@ -162,13 +160,6 @@ const Navbar = () => {
                 )}
               </div>
             ))}
-            <Link
-              href="/contact"
-              className="block w-full text-center bg-gradient-to-r from-purple-500 to-pink-600 text-white px-4 py-2 rounded-full font-medium"
-              onClick={() => setIsOpen(false)}
-            >
-              Contact Us
-            </Link>
           </div>
         </div>
       )}

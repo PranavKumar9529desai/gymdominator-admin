@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -142,4 +143,8 @@
 
 .flip-card .rotate-y-180 {
   transform: rotateY(180deg);
+}
+
+.perspective-1000 {
+  perspective: 1000px;
 }

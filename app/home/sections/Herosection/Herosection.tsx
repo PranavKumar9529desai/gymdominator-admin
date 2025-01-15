@@ -1,9 +1,8 @@
 "use client"
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Activity, Users, Dumbbell, UserCheck, UserCog } from "lucide-react";
 import CustomButton from "../../CustomButton";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import LogoImage from "@/app/assests/gymd.webp";
+
 import { BackgroundBeams } from "../../../../components/beams";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -82,31 +81,124 @@ export default function Herosection() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ 
-              duration: 1,
-              ease: "easeOut"  // Changed this line
-            }}
+            transition={{ duration: 1, ease: "easeOut" }}
             className="hidden lg:flex justify-end"
           >
-            <div className="relative w-[500px] h-[500px]">
-              <div className="absolute inset-0 bg-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
-              <div className="absolute inset-0 bg-indigo-200/50 rounded-full blur-[100px] opacity-90 sm:opacity-75"></div>
-              <motion.div
-                animate={{ 
-                  y: [0, -20, 0],
-                }}
-                transition={{ 
-                  repeat: Infinity,
-                  duration: 4,
-                  ease: "easeInOut"
-                }}
-              >
-                <Image
-                  src={LogoImage}
-                  alt="GymNavigator Logo"
-                  className="relative z-10 w-full h-full object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
-                />
-              </motion.div>
+            <div className="relative w-[600px] h-[600px] perspective-1000">
+              {/* 3D Dashboard Cards */}
+              <div className="grid grid-cols-2 gap-6">
+                {[
+                  { 
+                    icon: Users, 
+                    title: "Onboarded Users", 
+                    value: "1,847", 
+                    color: "from-blue-500 to-blue-600",
+                    growth: "+22%"
+                  },
+                  { 
+                    icon: UserCheck, 
+                    title: "Today's Attendance", 
+                    value: "234", 
+                    color: "from-green-500 to-green-600",
+                    growth: "+18%"
+                  },
+                  { 
+                    icon: UserCog, 
+                    title: "Trainer Dashboard", 
+                    value: "16", 
+                    color: "from-purple-500 to-purple-600",
+                    growth: "+5%"
+                  },
+                  { 
+                    icon: Activity, 
+                    title: "Active Users", 
+                    value: "1,392", 
+                    color: "from-orange-500 to-orange-600",
+                    growth: "+15%"
+                  }
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 50, rotateX: 45 }}
+                    animate={{ 
+                      opacity: 1, 
+                      y: 0, 
+                      rotateX: 0,
+                      z: Math.sin(i * 0.5) * 50 
+                    }}
+                    whileHover={{ 
+                      scale: 1.05, 
+                      z: 30,
+                      rotateX: 10,
+                      rotateY: 10
+                    }}
+                    transition={{ 
+                      delay: i * 0.1,
+                      duration: 0.8,
+                      type: "spring",
+                      stiffness: 100
+                    }}
+                    className="bg-gradient-to-br border border-white/10 rounded-xl p-6 transform-style-3d shadow-xl"
+                  >
+                    <div className={`rounded-full w-12 h-12 bg-gradient-to-br ${item.color} flex items-center justify-center mb-4`}>
+                      <item.icon className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white/90">{item.title}</h3>
+                    <div className="flex items-end gap-2 mt-2">
+                      <span className="text-3xl font-bold text-white">{item.value}</span>
+                      <span className="text-green-400 text-sm mb-1">{item.growth}</span>
+                    </div>
+                    
+                    {/* Animated graph line */}
+                    <motion.div 
+                      className="h-1 bg-white/10 mt-4 rounded-full overflow-hidden"
+                      initial={{ width: "0%" }}
+                      animate={{ width: "100%" }}
+                      transition={{ delay: i * 0.2 + 0.5, duration: 1 }}
+                    >
+                      <motion.div 
+                        className={`h-full bg-gradient-to-r ${item.color}`}
+                        animate={{ 
+                          x: ["-100%", "0%"],
+                          opacity: [0.5, 1] 
+                        }}
+                        transition={{ 
+                          duration: 1.5,
+                          delay: i * 0.2 + 0.5,
+                          ease: "easeOut"
+                        }}
+                      />
+                    </motion.div>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Floating Achievement Badges */}
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={`badge-${i}`}
+                    className="absolute"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ 
+                      opacity: [0, 1, 0],
+                      scale: [0.5, 1, 0.5],
+                      x: Math.sin(i * 45) * 200,
+                      y: Math.cos(i * 45) * 200,
+                    }}
+                    transition={{
+                      duration: 3,
+                      delay: i * 0.5,
+                      repeat: Infinity,
+                      repeatType: "reverse"
+                    }}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
+                      <Dumbbell className="w-4 h-4 text-white" />
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
