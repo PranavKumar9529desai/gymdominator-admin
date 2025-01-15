@@ -111,24 +111,29 @@ export default {
 
   callbacks: {
     async redirect({ url, baseUrl }) {
-      console.log("Environment:", {
-        NODE_ENV: process.env.NODE_ENV,
-        VERCEL_ENV: process.env.VERCEL_ENV,
-        currentUrl: url,
-        baseUrl: baseUrl,
-      });
-
-      if (
-        process.env.NODE_ENV === "production" ||
-        process.env.VERCEL_ENV === "preview"
-      ) {
-        baseUrl = "https://www.gymnavigator.in/";
+      const productionDomain = "https://gymnavigator.in";
+      
+      // Always use the custom domain in production
+      if (process.env.NODE_ENV === "production") {
+        // Handle relative paths
+        if (url.startsWith("/")) {
+          return `${productionDomain}${url}`;
+        }
+        
+        // Handle Vercel URL redirects
+        if (url.includes("gymdominatoradmin.vercel.app")) {
+          return url.replace("gymdominatoradmin.vercel.app", "gymnavigator.in");
+        }
+        
+        // Handle www subdomain
+        if (url.includes("www.gymnavigator.in")) {
+          return url.replace("www.gymnavigator.in", "gymnavigator.in");
+        }
+        
+        return productionDomain;
       }
-      // Handle relative URLs
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      // Handle absolute URLs
-      if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      
+      return url.startsWith("/") ? `${baseUrl}${url}` : url;
     },
     async signIn({ user, account }) {
       if (account && account.provider === "google") {

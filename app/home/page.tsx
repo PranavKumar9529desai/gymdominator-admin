@@ -8,8 +8,6 @@ export default async function HeroSection() {
       <Herosection />
       <FeaturesSection />
 
-      
-
       <Footer />
     </main>
   );

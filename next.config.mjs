@@ -15,8 +15,44 @@ const nextConfig = {
     ],
   },
 
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'gymdominatoradmin.vercel.app',
+          },
+        ],
+        destination: 'https://gymnavigator.in/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'www.gymnavigator.in',
+          },
+        ],
+        destination: 'https://gymnavigator.in/:path*',
+        permanent: true,
+      }
+    ];
+  },
+
   async headers() {
     return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Host',
+            value: 'gymnavigator.in'
+          }
+        ],
+      },
       {
         source: '/:favicon*',
         headers: [
@@ -26,8 +62,8 @@ const nextConfig = {
           },
         ],
       },
-    ]
-  },
+    ];
+  }
 };
 
 export default nextConfig;
