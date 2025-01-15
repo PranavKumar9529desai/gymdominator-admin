@@ -11,59 +11,59 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "images.unsplash.com",
-      }
+      },
     ],
   },
 
   async redirects() {
     return [
       {
-        source: '/:path*',
+        source: "/:path*",
         has: [
           {
-            type: 'host',
-            value: 'gymdominatoradmin.vercel.app',
+            type: "host",
+            value: "gymdominatoradmin.vercel.app",
           },
         ],
-        destination: 'https://gymnavigator.in/:path*',
+        destination: "https://gymdominatoradmin.vercel.app/:path*",
         permanent: true,
       },
       {
-        source: '/:path*',
+        source: "/:path*",
         has: [
           {
-            type: 'host',
-            value: 'www.gymnavigator.in',
+            type: "host",
+            value: "www.gymnavigator.in",
           },
         ],
-        destination: 'https://gymnavigator.in/:path*',
+        destination: "https://www.gymnavigator.in/:path*",
         permanent: true,
-      }
+      },
     ];
   },
 
   async headers() {
     return [
       {
-        source: '/:path*',
+        source: "/:path*",
         headers: [
           {
-            key: 'Host',
-            value: 'gymnavigator.in'
-          }
+            key: "Host",
+            value: "www.gymnavigator.in",
+          },
         ],
       },
       {
-        source: '/:favicon*',
+        source: "/:favicon*",
         headers: [
           {
-            key: 'Cache-Control',
-            value: 'public, max-age=0, must-revalidate',
+            key: "Cache-Control",
+            value: "public, max-age=0, must-revalidate",
           },
         ],
       },
     ];
-  }
+  },
 };
 
 export default nextConfig;

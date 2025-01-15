@@ -4,7 +4,8 @@ import RecoilContextProvider from "@/lib/RecoilContextProvider";
 import { Toaster } from "sonner";
 import type { ToasterProps } from "sonner";
 import { Metadata } from 'next'
-
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { SpeedInsights } from "@vercel/speed-insights/next"
 export const metadata: Metadata = {
   title: 'GymNavigator - Gym Management System',
   description: 'Professional gym management solution for trainers and gym owners',
