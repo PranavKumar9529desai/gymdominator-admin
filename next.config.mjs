@@ -15,11 +15,31 @@ const nextConfig = {
     ],
   },
 
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'gymdominatoradmin.vercel.app',
+          },
+        ],
+        destination: 'https://admin.gymnavigator.in/:path*',
+        permanent: true,
+      }
+    ];
+  },
+
   async headers() {
     return [
       {
         source: "/:path*",  // Apply to all routes
         headers: [
+          {
+            key: 'Host',
+            value: 'admin.gymnavigator.in'
+          },
           {
             // Prevent iframe embedding
             key: "X-Frame-Options",

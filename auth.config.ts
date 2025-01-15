@@ -91,7 +91,7 @@ export default {
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
-    updateAge: 24 * 60 * 60, // 24 hours
+    updateAge: 7 * 24 * 60 * 60, // 7 days
   },
 
   cookies: {
@@ -111,28 +111,18 @@ export default {
 
   callbacks: {
     async redirect({ url, baseUrl }) {
-      const productionDomain = "https://gymnavigator.in";
-      
+      const productionDomain = "https://admin.gymnavigator.in";
+
       // Always use the custom domain in production
       if (process.env.NODE_ENV === "production") {
         // Handle relative paths
         if (url.startsWith("/")) {
           return `${productionDomain}${url}`;
         }
-        
-        // Handle Vercel URL redirects
-        if (url.includes("gymdominatoradmin.vercel.app")) {
-          return url.replace("gymdominatoradmin.vercel.app", "gymnavigator.in");
-        }
-        
-        // Handle www subdomain
-        if (url.includes("www.gymnavigator.in")) {
-          return url.replace("www.gymnavigator.in", "gymnavigator.in");
-        }
-        
+
         return productionDomain;
       }
-      
+
       return url.startsWith("/") ? `${baseUrl}${url}` : url;
     },
     async signIn({ user, account }) {
