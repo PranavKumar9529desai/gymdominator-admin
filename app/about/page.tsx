@@ -2,7 +2,6 @@
 import { motion } from "framer-motion";
 import { Users, Target, Heart } from "lucide-react";
 import Navbar from "../home/sections/Navbar/Navbar";
-import Image from 'next/image';
 
 export default function AboutPage() {
   return (
@@ -59,9 +58,9 @@ export default function AboutPage() {
               </motion.div>
             ))}
           </div>
-
+{/* TODO add the our team here */}
           {/* Team Section */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
@@ -109,7 +108,7 @@ export default function AboutPage() {
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+          </motion.div> */}
         </div>
       </main>
     </>

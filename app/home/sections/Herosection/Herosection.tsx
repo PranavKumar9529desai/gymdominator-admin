@@ -135,13 +135,13 @@ export default function Herosection() {
 
             {/* Mobile-optimized CTA buttons */}
             <motion.div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-8">
-              <motion.button
+              {/* <motion.button
                 whileTap={{ scale: 0.98 }}
                 className="w-full sm:w-auto lg:hidden px-6 py-3 rounded-full border border-gray-700 text-gray-300 flex items-center justify-center gap-2 hover:bg-white/5 transition-all"
               >
                 Watch Demo
                 <ArrowRight className="w-4 h-4" />
-              </motion.button>
+              </motion.button> */}
             </motion.div>
           </motion.div>
 

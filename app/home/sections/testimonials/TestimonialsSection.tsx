@@ -1,9 +1,11 @@
 import { InfiniteMovingCards } from "./InfiniteMovingCards";
 import { Sparkles } from "lucide-react";
 
+const profileAvatarSrc = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIyMCIgY3k9IjIwIiByPSIyMCIgZmlsbD0iIzFFNDBBRiIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTUiIHI9IjciIGZpbGw9IiM2MEE1RkEiLz48cGF0aCBkPSJNOCAzNS41QzggMzUuNSAxMSAyNSAyMCAyNUMyOSAyNSAzMiAzNS41IDMyIDM1LjUiIHN0cm9rZT0iIzYwQTVGQSIgc3Ryb2tlV2lkdGg9IjMiLz48L3N2Zz4=";
+
 const testimonials = [
   {
-    image: "/testimonials/arjun.jpg",
+    image: profileAvatarSrc,
     quote: "GymNavigator transformed our daily operations. From QR attendance to AI-powered diet plans, we've seen 200% membership growth in just 6 months!",
     author: "Arjun Patel",
     role: "Founder, Shakti Fitness Hub",
@@ -12,7 +14,7 @@ const testimonials = [
     growth: "200%"
   },
   {
-    image: "/testimonials/priya.jpg",
+    image: profileAvatarSrc,
     quote: "Perfect example of digital transformation. Our trainers now focus on members instead of paperwork. Member satisfaction is at an all-time high!",
     author: "Priya Reddy",
     role: "Director, FitIndia Studios",
@@ -21,7 +23,7 @@ const testimonials = [
     growth: "150%"
   },
   {
-    image: "/testimonials/kabir.jpg",
+    image: profileAvatarSrc,
     quote: "AI-driven analytics took our gym's performance to new heights. Revenue increased by 80% within the first quarter of implementation.",
     author: "Kabir Singh",
     role: "CEO, PowerFlex Gyms",
@@ -30,7 +32,7 @@ const testimonials = [
     growth: "80%"
   },
   {
-    image: "/testimonials/meera.jpg",
+    image: profileAvatarSrc,
     quote: "Personalized diet plans and workout tracking doubled our member success rate. The automated progress updates keep members motivated!",
     author: "Meera Desai",
     role: "Nutritionist & Owner",
@@ -39,7 +41,7 @@ const testimonials = [
     growth: "120%"
   },
   {
-    image: "/testimonials/rajesh.jpg",
+    image: profileAvatarSrc,
     quote: "Cloud-based management system helped unite our multi-branch gyms seamlessly. Managing multiple locations has never been easier.",
     author: "Rajesh Malhotra",
     role: "Chain Owner, StrongLife",

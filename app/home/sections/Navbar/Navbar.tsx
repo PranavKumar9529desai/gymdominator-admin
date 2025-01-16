@@ -135,38 +135,47 @@ const Navbar = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm md:hidden"
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/70 backdrop-blur-md md:hidden"
               onClick={() => setIsOpen(false)}
             />
             <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: "spring", bounce: 0, duration: 0.4 }}
-              className="fixed right-0 top-0 bottom-0 w-[75%] max-w-sm bg-gray-900 md:hidden shadow-xl"
+              initial={{ x: '100%', opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: '100%', opacity: 0 }}
+              transition={{ 
+                type: "spring", 
+                damping: 30, 
+                stiffness: 300,
+                duration: 0.3 
+              }}
+              className="fixed right-0 top-0 bottom-0 w-[80%] max-w-sm bg-gradient-to-b from-gray-900 to-gray-800 md:hidden shadow-2xl border-l border-gray-700/50"
             >
               <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between p-4 border-b border-gray-800">
-                  <span className="text-lg font-semibold text-white">Menu</span>
-                  <button
+                <div className="flex items-center justify-between p-5 border-b border-gray-700/50">
+                  <span className="text-lg font-semibold text-white bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    Menu
+                  </span>
+                  <motion.button
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setIsOpen(false)}
-                    className="p-2 rounded-full hover:bg-gray-800 transition-colors"
+                    className="p-2 rounded-full hover:bg-gray-800/80 transition-colors"
                   >
                     <HiX className="h-6 w-6 text-gray-400" />
-                  </button>
+                  </motion.button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto py-4">
-                  {menuItems.map((item) => (
+                <div className="flex-1 overflow-y-auto py-4 space-y-1">
+                  {menuItems.map((item, index) => (
                     <motion.div
                       key={item.label}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 }}
+                      transition={{ delay: index * 0.1 }}
                     >
                       <Link
                         href={item.href}
-                        className="flex items-center space-x-2 text-gray-300 hover:bg-gray-800/50 px-4 py-3 transition-colors"
+                        className="flex items-center space-x-2 text-gray-300 hover:bg-blue-500/10 hover:text-blue-400 px-5 py-3 transition-all rounded-lg mx-2"
                         onClick={() => setIsOpen(false)}
                       >
                         <span className="text-base font-medium">{item.label}</span>
@@ -175,12 +184,12 @@ const Navbar = () => {
                         )}
                       </Link>
                       {item.dropdownItems && (
-                        <div className="pl-4 bg-gray-800/30">
+                        <div className="pl-4 bg-gray-800/30 rounded-lg mx-2 my-1">
                           {item.dropdownItems.map((dropdownItem) => (
                             <Link
                               key={dropdownItem.label}
                               href={dropdownItem.href}
-                              className="block text-gray-400 hover:text-white hover:bg-gray-800/50 px-4 py-2 text-sm"
+                              className="block text-gray-400 hover:text-blue-400 hover:bg-blue-500/10 px-4 py-2.5 text-sm rounded-lg transition-colors"
                               onClick={() => setIsOpen(false)}
                             >
                               {dropdownItem.label}
@@ -192,9 +201,17 @@ const Navbar = () => {
                   ))}
                 </div>
 
-                <div className="p-4 border-t border-gray-800">
-                  <CustomButton className="w-full" text={session ? "Dashboard" : "Login"} />
-                </div>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="p-5 border-t border-gray-700/50"
+                >
+                  <CustomButton 
+                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700" 
+                    text={session ? "Dashboard" : "Login"} 
+                  />
+                </motion.div>
               </div>
             </motion.div>
           </>

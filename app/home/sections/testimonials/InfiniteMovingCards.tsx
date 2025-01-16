@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-interface TestimonialItem {
+export type TestimonialItem = {
   image: string;
   quote: string;
   author: string;
@@ -11,7 +11,7 @@ interface TestimonialItem {
   location: string;
   rating: number;
   growth: string;
-}
+};
 
 export const InfiniteMovingCards = ({
   items,
