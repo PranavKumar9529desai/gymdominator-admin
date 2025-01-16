@@ -1,5 +1,13 @@
-"use client"
-import { ArrowRight, Activity, Users, Dumbbell, UserCheck, UserCog } from "lucide-react";
+"use client";
+import {
+  ArrowRight,
+  Activity,
+  Users,
+  Dumbbell,
+  UserCheck,
+  UserCog,
+  Sparkles,
+} from "lucide-react";
 import CustomButton from "../../CustomButton";
 import { Button } from "@/components/ui/button";
 
@@ -8,34 +16,34 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function Herosection() {
-  
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-
   if (!isClient) {
     return <div className="min-h-[90vh]" />; // Loading state
   }
 
   return (
-    <section className="relative h-screen flex items-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900 via-black to-gray-950">
-      {/* Animated background shapes */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute w-[500px] h-[500px] rounded-full bg-blue-500/20 blur-3xl animate-pulse top-[-250px] left-[-250px]"></div>
-        <div className="absolute w-[500px] h-[500px] rounded-full bg-indigo-500/20 blur-3xl animate-pulse bottom-[-250px] right-[-250px]"></div>
+    <section className="relative min-h-[95vh] flex items-center overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900 via-black to-gray-950">
+      {/* Mobile-specific background elements */}
+      <div className="absolute inset-0 overflow-hidden lg:hidden">
+        <div className="absolute w-[300px] h-[300px] rounded-full bg-blue-500/10 blur-3xl animate-pulse top-[-150px] left-[-150px]"></div>
+        <div className="absolute w-[300px] h-[300px] rounded-full bg-indigo-500/10 blur-3xl animate-pulse bottom-[-150px] right-[-150px]"></div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0.1, 0.3, 0.1] }}
+          transition={{ duration: 5, repeat: Infinity }}
+          className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"
+        />
       </div>
 
-      <div className="container mx-auto px-8 sm:px-12 lg:px-16 relative">
+      <div className="container mx-auto px-4 sm:px-12 lg:px-16 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="space-y-6 lg:space-y-8 text-center lg:text-left relative z-10 py-8 lg:py-0"
-          >
+          {/* Mobile-optimized hero content */}
+          <motion.div className="space-y-6 lg:space-y-8 text-center lg:text-left relative z-10 py-8 lg:py-0">
             <div className="space-y-4 sm:space-y-6 max-w-2xl mx-auto lg:mx-0">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -43,13 +51,15 @@ export default function Herosection() {
                 transition={{ delay: 0.3, duration: 0.8 }}
               >
                 <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight tracking-tight">
-                  <span className="block mb-2 sm:mb-4 text-white/90">Elevate Your</span>
+                  <span className="block mb-2 sm:mb-4 text-white/90">
+                    Elevate Your
+                  </span>
                   <span className="bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 bg-clip-text text-transparent inline-block animate-gradient">
                     Gym Management
                   </span>
                 </h1>
               </motion.div>
-              <motion.p 
+              <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
@@ -60,7 +70,55 @@ export default function Herosection() {
               </motion.p>
             </div>
 
-            <motion.div 
+            {/* Mobile Stats Overview */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="grid grid-cols-2 gap-3 my-8 lg:hidden"
+            >
+              {[
+                { label: "Partner Gyms", value: "10+", icon: Users },
+                { label: "Active Members", value: "100+", icon: UserCheck },
+              ].map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.2 + 0.5 }}
+                  className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-white/10"
+                >
+                  <stat.icon className="w-6 h-6 text-blue-400 mb-2" />
+                  <p className="text-2xl font-bold text-white">{stat.value}</p>
+                  <p className="text-sm text-gray-400">{stat.label}</p>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Mobile Feature Highlights */}
+            <div className="lg:hidden">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="flex flex-wrap gap-2 justify-center my-6"
+              >
+                {["Easy Setup", "24/7 Support", "Secure"].map((feature, i) => (
+                  <motion.span
+                    key={feature}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: i * 0.1 + 0.7 }}
+                    className="bg-blue-500/10 text-blue-300 text-sm px-3 py-1 rounded-full border border-blue-500/20 flex items-center gap-1"
+                  >
+                    <Sparkles className="w-3 h-3" />
+                    {feature}
+                  </motion.span>
+                ))}
+              </motion.div>
+            </div>
+
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8 }}
@@ -74,9 +132,20 @@ export default function Herosection() {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </motion.div>
+
+            {/* Mobile-optimized CTA buttons */}
+            <motion.div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-8">
+              <motion.button
+                whileTap={{ scale: 0.98 }}
+                className="w-full sm:w-auto lg:hidden px-6 py-3 rounded-full border border-gray-700 text-gray-300 flex items-center justify-center gap-2 hover:bg-white/5 transition-all"
+              >
+                Watch Demo
+                <ArrowRight className="w-4 h-4" />
+              </motion.button>
+            </motion.div>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
@@ -86,84 +155,92 @@ export default function Herosection() {
               {/* 3D Dashboard Cards */}
               <div className="grid grid-cols-2 gap-6">
                 {[
-                  { 
-                    icon: Users, 
-                    title: "Onboarded Users", 
-                    value: "1,847", 
+                  {
+                    icon: Users,
+                    title: "Onboarded Users",
+                    value: "1,847",
                     color: "from-blue-500 to-blue-600",
-                    growth: "+22%"
+                    growth: "+22%",
                   },
-                  { 
-                    icon: UserCheck, 
-                    title: "Today's Attendance", 
-                    value: "234", 
+                  {
+                    icon: UserCheck,
+                    title: "Today's Attendance",
+                    value: "234",
                     color: "from-green-500 to-green-600",
-                    growth: "+18%"
+                    growth: "+18%",
                   },
-                  { 
-                    icon: UserCog, 
-                    title: "Trainer Dashboard", 
-                    value: "16", 
+                  {
+                    icon: UserCog,
+                    title: "Trainer Dashboard",
+                    value: "16",
                     color: "from-purple-500 to-purple-600",
-                    growth: "+5%"
+                    growth: "+5%",
                   },
-                  { 
-                    icon: Activity, 
-                    title: "Active Users", 
-                    value: "1,392", 
+                  {
+                    icon: Activity,
+                    title: "Active Users",
+                    value: "1,392",
                     color: "from-orange-500 to-orange-600",
-                    growth: "+15%"
-                  }
+                    growth: "+15%",
+                  },
                 ].map((item, i) => (
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, y: 50, rotateX: 45 }}
-                    animate={{ 
-                      opacity: 1, 
-                      y: 0, 
+                    animate={{
+                      opacity: 1,
+                      y: 0,
                       rotateX: 0,
-                      z: Math.sin(i * 0.5) * 50 
+                      z: Math.sin(i * 0.5) * 50,
                     }}
-                    whileHover={{ 
-                      scale: 1.05, 
+                    whileHover={{
+                      scale: 1.05,
                       z: 30,
                       rotateX: 10,
-                      rotateY: 10
+                      rotateY: 10,
                     }}
-                    transition={{ 
+                    transition={{
                       delay: i * 0.1,
                       duration: 0.8,
                       type: "spring",
-                      stiffness: 100
+                      stiffness: 100,
                     }}
                     className="bg-gradient-to-br border border-white/10 rounded-xl p-6 transform-style-3d shadow-xl"
                   >
-                    <div className={`rounded-full w-12 h-12 bg-gradient-to-br ${item.color} flex items-center justify-center mb-4`}>
+                    <div
+                      className={`rounded-full w-12 h-12 bg-gradient-to-br ${item.color} flex items-center justify-center mb-4`}
+                    >
                       <item.icon className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold text-white/90">{item.title}</h3>
+                    <h3 className="text-lg font-semibold text-white/90">
+                      {item.title}
+                    </h3>
                     <div className="flex items-end gap-2 mt-2">
-                      <span className="text-3xl font-bold text-white">{item.value}</span>
-                      <span className="text-green-400 text-sm mb-1">{item.growth}</span>
+                      <span className="text-3xl font-bold text-white">
+                        {item.value}
+                      </span>
+                      <span className="text-green-400 text-sm mb-1">
+                        {item.growth}
+                      </span>
                     </div>
-                    
+
                     {/* Animated graph line */}
-                    <motion.div 
+                    <motion.div
                       className="h-1 bg-white/10 mt-4 rounded-full overflow-hidden"
                       initial={{ width: "0%" }}
                       animate={{ width: "100%" }}
                       transition={{ delay: i * 0.2 + 0.5, duration: 1 }}
                     >
-                      <motion.div 
+                      <motion.div
                         className={`h-full bg-gradient-to-r ${item.color}`}
-                        animate={{ 
+                        animate={{
                           x: ["-100%", "0%"],
-                          opacity: [0.5, 1] 
+                          opacity: [0.5, 1],
                         }}
-                        transition={{ 
+                        transition={{
                           duration: 1.5,
                           delay: i * 0.2 + 0.5,
-                          ease: "easeOut"
+                          ease: "easeOut",
                         }}
                       />
                     </motion.div>
@@ -178,7 +255,7 @@ export default function Herosection() {
                     key={`badge-${i}`}
                     className="absolute"
                     initial={{ opacity: 0, scale: 0 }}
-                    animate={{ 
+                    animate={{
                       opacity: [0, 1, 0],
                       scale: [0.5, 1, 0.5],
                       x: Math.sin(i * 45) * 200,
@@ -188,7 +265,7 @@ export default function Herosection() {
                       duration: 3,
                       delay: i * 0.5,
                       repeat: Infinity,
-                      repeatType: "reverse"
+                      repeatType: "reverse",
                     }}
                   >
                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
@@ -202,23 +279,53 @@ export default function Herosection() {
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div 
+      {/* Mobile-specific floating elements */}
+      <div className="absolute inset-0 pointer-events-none lg:hidden">
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={`mobile-float-${i}`}
+            className="absolute"
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{
+              opacity: [0, 1, 0],
+              scale: [0.5, 1, 0.5],
+              x: Math.sin(i * 45) * 100,
+              y: Math.cos(i * 45) * 100,
+            }}
+            transition={{
+              duration: 3,
+              delay: i * 0.5,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+          >
+            <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
+              <Dumbbell className="w-3 h-3 text-white" />
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Mobile-optimized scroll indicator */}
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.8 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        transition={{ delay: 1.2 }}
+        className="absolute bottom-4 left-1/2 transform -translate-x-1/2 lg:bottom-8"
       >
-        <div className="w-[30px] h-[50px] rounded-full border-2 border-gray-500 flex justify-center p-2">
-          <motion.div
-            animate={{ y: [0, 15, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5 }}
-            className="w-1 h-3 bg-blue-500 rounded-full"
-          />
-        </div>
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+          className="text-blue-400 text-sm flex flex-col items-center gap-2"
+        >
+          <span className="hidden sm:block text-xs text-gray-400">
+            Scroll to explore
+          </span>
+          <ArrowRight className="w-4 h-4 rotate-90" />
+        </motion.div>
       </motion.div>
 
-      <BackgroundBeams className="opacity-40" />
+      <BackgroundBeams className="opacity-20" />
     </section>
   );
 }
