@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import Image from "next/image";
 
 export type TestimonialItem = {
@@ -45,7 +45,7 @@ export const InfiniteMovingCards = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <motion.div
+      <m.div
         className="flex gap-6 w-max"
         animate={start ? {
           x: direction === "left" ? ["0%", "-50%"] : ["-50%", "0%"],
@@ -101,7 +101,7 @@ export const InfiniteMovingCards = ({
             </div>
           </div>
         ))}
-      </motion.div>
+      </m.div>
     </div>
   );
 };

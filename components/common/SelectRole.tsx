@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Rolestype } from "@/app/types/next-auth";
 import { updateSessionWithRole } from "@/app/actions/session/updateSessionWithRole";
 import { useSession } from "next-auth/react";
@@ -70,7 +70,7 @@ export default function SelectRole() {
         <div className="grid gap-4 py-4">
           <AnimatePresence>
             {roles.map((role, index) => (
-              <motion.div
+              <m.div
                 key={role.value}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -87,7 +87,7 @@ export default function SelectRole() {
                     <p className="text-gray-600">{role.description}</p>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </m.div>
             ))}
           </AnimatePresence>
         </div>

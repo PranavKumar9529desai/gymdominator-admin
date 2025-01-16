@@ -1,5 +1,5 @@
 "use client"
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Users, Target, Heart } from "lucide-react";
 import Navbar from "../home/sections/Navbar/Navbar";
 
@@ -10,7 +10,7 @@ export default function AboutPage() {
       <main className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black pt-20">
         <div className="container mx-auto px-4 py-16">
           {/* Hero Section */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -22,7 +22,7 @@ export default function AboutPage() {
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
               At GymDominator, we&apos;re passionate about transforming the way gyms operate and members experience fitness.
             </p>
-          </motion.div>
+          </m.div>
 
           {/* Values Section */}
           <div className="grid md:grid-cols-3 gap-8 mb-16">
@@ -43,7 +43,7 @@ export default function AboutPage() {
                 description: "Innovation, reliability, and member-first approach drive everything we do."
               }
             ].map((item, index) => (
-              <motion.div
+              <m.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -55,12 +55,12 @@ export default function AboutPage() {
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
                 <p className="text-gray-400">{item.description}</p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
 {/* TODO add the our team here */}
           {/* Team Section */}
-          {/* <motion.div
+          {/* <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
@@ -87,7 +87,7 @@ export default function AboutPage() {
                   image: "https://source.unsplash.com/300x300/?portrait,man,2"
                 }
               ].map((member, index) => (
-                <motion.div
+                <m.div
                   key={index}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -105,10 +105,10 @@ export default function AboutPage() {
                   </div>
                   <h3 className="text-xl font-semibold text-white">{member.name}</h3>
                   <p className="text-blue-400">{member.role}</p>
-                </motion.div>
+                </m.div>
               ))}
             </div>
-          </motion.div> */}
+          </m.div> */}
         </div>
       </main>
     </>

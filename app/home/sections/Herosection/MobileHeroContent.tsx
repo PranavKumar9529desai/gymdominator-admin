@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { ArrowRight, Users, UserCheck, Sparkles, Dumbbell } from "lucide-react";
 import CustomButton from "../../CustomButton";
 import MobileHeroContent from "./MobileHeroContent";
@@ -16,7 +16,7 @@ export default function Herosection() {
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute w-[500px] h-[500px] rounded-full bg-blue-500/10 blur-3xl animate-pulse top-[-250px] left-[-250px]"></div>
             <div className="absolute w-[500px] h-[500px] rounded-full bg-indigo-500/10 blur-3xl animate-pulse bottom-[-250px] right-[-250px]"></div>
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: [0.1, 0.3, 0.1] }}
               transition={{ duration: 5, repeat: Infinity }}
@@ -24,10 +24,10 @@ export default function Herosection() {
             />
           </div>
 
-          <motion.div className="space-y-6 text-center relative z-10 py-8">
+          <m.div className="space-y-6 text-center relative z-10 py-8">
             {/* Title and Description */}
             <div className="space-y-4 max-w-2xl mx-auto px-4">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
@@ -38,8 +38,8 @@ export default function Herosection() {
                     Gym Management
                   </span>
                 </h1>
-              </motion.div>
-              <motion.p 
+              </m.div>
+              <m.p 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
@@ -47,11 +47,11 @@ export default function Herosection() {
               >
                 Streamline operations, enhance member experience, and drive
                 growth with our sophisticated management suite.
-              </motion.p>
+              </m.p>
             </div>
 
             {/* Stats Cards */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
@@ -61,7 +61,7 @@ export default function Herosection() {
                 { label: "Partner Gyms", value: "10+", icon: Users },
                 { label: "Active Members", value: "100+", icon: UserCheck },
               ].map((stat, i) => (
-                <motion.div
+                <m.div
                   key={stat.label}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -71,19 +71,19 @@ export default function Herosection() {
                   <stat.icon className="w-6 h-6 text-blue-400 mb-2" />
                   <p className="text-2xl font-bold text-white">{stat.value}</p>
                   <p className="text-sm text-gray-400">{stat.label}</p>
-                </motion.div>
+                </m.div>
               ))}
-            </motion.div>
+            </m.div>
 
             {/* Feature Tags */}
-            <motion.div 
+            <m.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}
               className="flex flex-wrap gap-2 justify-center px-4"
             >
               {["Easy Setup", "24/7 Support", "Secure"].map((feature, i) => (
-                <motion.span
+                <m.span
                   key={feature}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -92,27 +92,27 @@ export default function Herosection() {
                 >
                   <Sparkles className="w-3 h-3" />
                   {feature}
-                </motion.span>
+                </m.span>
               ))}
-            </motion.div>
+            </m.div>
 
             {/* CTA Buttons */}
             <div className="px-4">
               <CustomButton className="w-full text-lg py-3 mb-3" />
-              <motion.button
+              <m.button
                 whileTap={{ scale: 0.98 }}
                 className="w-full px-6 py-3 rounded-full border border-gray-700 text-gray-300 flex items-center justify-center gap-2 hover:bg-white/5 transition-all"
               >
                 Watch Demo
                 <ArrowRight className="w-4 h-4" />
-              </motion.button>
+              </m.button>
             </div>
-          </motion.div>
+          </m.div>
 
           {/* Floating Elements */}
           <div className="absolute inset-0 pointer-events-none">
             {[...Array(3)].map((_, i) => (
-              <motion.div
+              <m.div
                 key={`desktop-float-${i}`}
                 className="absolute"
                 initial={{ opacity: 0, scale: 0 }}
@@ -132,7 +132,7 @@ export default function Herosection() {
                 <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
                   <Dumbbell className="w-3 h-3 text-white" />
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </>

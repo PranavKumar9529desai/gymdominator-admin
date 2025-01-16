@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { HiMenu, HiX } from 'react-icons/hi'
 import { BiChevronDown } from 'react-icons/bi'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, m } from 'framer-motion'
 import { useSession } from "next-auth/react";
 import CustomButton from "../../CustomButton";
 
@@ -131,7 +131,7 @@ const Navbar = () => {
       <AnimatePresence>
         {isOpen && (
           <>
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -139,7 +139,7 @@ const Navbar = () => {
               className="fixed inset-0 bg-black/70 backdrop-blur-md md:hidden"
               onClick={() => setIsOpen(false)}
             />
-            <motion.div
+            <m.div
               initial={{ x: '100%', opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: '100%', opacity: 0 }}
@@ -156,18 +156,18 @@ const Navbar = () => {
                   <span className="text-lg font-semibold text-white bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
                     Menu
                   </span>
-                  <motion.button
+                  <m.button
                     whileTap={{ scale: 0.9 }}
                     onClick={() => setIsOpen(false)}
                     className="p-2 rounded-full hover:bg-gray-800/80 transition-colors"
                   >
                     <HiX className="h-6 w-6 text-gray-400" />
-                  </motion.button>
+                  </m.button>
                 </div>
 
                 <div className="flex-1 overflow-y-auto py-4 space-y-1">
                   {menuItems.map((item, index) => (
-                    <motion.div
+                    <m.div
                       key={item.label}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -197,11 +197,11 @@ const Navbar = () => {
                           ))}
                         </div>
                       )}
-                    </motion.div>
+                    </m.div>
                   ))}
                 </div>
 
-                <motion.div
+                <m.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
@@ -211,9 +211,9 @@ const Navbar = () => {
                     className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700" 
                     text={session ? "Dashboard" : "Login"} 
                   />
-                </motion.div>
+                </m.div>
               </div>
-            </motion.div>
+            </m.div>
           </>
         )}
       </AnimatePresence>

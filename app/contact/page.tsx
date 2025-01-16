@@ -1,5 +1,5 @@
 "use client"
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Phone, Mail, MapPin, Send } from "lucide-react";
 import { useState } from "react";
 import Navbar from "../home/sections/Navbar/Navbar";
@@ -18,7 +18,7 @@ export default function ContactPage() {
       <Navbar />
       <main className="min-h-screen bg-gradient-to-b from-gray-950 via-gray-900 to-black pt-20">
         <div className="container mx-auto px-4 py-16">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -30,11 +30,11 @@ export default function ContactPage() {
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
               Have questions about GymDominator? We&apos;re here to help you transform your gym management experience.
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid md:grid-cols-2 gap-12">
             {/* Contact Form */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
@@ -76,10 +76,10 @@ export default function ContactPage() {
                   <p className="text-green-400 text-center mt-4">{formStatus}</p>
                 )}
               </form>
-            </motion.div>
+            </m.div>
 
             {/* Contact Information */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.4 }}
@@ -119,7 +119,7 @@ export default function ContactPage() {
                   </div>
                 </div>
               ))}
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </main>

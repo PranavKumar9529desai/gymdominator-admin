@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRecoilValue } from "recoil";
 import { Loader2, Shield, CheckCircle2, AlertCircle } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { GymAtom, GymAtomType } from "@/app/state/Atoms/gymAtom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -91,7 +91,7 @@ export default function AuthTokenSubmission() {
           {showWrongToken ? (
             <AuthTokenWrong onRetry={handleRetry} />
           ) : (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -145,14 +145,14 @@ export default function AuthTokenSubmission() {
                   />
 
                   {error && (
-                    <motion.div
+                    <m.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="flex items-center justify-center text-red-500 text-sm mt-2"
                     >
                       <AlertCircle className="w-4 h-4 mr-1" />
                       {error}
-                    </motion.div>
+                    </m.div>
                   )}
 
                   <p className="text-xs text-gray-500 text-center mt-2">
@@ -182,7 +182,7 @@ export default function AuthTokenSubmission() {
                   Contact the gym owner if you haven&apos;t received the token
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </DialogContent>

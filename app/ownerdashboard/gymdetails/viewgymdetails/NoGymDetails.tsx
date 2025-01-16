@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -24,7 +24,7 @@ export default function NoGymDetails() {
         </div>
 
         {/* Content Overlay */}
-        <motion.div 
+        <m.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="relative z-10 h-full flex flex-col items-center justify-center text-white p-6"
@@ -42,7 +42,7 @@ export default function NoGymDetails() {
             <Plus className="w-5 h-5" />
             Create Gym Profile
           </Button>
-        </motion.div>
+        </m.div>
 
         {/* Bottom Gradient Overlay */}
         <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/60 to-transparent" />

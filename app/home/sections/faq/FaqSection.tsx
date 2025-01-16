@@ -1,5 +1,5 @@
 "use client"
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { Plus, Minus } from "lucide-react";
 import { useState } from "react";
 
@@ -32,7 +32,7 @@ export default function FaqSection() {
   return (
     <section className="py-24 bg-gradient-to-b from-black to-gray-900">
       <div className="container mx-auto px-4">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -44,11 +44,11 @@ export default function FaqSection() {
           <p className="text-gray-400 text-lg">
             Everything you need to know about managing your gym
           </p>
-        </motion.div>
+        </m.div>
 
         <div className="max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
-            <motion.div
+            <m.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -62,7 +62,7 @@ export default function FaqSection() {
                 <span className="text-lg font-semibold text-left text-white group-hover:text-blue-400">
                   {faq.question}
                 </span>
-                <motion.div
+                <m.div
                   animate={{ rotate: activeIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                   className="text-blue-500"
@@ -72,9 +72,9 @@ export default function FaqSection() {
                   ) : (
                     <Plus className="w-5 h-5" />
                   )}
-                </motion.div>
+                </m.div>
               </button>
-              <motion.div
+              <m.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{
                   height: activeIndex === index ? "auto" : 0,
@@ -88,8 +88,8 @@ export default function FaqSection() {
                     {faq.answer}
                   </p>
                 </div>
-              </motion.div>
-            </motion.div>
+              </m.div>
+            </m.div>
           ))}
         </div>
       </div>

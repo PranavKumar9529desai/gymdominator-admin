@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import {  AnimatePresence, m } from "framer-motion";
 import { DragDropContext, Droppable, Draggable, DropResult } from "react-beautiful-dnd";
 import { Plus, X, ChevronRight, ChevronLeft, Save } from "lucide-react";
 import {
@@ -269,7 +269,7 @@ export default function CreateWorkoutPlan() {
 
   return (
     <div className="container mx-auto p-6">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-4xl mx-auto"
@@ -307,7 +307,7 @@ export default function CreateWorkoutPlan() {
         {/* Step 1: Basic Information */}
         <AnimatePresence mode="wait">
           {currentStep === 1 && (
-            <motion.div
+            <m.div
               key="step1"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -338,12 +338,12 @@ export default function CreateWorkoutPlan() {
                   />
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           )}
 
           {/* Step 2: Schedule Selection */}
           {currentStep === 2 && (
-            <motion.div
+            <m.div
               key="step2"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -550,7 +550,7 @@ export default function CreateWorkoutPlan() {
                   </div>
                 </DragDropContext>
               )}
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
@@ -581,7 +581,7 @@ export default function CreateWorkoutPlan() {
             </Button>
           )}
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

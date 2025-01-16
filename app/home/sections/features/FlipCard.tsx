@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useState } from "react";
 import { 
   QrCode, 
@@ -74,7 +74,7 @@ export const FlipCard = ({ title, description }: FlipCardProps) => {
   const BackIcon = iconMap[backFeature.title as keyof typeof iconMap];
 
   return (
-    <motion.div
+    <m.div
       className="flip-card cursor-pointer h-[400px] w-full [perspective:1000px]"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -131,6 +131,6 @@ export const FlipCard = ({ title, description }: FlipCardProps) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   );
 }

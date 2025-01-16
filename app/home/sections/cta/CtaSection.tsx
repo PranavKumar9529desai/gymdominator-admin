@@ -1,5 +1,5 @@
 'use client'
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Zap, Shield, Clock } from 'lucide-react';
 import CustomButton from '../../CustomButton';
@@ -13,7 +13,7 @@ const CtaSection = () => {
       
       {/* Content */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -26,7 +26,7 @@ const CtaSection = () => {
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Join thousands of successful gym owners who have revolutionized their business with GymDominator
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Features grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-12">
@@ -47,7 +47,7 @@ const CtaSection = () => {
               description: "Round-the-clock expert assistance"
             }
           ].map((feature, index) => (
-            <motion.div
+            <m.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -58,12 +58,12 @@ const CtaSection = () => {
               <feature.icon className="w-12 h-12 text-blue-400 mb-4" />
               <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
               <p className="text-gray-400">{feature.description}</p>
-            </motion.div>
+            </m.div>
           ))}
         </div>
 
         {/* CTA Buttons */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -79,7 +79,7 @@ const CtaSection = () => {
             Schedule Demo
             <ArrowRight className="w-5 h-5 ml-2" />
           </Link>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

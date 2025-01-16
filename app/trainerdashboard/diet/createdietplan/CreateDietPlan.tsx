@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import {  m ,AnimatePresence } from 'framer-motion';
 import { ArrowRight, Save } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -266,7 +266,7 @@ export default function CreateDietPlan() {
 
   return (
     <div className="container mx-auto p-6">
-      <motion.div
+      <m.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-4xl mx-auto"
@@ -298,7 +298,7 @@ export default function CreateDietPlan() {
         <AnimatePresence mode="wait">
           {/* Step 1: Basic Information */}
           {currentStep === 1 && (
-            <motion.div
+            <m.div
               key="step1"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -338,12 +338,12 @@ export default function CreateDietPlan() {
                   />
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           )}
 
           {/* Step 2: Macro Split */}
           {currentStep === 2 && (
-            <motion.div
+            <m.div
               key="step2"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -405,12 +405,12 @@ export default function CreateDietPlan() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           )}
 
           {/* Step 3: Meal Planning */}
           {currentStep === 3 && (
-            <motion.div
+            <m.div
               key="step3"
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -536,7 +536,7 @@ export default function CreateDietPlan() {
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Planned Meals</h3>
                 {dietPlan.meals.map((meal, index) => (
-                  <motion.div
+                  <m.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -571,10 +571,10 @@ export default function CreateDietPlan() {
                         Remove
                       </Button>
                     </div>
-                  </motion.div>
+                  </m.div>
                 ))}
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
@@ -600,7 +600,7 @@ export default function CreateDietPlan() {
             </Button>
           )}
         </div>
-      </motion.div>
+      </m.div>
     </div>
   );
 }

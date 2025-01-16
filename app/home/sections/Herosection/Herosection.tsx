@@ -12,7 +12,7 @@ import CustomButton from "../../CustomButton";
 import { Button } from "@/components/ui/button";
 
 import { BackgroundBeams } from "../../../../components/beams";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export default function Herosection() {
@@ -32,7 +32,7 @@ export default function Herosection() {
       <div className="absolute inset-0 overflow-hidden lg:hidden">
         <div className="absolute w-[300px] h-[300px] rounded-full bg-blue-500/10 blur-3xl animate-pulse top-[-150px] left-[-150px]"></div>
         <div className="absolute w-[300px] h-[300px] rounded-full bg-indigo-500/10 blur-3xl animate-pulse bottom-[-150px] right-[-150px]"></div>
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: [0.1, 0.3, 0.1] }}
           transition={{ duration: 5, repeat: Infinity }}
@@ -43,9 +43,9 @@ export default function Herosection() {
       <div className="container mx-auto px-4 sm:px-12 lg:px-16 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Mobile-optimized hero content */}
-          <motion.div className="space-y-6 lg:space-y-8 text-center lg:text-left relative z-10 py-8 lg:py-0">
+          <m.div className="space-y-6 lg:space-y-8 text-center lg:text-left relative z-10 py-8 lg:py-0">
             <div className="space-y-4 sm:space-y-6 max-w-2xl mx-auto lg:mx-0">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3, duration: 0.8 }}
@@ -58,8 +58,8 @@ export default function Herosection() {
                     Gym Management
                   </span>
                 </h1>
-              </motion.div>
-              <motion.p
+              </m.div>
+              <m.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
@@ -67,11 +67,11 @@ export default function Herosection() {
               >
                 Streamline operations, enhance member experience, and drive
                 growth with our sophisticated management suite.
-              </motion.p>
+              </m.p>
             </div>
 
             {/* Mobile Stats Overview */}
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
@@ -81,7 +81,7 @@ export default function Herosection() {
                 { label: "Partner Gyms", value: "10+", icon: Users },
                 { label: "Active Members", value: "100+", icon: UserCheck },
               ].map((stat, i) => (
-                <motion.div
+                <m.div
                   key={stat.label}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -91,20 +91,20 @@ export default function Herosection() {
                   <stat.icon className="w-6 h-6 text-blue-400 mb-2" />
                   <p className="text-2xl font-bold text-white">{stat.value}</p>
                   <p className="text-sm text-gray-400">{stat.label}</p>
-                </motion.div>
+                </m.div>
               ))}
-            </motion.div>
+            </m.div>
 
             {/* Mobile Feature Highlights */}
             <div className="lg:hidden">
-              <motion.div
+              <m.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
                 className="flex flex-wrap gap-2 justify-center my-6"
               >
                 {["Easy Setup", "24/7 Support", "Secure"].map((feature, i) => (
-                  <motion.span
+                  <m.span
                     key={feature}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -113,12 +113,12 @@ export default function Herosection() {
                   >
                     <Sparkles className="w-3 h-3" />
                     {feature}
-                  </motion.span>
+                  </m.span>
                 ))}
-              </motion.div>
+              </m.div>
             </div>
 
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9, duration: 0.8 }}
@@ -131,21 +131,21 @@ export default function Herosection() {
               >
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
-            </motion.div>
+            </m.div>
 
             {/* Mobile-optimized CTA buttons */}
-            <motion.div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-8">
-              {/* <motion.button
+            <m.div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mt-8">
+              {/* <m.button
                 whileTap={{ scale: 0.98 }}
                 className="w-full sm:w-auto lg:hidden px-6 py-3 rounded-full border border-gray-700 text-gray-300 flex items-center justify-center gap-2 hover:bg-white/5 transition-all"
               >
                 Watch Demo
                 <ArrowRight className="w-4 h-4" />
-              </motion.button> */}
-            </motion.div>
-          </motion.div>
+              </m.button> */}
+            </m.div>
+          </m.div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}
@@ -184,7 +184,7 @@ export default function Herosection() {
                     growth: "+15%",
                   },
                 ].map((item, i) => (
-                  <motion.div
+                  <m.div
                     key={i}
                     initial={{ opacity: 0, y: 50, rotateX: 45 }}
                     animate={{
@@ -225,13 +225,13 @@ export default function Herosection() {
                     </div>
 
                     {/* Animated graph line */}
-                    <motion.div
+                    <m.div
                       className="h-1 bg-white/10 mt-4 rounded-full overflow-hidden"
                       initial={{ width: "0%" }}
                       animate={{ width: "100%" }}
                       transition={{ delay: i * 0.2 + 0.5, duration: 1 }}
                     >
-                      <motion.div
+                      <m.div
                         className={`h-full bg-gradient-to-r ${item.color}`}
                         animate={{
                           x: ["-100%", "0%"],
@@ -243,15 +243,15 @@ export default function Herosection() {
                           ease: "easeOut",
                         }}
                       />
-                    </motion.div>
-                  </motion.div>
+                    </m.div>
+                  </m.div>
                 ))}
               </div>
 
               {/* Floating Achievement Badges */}
               <div className="absolute inset-0 pointer-events-none">
                 {[...Array(5)].map((_, i) => (
-                  <motion.div
+                  <m.div
                     key={`badge-${i}`}
                     className="absolute"
                     initial={{ opacity: 0, scale: 0 }}
@@ -271,18 +271,18 @@ export default function Herosection() {
                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
                       <Dumbbell className="w-4 h-4 text-white" />
                     </div>
-                  </motion.div>
+                  </m.div>
                 ))}
               </div>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </div>
 
       {/* Mobile-specific floating elements */}
       <div className="absolute inset-0 pointer-events-none lg:hidden">
         {[...Array(3)].map((_, i) => (
-          <motion.div
+          <m.div
             key={`mobile-float-${i}`}
             className="absolute"
             initial={{ opacity: 0, scale: 0 }}
@@ -302,18 +302,18 @@ export default function Herosection() {
             <div className="w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
               <Dumbbell className="w-3 h-3 text-white" />
             </div>
-          </motion.div>
+          </m.div>
         ))}
       </div>
 
       {/* Mobile-optimized scroll indicator */}
-      <motion.div
+      <m.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
         className="absolute bottom-4 left-1/2 transform -translate-x-1/2 lg:bottom-8"
       >
-        <motion.div
+        <m.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
           className="text-blue-400 text-sm flex flex-col items-center gap-2"
@@ -322,8 +322,8 @@ export default function Herosection() {
             Scroll to explore
           </span>
           <ArrowRight className="w-4 h-4 rotate-90" />
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       <BackgroundBeams className="opacity-20" />
     </section>

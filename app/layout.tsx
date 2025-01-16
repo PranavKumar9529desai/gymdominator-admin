@@ -4,37 +4,36 @@ import RecoilContextProvider from "@/lib/RecoilContextProvider";
 import { Toaster } from "sonner";
 import type { ToasterProps } from "sonner";
 import { Metadata } from 'next'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { LazyMotion, domAnimation } from "framer-motion"
 
 const siteUrl = 'https://admin.gymnavigator.in';
 
 export const metadata: Metadata = {
-  title: 'GymDominator - Gym Management System',
-  description: 'Transform your gym management with GymDominator. The all-in-one solution for modern gym owners and trainers.',
+  title: 'GymNavigator - Gym Management System',
+  description: 'Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.',
   metadataBase: new URL(siteUrl),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'GymDominator - Gym Management System',
-    description: 'Transform your gym management with GymDominator. The all-in-one solution for modern gym owners and trainers.',
+    title: 'GymNavigator - Gym Management System',
+    description: 'Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.',
     url: siteUrl,
-    siteName: 'GymDominator',
+    siteName: 'GymNavigator',
     locale: 'en_US',
     type: 'website',
     images: [{
       url: '/gymnavigator-og.jpg', // Direct path to OG image in public directory
       width: 1200,
       height: 630,
-      alt: 'GymDominator - Modern Gym Management',
+      alt: 'GymNavigator - Modern Gym Management',
       type: 'image/jpeg',
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GymDominator - Gym Management System',
-    description: 'Transform your gym management with GymDominator. The all-in-one solution for modern gym owners and trainers.',
+    title: 'GymNavigator - Gym Management System',
+    description: 'Transform your gym management with GymNavigator. The all-in-one solution for modern gym owners and trainers.',
     images: ['/gymnavigator-og.jpg'],
   },
   other: {
@@ -73,8 +72,10 @@ export default function RootLayout({
       <Providers>
         <RecoilContextProvider>
           <body>
-            {children}
-            <Toaster {...toasterProps} />
+            <LazyMotion features={domAnimation}>
+              {children}
+              <Toaster {...toasterProps} />
+            </LazyMotion>
           </body>
         </RecoilContextProvider>
       </Providers>
