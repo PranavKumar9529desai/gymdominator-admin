@@ -1,13 +1,14 @@
 import React from "react";
-import Image from "next/image";
-import LogoImage from "@/app/assests/gym-manager.webp";
-export default function page() {
-  return (
-    <>
-      {/*  show the welcome page here  */}
-      <div className="text-4xl flex justify-center items-center w-full h-full bg-black">
-        <Image src={LogoImage} alt="LogoIcon"  className=""/>
-      </div>
-    </>
-  );
+import GetTrainerStats from "./GetTrainerstats";
+import TrainerStats from "./TrainerStats";
+import ErrorScreen from "@/app/components/ErrorScreen";
+
+export default async function Page() {
+  const trainerData = await GetTrainerStats();
+
+  if ('error' in trainerData) {
+    return <ErrorScreen error={trainerData.error} />;
+  }
+
+  return <TrainerStats data={trainerData} />;
 }

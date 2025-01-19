@@ -1,13 +1,19 @@
-import AssignDietToUsers from "./AssignDietToUsers";
-import { getUsersAssignedToTrainer } from "./GetassignedUserDietInfo"; // Updated import
+import { getUsersAssignedToTrainer } from "./GetassignedUserDietInfo";
 import { getAllDietPlans } from "./GetallDiets";
-import React from "react";
+import AssignDietToUsers from "./AssignDietToUsers";
+import { Suspense } from "react";
 
 export default async function Page() {
   const [users, dietPlans] = await Promise.all([
     getUsersAssignedToTrainer(),
-    getAllDietPlans()
+    getAllDietPlans(),
   ]);
 
-  return <AssignDietToUsers users={users} dietPlans={dietPlans} />;
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Suspense fallback={<div>Loading...</div>}>
+        <AssignDietToUsers users={users} dietPlans={dietPlans} />
+      </Suspense>
+    </div>
+  );
 }
