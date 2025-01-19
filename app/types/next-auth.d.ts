@@ -1,14 +1,12 @@
 // next-auth.d.ts
 import { DefaultSession } from "next-auth";
 
-
-export type Rolestype = "owner" | "trainer" | "sales";
+export type Rolestype = "owner" | "trainer";
 
 // Matches the backend response
 export interface GymInfo {
-  gym_id: number | null;
   id: number;
-  name: string;
+  gym_name: string;
 }
 
 // Extend the default Session type to include custom fields

@@ -1,6 +1,11 @@
-"use client"
+"use client";
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -41,18 +46,25 @@ export default function SelectRole() {
     console.log("role is this ", role);
     try {
       await new Promise(async (resolve) => {
-        if(session?.user?.name && session?.user?.email) {
-          const response : SignupWithGoogleReturnType = await SignupWithGoogle(session?.user?.name, session?.user?.email, role as "owner" | "trainer" | "sales");
-        if( response && response.name && response.role ){
-              const result = await updateSessionWithRole(response.role as Rolestype, update);
-              resolve(result);
+        if (session?.user?.name && session?.user?.email) {
+          const response: SignupWithGoogleReturnType = await SignupWithGoogle(
+            session?.user?.name,
+            session?.user?.email,
+            role as "owner" | "trainer" | "sales"
+          );
+          if (response && response.name && response.role) {
+            const result = await updateSessionWithRole(
+              response.role as Rolestype,
+              update
+            );
+            resolve(result);
           }
         }
       });
-      
+
       router.push(`/${role}dashboard`);
     } catch (error) {
-      console.error('Error selecting role:', error);
+      console.error("Error selecting role:", error);
     } finally {
       setLoading(false);
     }
@@ -78,12 +90,18 @@ export default function SelectRole() {
               >
                 <Card
                   className={`cursor-pointer transition-all duration-300 hover:scale-105 
-                    ${selectedRole === role.value ? 'border-blue-500 bg-blue-50' : 'bg-gray-50 border-gray-200 hover:bg-gray-100'}
-                    ${loading ? 'pointer-events-none opacity-50' : ''}`}
+                    ${
+                      selectedRole === role.value
+                        ? "border-blue-500 bg-blue-50"
+                        : "bg-gray-50 border-gray-200 hover:bg-gray-100"
+                    }
+                    ${loading ? "pointer-events-none opacity-50" : ""}`}
                   onClick={() => handleRoleSelect(role.value)}
                 >
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-gray-900">{role.title}</h3>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-900">
+                      {role.title}
+                    </h3>
                     <p className="text-gray-600">{role.description}</p>
                   </CardContent>
                 </Card>

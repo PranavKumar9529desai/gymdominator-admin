@@ -29,25 +29,26 @@ export interface WorkoutPlan {
 export const getAllWorkoutPlans = async () => {
   const trainerAxios = await TrainerReqConfig();
   try {
-    const response = await trainerAxios.get('/allworkoutplans');
+    const response = await trainerAxios.get("/allworkoutplans");
     const data = response.data;
-    
+
     if (data.msg === "success") {
+      // console.log("this are the all of the workous" , data.workoutPlans);
       return {
         success: true,
-        workoutPlans: data.workoutPlans as WorkoutPlan[]
+        workoutPlans: data.workoutPlans as WorkoutPlan[],
       };
     }
     return {
       success: false,
-      workoutPlans: []
+      workoutPlans: [],
     };
   } catch (error) {
     console.error("Error fetching workout plans:", error);
     return {
       success: false,
       workoutPlans: [],
-      error: "Failed to fetch workout plans"
+      error: "Failed to fetch workout plans",
     };
   }
 };

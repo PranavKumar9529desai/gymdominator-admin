@@ -5,26 +5,18 @@ export interface AssignedUser {
   id: string;
   name: string;
   email: string;
+  gender: string;
+  goal: string;
+  membershipStatus: string;
+  activeWorkoutPlanId: number | null;
+  activeWorkoutPlanName: string | null;
+  hasActiveWorkoutPlan: boolean;
   HealthProfile?: {
     weight: number;
     height: number;
     goal: string | null;
     gender: string;
   } | null;
-  WorkoutPlan?: {
-    id: number;
-    name: string;
-  } | null;
-  workoutPlanId?: number | null;
-  workoutPlans?: {  // Updated to match new schema
-    workoutPlan: {
-      id: number;
-      name: string;
-    };
-    isActive: boolean;
-  }[];
-  phone?: string;
-  membershipStatus: string;
 }
 
 export const getUsersAssignedToTrainer = async () => {
@@ -34,6 +26,7 @@ export const getUsersAssignedToTrainer = async () => {
     const data = response.data;
     
     if (data.msg === "success") {
+      // console.log("this are the assigned users", data.users);
       return data.users as AssignedUser[];
     }
     return [];

@@ -27,28 +27,29 @@ interface StatusCardProps {
   gradient: string;
 }
 
+// Update UserType to exactly match AssignedUser from GetuserassignedTotrainers
 interface UserType {
-  id: number;
+  id: string;
   name: string;
-  gender: "Male" | "Female";
+  email: string;
+  gender: string;
   goal: string;
-  workoutPlanId?: number; // Add this field
-  workoutPlanName?: string; // Add this field
+  membershipStatus: string;
+  activeWorkoutPlanId: number | null;
+  activeWorkoutPlanName: string | null;
+  hasActiveWorkoutPlan: boolean;
 }
 
 interface UserWorkoutAssignmentProps {
   Users: UserType[];
   statusCards: StatusCardProps[];
-  workoutPlans: WorkoutPlan[]; // Add workoutPlans to props
+  workoutPlans: WorkoutPlan[];
 }
 
 // Update the Select component in the columns definition to use workoutPlans
 const createColumns = (
   workoutPlans: WorkoutPlan[],
-  handleWorkoutAssignment: (
-    userId: number,
-    workoutPlanId: string
-  ) => Promise<void>
+  handleWorkoutAssignment: (userId: string, workoutPlanId: string) => Promise<void>  // Changed userId to string
 ): ColumnDef<UserType>[] => [
   {
     accessorKey: "name",
@@ -76,30 +77,26 @@ const createColumns = (
     accessorKey: "assignedWorkout",
     header: "Assign Workout",
     cell: ({ row }) => {
-      const hasWorkout = !!row.original.workoutPlanId;
-      const currentPlan = workoutPlans.find(
-        (plan) => plan.id === row.original.workoutPlanId
-      );
+      const user = row.original;
+      console.log("Rendering workout for user:", user); // Debug log
 
       return (
         <div className="flex flex-col gap-1">
           <Select
-            value={row.original.workoutPlanId?.toString()}
-            onValueChange={(value) =>
-              handleWorkoutAssignment(row.original.id, value)
-            }
+            value={user.activeWorkoutPlanId?.toString() || undefined}
+            onValueChange={(value) => handleWorkoutAssignment(user.id, value)}
           >
             <SelectTrigger
               className={`w-[200px] ${
-                hasWorkout
+                user.hasActiveWorkoutPlan
                   ? "bg-green-50 border-green-200 text-green-700"
                   : "bg-red-50 border-red-200 text-red-700"
               }`}
             >
               <SelectValue
                 placeholder={
-                  hasWorkout
-                    ? `Current: ${currentPlan?.name}`
+                  user.hasActiveWorkoutPlan
+                    ? `Current: ${user.activeWorkoutPlanName}`
                     : "No workout assigned"
                 }
               />
@@ -110,20 +107,20 @@ const createColumns = (
                   key={plan.id}
                   value={plan.id.toString()}
                   className={
-                    plan.id === row.original.workoutPlanId ? "bg-green-50" : ""
+                    plan.id === user.activeWorkoutPlanId ? "bg-green-50" : ""
                   }
                 >
                   {plan.name}
-                  {plan.id === row.original.workoutPlanId && (
+                  {plan.id === user.activeWorkoutPlanId && (
                     <span className="ml-2 text-green-600">•</span>
                   )}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          {hasWorkout && (
+          {user.hasActiveWorkoutPlan && (
             <p className="text-xs text-green-600">
-              Active Plan: {currentPlan?.name}
+              Active Plan: {user.activeWorkoutPlanName}
             </p>
           )}
         </div>
@@ -146,15 +143,16 @@ export default function UserWorkoutAssignment({
   >("all");
   const [filteredUsers, setFilteredUsers] = useState<UserType[]>(Users);
 
+  // Update handleWorkoutAssignment to use string ID
   const handleWorkoutAssignment = useCallback(
-    async (userId: number, workoutPlanId: string) => {
+    async (userId: string, workoutPlanId: string) => {
       try {
-        const previousPlan = Users.find((u) => u.id === userId)?.workoutPlanId;
+        const previousPlan = Users.find((u) => u.id === userId)?.activeWorkoutPlanName;
         const newPlan = workoutPlans.find(
           (p) => p.id === parseInt(workoutPlanId)
         );
 
-        await attachWorkoutPlanToUser(userId.toString(), workoutPlanId);
+        await attachWorkoutPlanToUser(userId, workoutPlanId);
 
         // Update local state
         setFilteredUsers((current) =>
@@ -162,17 +160,17 @@ export default function UserWorkoutAssignment({
             user.id === userId
               ? {
                   ...user,
-                  workoutPlanId: parseInt(workoutPlanId),
-                  workoutPlanName: newPlan?.name,
+                  activeWorkoutPlanId: parseInt(workoutPlanId),
+                  activeWorkoutPlanName: newPlan?.name || '',
+                  hasActiveWorkoutPlan: true,
                 }
               : user
           )
         );
 
-        // Show success toast with plan details
         toast.success(
           previousPlan
-            ? `Workout plan updated to "${newPlan?.name}"`
+            ? `Workout plan updated from "${previousPlan}" to "${newPlan?.name}"`
             : `Workout plan "${newPlan?.name}" assigned successfully`,
           {
             description: "The user's workout plan has been updated.",
@@ -210,8 +208,8 @@ export default function UserWorkoutAssignment({
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
         (genderFilter === "All" || user.gender === genderFilter) &&
         (assignmentFilter === "all" ||
-          (assignmentFilter === "assigned" && user.workoutPlanId) ||
-          (assignmentFilter === "unassigned" && !user.workoutPlanId))
+          (assignmentFilter === "assigned" && user.hasActiveWorkoutPlan) ||
+          (assignmentFilter === "unassigned" && !user.hasActiveWorkoutPlan))
     );
     setFilteredUsers(filtered);
   }, [searchTerm, genderFilter, assignmentFilter, Users]);
@@ -252,10 +250,10 @@ export default function UserWorkoutAssignment({
             <SelectValue placeholder="Select gender" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="All">All</SelectItem>
-            <SelectItem value="Male">Male</SelectItem>
-            <SelectItem value="Female">Female</SelectItem>
-          </SelectContent>
+              <SelectItem value="All">All</SelectItem>
+              <SelectItem value="Male">Male</SelectItem>
+              <SelectItem value="Female">Female</SelectItem>
+            </SelectContent>
         </Select>
         <Select
           value={assignmentFilter}
@@ -284,10 +282,7 @@ export default function UserWorkoutAssignment({
         <DataCard
           data={filteredUsers}
           renderCard={(user) => {
-            const hasWorkout = !!user.workoutPlanId;
-            const currentPlan = workoutPlans.find(
-              (plan) => plan.id === user.workoutPlanId
-            );
+            const hasWorkout = user.hasActiveWorkoutPlan;
 
             return (
               <div className="p-4 space-y-2">
@@ -295,7 +290,7 @@ export default function UserWorkoutAssignment({
                 <p className="text-sm text-gray-500">Gender: {user.gender}</p>
                 <p className="text-sm text-gray-500">Goal: {user.goal}</p>
                 <Select
-                  value={user.workoutPlanId?.toString()}
+                  value={user.activeWorkoutPlanId?.toString()}
                   onValueChange={(value) =>
                     handleWorkoutAssignment(user.id, value)
                   }
@@ -310,7 +305,7 @@ export default function UserWorkoutAssignment({
                     <SelectValue
                       placeholder={
                         hasWorkout
-                          ? `Current: ${currentPlan?.name}`
+                          ? `Current: ${user.activeWorkoutPlanName}`
                           : "No workout assigned"
                       }
                     />
@@ -321,11 +316,11 @@ export default function UserWorkoutAssignment({
                         key={plan.id}
                         value={plan.id.toString()}
                         className={
-                          plan.id === user.workoutPlanId ? "bg-green-50" : ""
+                          plan.id === user.activeWorkoutPlanId ? "bg-green-50" : ""
                         }
                       >
                         {plan.name}
-                        {plan.id === user.workoutPlanId && (
+                        {plan.id === user.activeWorkoutPlanId && (
                           <span className="ml-2 text-green-600">•</span>
                         )}
                       </SelectItem>
@@ -334,7 +329,7 @@ export default function UserWorkoutAssignment({
                 </Select>
                 {hasWorkout && (
                   <p className="text-xs text-green-600">
-                    Active Plan: {currentPlan?.name}
+                    Active Plan: {user.activeWorkoutPlanName}
                   </p>
                 )}
               </div>

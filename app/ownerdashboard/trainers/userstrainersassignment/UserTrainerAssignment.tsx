@@ -14,7 +14,7 @@ import {
   SelectValue,
   SelectContent,
   SelectItem,
-} from "../ui/select";
+} from "../../../../components/ui/select";
 import { Input } from "@/components/ui/input";
 import { ColumnDropdownConfig } from "@/components/Table/table.types";
 interface UserTraienerAssignmentProps {
@@ -83,8 +83,10 @@ export default function TrainerAssignment({
 
         return (
           <div
-            className={`w-full rounded-lg ${
-              hasTrainer ? "bg-green-50/80 border-green-200" : "bg-red-50/80 border-red-200"
+            className={`w-fit rounded-lg ${
+              hasTrainer
+                ? "bg-green-50/80 border-green-200"
+                : "bg-red-50/80 border-red-200"
             } border`}
           >
             <Select
@@ -97,8 +99,10 @@ export default function TrainerAssignment({
                 handleTrainerAssignment(row.original.id, value)
               }
             >
-              <SelectTrigger className="w-[200px] border-none bg-transparent hover:bg-white/50 transition-colors">
-                <SelectValue placeholder={hasTrainer ? "Change Trainer" : "Assign Trainer"} />
+              <SelectTrigger className=" border-none bg-transparent hover:bg-white/50 transition-colors">
+                <SelectValue
+                  placeholder={hasTrainer ? "Change Trainer" : "Assign Trainer"}
+                />
               </SelectTrigger>
               <SelectContent>
                 {trainers.map((trainer) => (
@@ -231,14 +235,20 @@ export default function TrainerAssignment({
           dropdownConfig={dropdownConfig}
           renderCard={(user) => {
             const hasTrainer = user.trainerid || assignedTrainers[user.id];
-            
+
             return (
               <div className="p-4 space-y-3">
                 <h3 className="font-medium">{user.name}</h3>
                 <p className="text-sm text-gray-500">
                   {user.HealthProfile?.fullname}
                 </p>
-                <div className={`rounded-lg ${hasTrainer ? 'bg-green-50/80 border-green-200' : 'bg-red-50/80 border-red-200'} border`}>
+                <div
+                  className={`rounded-lg ${
+                    hasTrainer
+                      ? "bg-green-50/80 border-green-200"
+                      : "bg-red-50/80 border-red-200"
+                  } border`}
+                >
                   <Select
                     value={
                       assignedTrainers[user.id]?.toString() ||
@@ -249,11 +259,18 @@ export default function TrainerAssignment({
                     }
                   >
                     <SelectTrigger className="w-full border-none bg-transparent hover:bg-white/50 transition-colors">
-                      <SelectValue placeholder={hasTrainer ? "Change Trainer" : "Assign Trainer"} />
+                      <SelectValue
+                        placeholder={
+                          hasTrainer ? "Change Trainer" : "Assign Trainer"
+                        }
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {trainers.map((trainer) => (
-                        <SelectItem key={trainer.id} value={trainer.id.toString()}>
+                        <SelectItem
+                          key={trainer.id}
+                          value={trainer.id.toString()}
+                        >
                           {trainer.name}
                         </SelectItem>
                       ))}

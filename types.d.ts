@@ -3,6 +3,11 @@ type gender = "Male" | "Female";
 type Rolestype = "owner" | "trainer" | "sales";
 type GenderType = "Male" | "Female";
 
+interface GymInfo {
+  id: number;
+  gym_name: string;
+}
+
 interface UserHealthProfileType {
   id: number;
   fullname: string;

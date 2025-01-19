@@ -1,6 +1,5 @@
 import { IsOwner } from "./lib/isGymOwner";
 import { IsTrainer } from "./lib/isTrainer";
-import { IsSales } from "./lib/isSales";
 import NextAuth from "next-auth";
 import authConfig from "./auth.config";
 import { NextResponse } from "next/server";
@@ -92,7 +91,8 @@ export default auth(async function middleware(request) {
     }
 
     // Updated gym check to use the new GymInfo type
-    if (session.role === "trainer" && !session.gym?.gym_id) {
+    if (session.role === "trainer" && !session.gym) {
+      console.log("middleware redirects are this", session.gym);
       return NextResponse.redirect(new URL("/selectgym", request.url));
     }
 
@@ -103,8 +103,7 @@ export default auth(async function middleware(request) {
     const path = request.nextUrl.pathname;
     if (
       (path.startsWith("/owner") && !IsOwner(session)) ||
-      (path.startsWith("/trainer") && !IsTrainer(session)) ||
-      (path.startsWith("/sales") && !IsSales(session))
+      (path.startsWith("/trainer") && !IsTrainer(session))
     ) {
       return NextResponse.rewrite(new URL("/unauthorized", request.url));
     }

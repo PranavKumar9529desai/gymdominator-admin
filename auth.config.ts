@@ -56,7 +56,7 @@ export default {
               password,
               userFromDB.password
             );
-
+            console.log("user from the backend from the credentails provider",userFromDB);
             if (isPasswordMatch) {
               return {
                 id: email,
@@ -129,7 +129,9 @@ export default {
     async signIn({ user, account }) {
       if (account && account.provider === "google") {
         if (user && user.email) {
+          console.log("user before the google signin" , user);
           const userFromDb: userType | false = await getUserByEmail(user.email);
+          console.log("user from the backend", userFromDb);
           if (userFromDb && userFromDb.email) {
             // Modify the user object to include role and gym from DB
             Object.assign(user, {
@@ -138,6 +140,7 @@ export default {
               name: userFromDb.name,
               email: userFromDb.email,
             });
+            console.log("the user returned by the google signin",user);
             return true;
           }
           // Allow new Google users to sign up
@@ -198,6 +201,7 @@ export default {
       if (token && token.email && token.name && token.role) {
         session.user.name = token.name;
         session.user.email = token.email;
+        session.gym = token.gym as GymInfo;
         session.role = token.role as Rolestype;
         console.log("updated sesion from the session callback ", session);
         console.log("Session Callback - Output:", session);

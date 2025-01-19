@@ -1,4 +1,4 @@
-import UserTrainerTable from "@/components/common/UserTrainerAssignment";
+import UserTrainerTable from "@/app/ownerdashboard/trainers/userstrainersassignment/UserTrainerAssignment";
 import React from "react";
 import { getTrainerAssociatedWithGym } from "./GetTrainerAssociatedWithGym";
 import { getUsersAssociatedWithGym } from "./GetUserAssociatedwithGym";

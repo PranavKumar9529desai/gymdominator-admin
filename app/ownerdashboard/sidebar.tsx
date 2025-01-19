@@ -163,21 +163,19 @@ export default function Sidebar() {
 
     if (result.isConfirmed) {
       try {
-        await signOut({ redirect: false });
-        await Swal.fire({
-          title: 'See you soon!',
-          text: 'You have been successfully logged out',
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false,
-          backdrop: `
-            rgba(0,0,0,0.4)
-            url("/images/waving-hand.gif")
-            right top
-            no-repeat
-          `
+        // Call signOut with callbackUrl and force client redirect
+        await signOut({ 
+          callbackUrl: '/signin',
+          redirect: false
         });
-        router.push('/signin');
+        
+        // Clear any local storage or cookies
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Force a hard redirect to signin page
+        window.location.href = '/signin';
+        
       } catch (error) {
         Swal.fire({
           title: 'Error!',

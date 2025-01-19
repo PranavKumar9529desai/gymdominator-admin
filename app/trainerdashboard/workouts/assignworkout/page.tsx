@@ -2,25 +2,13 @@ import UserWorkoutAssignment from "./UserWorkoutAssignment";
 import { getAllWorkoutPlans } from "./Getworkout";
 import { getUsersAssignedToTrainer } from "./GetuserassignedTotrainers";
 
-
 export default async function Page() {
-  const [usersResponse, workoutPlansResponse] = await Promise.all([
+  const [users, workoutPlansResponse] = await Promise.all([
     getUsersAssignedToTrainer(),
     getAllWorkoutPlans()
   ]);
 
-  // Transform users data to include workout plan information
-  const users = usersResponse.map(user => ({
-    id: parseInt(user.id),
-    name: user.name,
-    email: user.email,
-    gender: (user.HealthProfile?.gender as "Male" | "Female") || "Male",
-    goal: user.HealthProfile?.goal || "Not Set",
-    workoutPlanId: user.WorkoutPlan?.id ?? user.workoutPlanId ?? null,
-    workoutPlanName: user.WorkoutPlan?.name ?? null
-  }));
-
-  // Calculate status cards data with workout assignment info
+  // Calculate status cards data
   const statusCards = [
     {
       title: "Total Users",
@@ -30,13 +18,13 @@ export default async function Page() {
     },
     {
       title: "Assigned Workouts",
-      value: users.filter(u => u.workoutPlanId).length,
+      value: users.filter(u => u.hasActiveWorkoutPlan).length,
       iconName: "dumbbell",
       gradient: "green"
     },
     {
       title: "Pending Assignments",
-      value: users.filter(u => !u.workoutPlanId).length,
+      value: users.filter(u => !u.hasActiveWorkoutPlan).length,
       iconName: "target",
       gradient: "red"
     }
@@ -45,7 +33,6 @@ export default async function Page() {
   return (
     <div className="container mx-auto">
       <UserWorkoutAssignment 
-      // @ts-expect-error - Property 'users' does not exist on type 'never[]'.
         Users={users}
         statusCards={statusCards}
         workoutPlans={workoutPlansResponse.workoutPlans} 
