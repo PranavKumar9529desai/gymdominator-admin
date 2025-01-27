@@ -1,11 +1,12 @@
 import "./globals.css";
 import RecoilContextProvider from "@/lib/RecoilContextProvider";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Analytics } from "@vercel/analytics/react"
 import { LazyMotion, domAnimation } from "framer-motion";
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import type { ToasterProps } from "sonner";
 import Providers from "./provider";
-
 const siteUrl = "https://admin.gymnavigator.in";
 
 export const metadata: Metadata = {
