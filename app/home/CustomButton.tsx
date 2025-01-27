@@ -23,9 +23,9 @@ export default function CustomButton({ className = "", text = "Get Started" }: C
       router.push("/signin");
     }
   };
-
   return (
     <button
+      type="button"
       className={`flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30 ${className}`}
       onClick={handleClick}
       disabled={isLoading}
