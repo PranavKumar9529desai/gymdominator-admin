@@ -1,6 +1,6 @@
-import SelectGym from '@/app/(common)/selectgym/SelectGym';
-import FetchallGyms from '@/app/(common)/actions/gym/owner/GetallGyms';
-import React from 'react'
+import SelectGym from "@/app/(common)/selectgym/SelectGym";
+import React from "react";
+import FetchallGyms from "./FetchallGyms";
 
 export default async function Page() {
   const gyms: gym[] | [] = await FetchallGyms();

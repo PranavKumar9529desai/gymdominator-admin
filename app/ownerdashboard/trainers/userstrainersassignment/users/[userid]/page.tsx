@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { Phone, MapPin, TrendingUp, Award, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";

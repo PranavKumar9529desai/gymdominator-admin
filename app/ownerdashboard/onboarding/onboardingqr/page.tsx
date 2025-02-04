@@ -2,8 +2,9 @@ import GymQRCodeOnboarding from "@/components/gym-owner/QrCode";
 import FetchGymDetailsSA from "./GetGymDetails";
 import { OnBoadingQrData } from "./GetOnBordingQrData";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
 
+import Link from "next/link";
+export const dynamic = "force-dynamic";
 export default async function Page() {
   const gymDetails = await FetchGymDetailsSA();
 

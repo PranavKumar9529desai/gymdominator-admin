@@ -1,14 +1,5 @@
 "use client";
 
-import {
-	addTrainer,
-	updateTrainer,
-} from "@/app/(common)/actions/gym/owner/AddTrainerSA";
-import type {
-	AddTrainerRequest,
-	ShiftType,
-	UpdateTrainerRequest,
-} from "@/app/(common)/actions/gym/owner/AddTrainerSA";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -25,6 +16,15 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import Loader from "../Skeltons/loaders";
+import {
+	addTrainer,
+	updateTrainer,
+} from "./AddTrainerSA";
+import type {
+	AddTrainerRequest,
+	ShiftType,
+	UpdateTrainerRequest,
+} from "./AddTrainerSA";
 interface AddTrainerProps {
 	addTrainerProps: {
 		id?: number;

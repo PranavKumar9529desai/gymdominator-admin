@@ -1,18 +1,18 @@
 "use client";
-import { useState } from "react";
-import Image from "next/image";
-import { useRecoilValue } from "recoil";
-import { Loader2, Shield, CheckCircle2, AlertCircle } from "lucide-react";
-import { m, AnimatePresence } from "framer-motion";
+import { updateSesionWithGym } from "@/app/(common)/actions/session/updateSessionWithGym";
 import { GymAtom, type GymAtomType } from "@/app/state/Atoms/gymAtom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { VerifyAuthToken } from "@/app/(common)/actions/gym/Token/VerifyAuthToken"
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import { updateSesionWithGym } from "@/app/(common)/actions/session/updateSessionWithGym";
 import { Input } from "@/components/ui/input";
+import { AnimatePresence, m } from "framer-motion";
+import { AlertCircle, CheckCircle2, Loader2, Shield } from "lucide-react";
+import { useSession } from "next-auth/react";
 import dynamic from 'next/dynamic';
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { VerifyAuthToken } from "../VerifyAuthToken";
 
 // Dynamic import with no SSR
 const AuthTokenWrong = dynamic(() => import('./AuthTokenWrong'), { ssr: false });

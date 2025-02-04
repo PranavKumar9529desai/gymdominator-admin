@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Swal from "sweetalert2";
 import type React from "react";
 import { useState } from "react";
@@ -76,7 +76,7 @@ export default function CreateWorkout() {
           text: "Workout is sucssfully created.",
           icon: "success",
         }).then(() => {
-// TODO backend call to the database
+          // TODO backend call to the database
           console.log("Submitting:", {
             workoutName,
             description,
@@ -152,7 +152,10 @@ export default function CreateWorkout() {
           <div>
             <Label>Exercises</Label>
             {exercises.map((exercise, index) => (
-              <div key={index as number} className="flex items-center space-x-2 mt-2">
+              <div
+                key={index as number}
+                className="flex items-center space-x-2 mt-2"
+              >
                 <Input
                   value={exercise.name}
                   onChange={(e) =>
@@ -165,7 +168,7 @@ export default function CreateWorkout() {
                   type="number"
                   value={exercise.sets}
                   onChange={(e) =>
-                    updateExercise(index, "sets", parseInt(e.target.value))
+                    updateExercise(index, "sets", Number.parseInt(e.target.value))
                   }
                   placeholder="Sets"
                   min="1"
@@ -176,7 +179,11 @@ export default function CreateWorkout() {
                   type="number"
                   value={exercise.reps}
                   onChange={(e) =>
-                    updateExercise(index, "reps", parseInt(e.target.value))
+                    updateExercise(
+                      index,
+                      "reps",
+                      Number.parseInt(e.target.value)
+                    )
                   }
                   placeholder="Reps"
                   min="1"

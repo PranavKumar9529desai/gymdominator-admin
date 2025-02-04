@@ -7,7 +7,7 @@ import { DataTable } from "@/components/Table/UsersTable";
 import { DataCard } from "@/components/Table/UserCard";
 import { StatusCard } from "@/components/common/StatusCard";
 import { toast, Toaster } from "react-hot-toast";
-import { AssignTrainerToUsers } from "@/app/(common)/actions/gym/owner/AssignTrainerToUsers";
+import { AssignTrainerToUsers } from "./AssignTrainerToUsers";
 import {
   Select,
   SelectTrigger,
@@ -16,7 +16,7 @@ import {
   SelectItem,
 } from "../../../../components/ui/select";
 import { Input } from "@/components/ui/input";
-import { ColumnDropdownConfig } from "@/components/Table/table.types";
+import type { ColumnDropdownConfig } from "@/components/Table/table.types";
 interface UserTraienerAssignmentProps {
   users: UserType[];
   trainers: TrainerType[];
