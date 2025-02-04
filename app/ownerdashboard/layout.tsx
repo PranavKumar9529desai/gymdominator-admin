@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import BottomNavigation from "./bottomNavigation";
 import Sidebar from "./sidebar";
 export default function layout({ children }: { children: React.ReactNode }) {

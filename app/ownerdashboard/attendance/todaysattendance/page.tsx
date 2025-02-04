@@ -1,7 +1,7 @@
+import React from "react";
 import UserAttendance from "./UserAttendance";
 import { TodayAttendance } from "./getTodayAttendance";
-import React from "react";
-
+export const dynamic = "force-dynamic";
 export default async function Page() {
   const attendanceData = await TodayAttendance();
 

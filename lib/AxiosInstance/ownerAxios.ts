@@ -1,16 +1,16 @@
 "use server";
-import { auth } from "@/auth";
-import axios, { AxiosInstance } from "axios";
+import { auth } from "@/app/(auth)/auth";
+import axios, { type AxiosInstance } from "axios";
 
 export const OwnerReqConfig = async (): Promise<AxiosInstance> => {
-  const session = await auth();
+	const session = await auth();
 
-  const ownerAxios: AxiosInstance = await axios.create({
-    baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/owner`,
-    headers: {
-      Authorization: `${JSON.stringify(session)}`,
-    },
-  });
+	const ownerAxios: AxiosInstance = await axios.create({
+		baseURL: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/v1/owner`,
+		headers: {
+			Authorization: `${JSON.stringify(session)}`,
+		},
+	});
 
-  return ownerAxios;
+	return ownerAxios;
 };

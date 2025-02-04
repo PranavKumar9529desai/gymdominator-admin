@@ -1,6 +1,6 @@
 // app/api/upload/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import uploadImage from '@/app/actions/clouldnary/UploadImageSA';
+import { type NextRequest, NextResponse } from 'next/server';
+import uploadImage from '@/app/(common)/actions/clouldnary/UploadImageSA';
 
 export async function POST(req: NextRequest) {
   try {

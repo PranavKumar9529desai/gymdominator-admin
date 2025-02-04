@@ -1,32 +1,32 @@
 "use client";
-import React, { useState, useTransition } from "react";
+import type { UserExistsFormat } from "@/app/(common)/actions/signup/SignUpWithCrendentails";
+import { UserExistsSA } from "@/app/(common)/actions/signup/SignUpWithCrendentails";
 import {
   Form,
   FormControl,
-  FormMessage,
   FormField,
-  FormLabel,
   FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "../ui/input";
+import { Eye, EyeOff, Lock, Mail, User, UserRoundCogIcon } from "lucide-react";
+import { signIn } from "next-auth/react";
+import React, { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import FormError from "../ui/form-error";
+import GoogleButton from "../ui/googleButton";
+import { Input } from "../ui/input";
 import {
   Select,
-  SelectItem,
   SelectContent,
+  SelectItem,
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Lock, Mail, User, UserRoundCogIcon, Eye, EyeOff } from "lucide-react";
-import { signIn } from "next-auth/react";
-import { UserExistsFormat } from "@/app/actions/signup/SignUpWithCrendentails";
-import { UserExistsSA } from "@/app/actions/signup/SignUpWithCrendentails";
-import GoogleButton from "../ui/googleButton";
 
 // type roleType = "owner" | "trainer" | "sales";
 // form schema

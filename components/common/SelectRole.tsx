@@ -10,11 +10,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { m, AnimatePresence } from "framer-motion";
-import { Rolestype } from "@/app/types/next-auth";
-import { updateSessionWithRole } from "@/app/actions/session/updateSessionWithRole";
+import type { Rolestype } from "@/app/types/next-auth";
+import { updateSessionWithRole } from "@/app/(common)/actions/session/updateSessionWithRole";
 import { useSession } from "next-auth/react";
-import SignupWithGoogle from "@/app/actions/signup/SignupWithGoogle";
-import type { SignupWithGoogleReturnType } from "@/app/actions/signup/SignupWithGoogle";
+import SignupWithGoogle from "@/app/(common)/actions/signup/SignupWithGoogle";
+import type { SignupWithGoogleReturnType } from "@/app/(common)/actions/signup/SignupWithGoogle";
 const roles = [
   {
     title: "Gym Owner",
@@ -52,7 +52,7 @@ export default function SelectRole() {
             session?.user?.email,
             role as "owner" | "trainer" | "sales"
           );
-          if (response && response.name && response.role) {
+          if (response?.name && response.role) {
             const result = await updateSessionWithRole(
               response.role as Rolestype,
               update

@@ -1,6 +1,7 @@
 "use client"
 import Swal from "sweetalert2";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { Plus, Minus, Dumbbell, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -151,7 +152,7 @@ export default function CreateWorkout() {
           <div>
             <Label>Exercises</Label>
             {exercises.map((exercise, index) => (
-              <div key={index} className="flex items-center space-x-2 mt-2">
+              <div key={index as number} className="flex items-center space-x-2 mt-2">
                 <Input
                   value={exercise.name}
                   onChange={(e) =>

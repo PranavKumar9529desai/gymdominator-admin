@@ -4,6 +4,8 @@ import FetchGymDetailsSA from "../../onboarding/onboardingqr/GetGymDetails";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 export default async function AttendanceComponent() {
   // First check if gym exists
   const gymDetails = await FetchGymDetailsSA();
@@ -16,7 +18,10 @@ export default async function AttendanceComponent() {
           <p className="text-gray-600">Please create your gym profile first</p>
         </div>
         <Link href="/ownerdashboard/gymdetails/viewgymdetails">
-          <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white">
+          <Button
+            variant="default"
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
             Create Gym Profile
           </Button>
         </Link>
@@ -26,7 +31,7 @@ export default async function AttendanceComponent() {
 
   // If gym exists, proceed with attendance QR
   const gymData = await GetAttendanceQrData();
-  
+
   if (!gymData) {
     return <div>Unable to load attendance data</div>;
   }
@@ -41,7 +46,7 @@ export default async function AttendanceComponent() {
 
   return (
     <div className="container mx-auto py-6">
-      <GymQRCode 
+      <GymQRCode
         qrdata={qrValue}
         title={gymData.gymname}
         subtitle="Scan this QR code to mark your attendance"

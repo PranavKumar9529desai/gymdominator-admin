@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { RemoveScroll } from 'react-remove-scroll';
 import { Button } from "@/components/ui/button";

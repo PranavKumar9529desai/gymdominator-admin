@@ -1,9 +1,9 @@
-import HeroSection from "./home/page";
+import Homepage from "./(home)/page";
 
 export default async function page() {
   return (
     <>
-      <HeroSection />
+      <Homepage />
     </>
   );
 }

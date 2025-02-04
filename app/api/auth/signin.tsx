@@ -1,5 +1,5 @@
+import SignIn from "@/components/common/Auth/Signin";
 import React from "react";
-import SignIn from "@/components/Signin";
 export default async function signin() {
   return (
     <>

@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { Users, UserCheck, UserX } from "lucide-react";
 import { DataTable } from "@/components/Table/UsersTable";
 import { DataCard } from "@/components/Table/UserCard";
 import { StatusCard } from "@/components/common/StatusCard";
 import { toast, Toaster } from "react-hot-toast";
-import { AssignTrainerToUsers } from "@/app/actions/gym/owner/AssignTrainerToUsers";
+import { AssignTrainerToUsers } from "@/app/(common)/actions/gym/owner/AssignTrainerToUsers";
 import {
   Select,
   SelectTrigger,
