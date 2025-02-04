@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-
+// change
 interface GymProps {
   gymData: {
     name: string;
