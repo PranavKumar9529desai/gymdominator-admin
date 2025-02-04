@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { m } from "framer-motion";
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { useState } from "react";
@@ -28,8 +28,7 @@ export default function ContactPage() {
               Get in Touch
             </h1>
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-              Have questions about GymDominator? We&apos;re here to help you
-              transform your gym management experience.
+              Have questions about GymDominator? We&apos;re here to help you transform your gym management experience.
             </p>
           </m.div>
 
@@ -43,9 +42,7 @@ export default function ContactPage() {
             >
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">
-                    Name
-                  </label>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Name</label>
                   <input
                     type="text"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
@@ -53,9 +50,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">
-                    Email
-                  </label>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
                   <input
                     type="email"
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
@@ -63,9 +58,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">
-                    Message
-                  </label>
+                  <label className="block text-sm font-medium text-gray-400 mb-2">Message</label>
                   <textarea
                     rows={4}
                     className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-white"
@@ -80,9 +73,7 @@ export default function ContactPage() {
                   Send Message
                 </button>
                 {formStatus && (
-                  <p className="text-green-400 text-center mt-4">
-                    {formStatus}
-                  </p>
+                  <p className="text-green-400 text-center mt-4">{formStatus}</p>
                 )}
               </form>
             </m.div>
@@ -99,20 +90,20 @@ export default function ContactPage() {
                   icon: Phone,
                   title: "Phone",
                   details: "+1 (555) 123-4567",
-                  subtitle: "Monday to Friday 9am to 6pm",
+                  subtitle: "Monday to Friday 9am to 6pm"
                 },
                 {
                   icon: Mail,
                   title: "Email",
                   details: "support@gymdominator.com",
-                  subtitle: "We'll respond within 24 hours",
+                  subtitle: "We'll respond within 24 hours"
                 },
                 {
                   icon: MapPin,
                   title: "Office",
                   details: "123 Fitness Street",
-                  subtitle: "San Francisco, CA 94105",
-                },
+                  subtitle: "San Francisco, CA 94105"
+                }
               ].map((item, index) => (
                 <div
                   key={index}
@@ -122,9 +113,7 @@ export default function ContactPage() {
                     <item.icon className="w-6 h-6 text-blue-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white">
-                      {item.title}
-                    </h3>
+                    <h3 className="text-lg font-semibold text-white">{item.title}</h3>
                     <p className="text-blue-400">{item.details}</p>
                     <p className="text-gray-400 text-sm">{item.subtitle}</p>
                   </div>

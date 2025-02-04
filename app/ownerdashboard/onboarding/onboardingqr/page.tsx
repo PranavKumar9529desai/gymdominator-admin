@@ -1,7 +1,7 @@
 import GymQRCodeOnboarding from "@/components/gym-owner/QrCode";
+import { Button } from "@/components/ui/button";
 import FetchGymDetailsSA from "./GetGymDetails";
 import { OnBoadingQrData } from "./GetOnBordingQrData";
-import { Button } from "@/components/ui/button";
 
 import Link from "next/link";
 export const dynamic = "force-dynamic";
